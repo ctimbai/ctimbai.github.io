@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Tag: 容器网络 | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            
+    <script>
+        window.subData= { title:'标签 : 容器网络'}
+    </script>
+
+
+<section class="post-list">
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/20/云计算/各种容器网络方案对比/">
+              
+                  各种容器网络方案对比
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>前面单主机容器网络和多主机容器网络两篇文章，咱们已经从原理上总结了多种容器网络方案，也通过这篇文章探讨了容器网络的背后原理。本文再基于一个宏观的视角，对比几种网络方案，让大家有个完整的认识。</p>
+<p>单主机网络就不多说了，因为也比较简单，我们重点对比几种多主机网络方案。</p>
+<p>对比的维度有以下几种：网络模型，IP 地址池管理（IP Address Management，IPAM），服务发现，连通与隔离，性能。</p>
+<p>网络模型指的是构成跨主机通信的网络结构和实现技术，比如是纯二层转发，还是纯三层转发；是 overlay 网络还是 underlay 网络等等。</p>
+<p>IPAM 指的是如何管理容器网络的 IP 池。当容器集群比较大，管理的主机比较多的时候，如何分配各个主机上容器的 IP 是一个比较棘手的问题。Docker 网络有个 subnet 的概念，通常一个主机分配一个 subnet，但也有多个主机共用一个 subnet 的情况，具体的网络方案有不同的考量。具体看下面的表格总结。</p>
+<p>服务发现本质上是一个分布式的 key-value 存储系统，用于跨主机通信时保存并同步各主机的网络信息，便于快速建立起各主机之间的网络连接。由于各网络方案实现上各有千秋，并不是所有的跨主机网络方案都要依据服务发现。</p>
+<p>连通与隔离指的是容器跨主机之间是否能够互相通信，以及容器与外网（外网不一定指 Internet）之间如何通信。</p>
+<p>性能具体指的是通信的时延，我们仅从各个网络方案的原理上来分析得出结论，所以这里的结论并不一定正确，因为不同的部署环境会对性能有一些影响，建议大家还是根据自己的环境动手实验验证为妙。</p>
+<p>从原理上说，underlay 网络性能要优于 overlay 网络，因为 overlay 网络存在封包和拆包操作，存在额外的 CPU 和网络开销，所以，几种方案中，macvlan、flannel host-gw、calico 的性能会优于 overlay、flannel vxlan 和 weave。但是这个也不能作为最终生产环境采用的标准，因为 overlay 网络采用 vxlan 作为隧道的话，能支持更多的二层网段，安全性也更高，所以，需要综合考虑。</p>
+<p>通过以上分析，我们可以得出以下的结论：</p>
+<center><img src="/images/docker/docker_net_com.jpg" alt=""></center>
+
+<p>参考：<br><a href="http://www.cnblogs.com/CloudMan6/p/7587532.html" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/7587532.html</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/18/云计算/那么多容器网络的解决方案，其背后的原理到底是什么？/">
+              
+                  那么多容器网络的解决方案，其背后的原理到底是什么？
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-18
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>知其然而不知其所以然，不知也。老古人说得多好，学知识不懂得知识背后的原理，等于白学。</p>
+<p>通过前面两篇文章，我们知道了容器的单主机网络和多主机网络，对于这么多网络方案，我们看到对 Docker 的整体网络结构好像没有改动，都是水平扩展的，那 Docker 网络究竟是怎么集成这么多网络方案而不改变自身原有的结构呢？本文就来一探究竟。</p>
+<h3 id="1-Docker-的总体框架"><a href="#1-Docker-的总体框架" class="headerlink" title="1 Docker 的总体框架"></a>1 Docker 的总体框架</h3><hr>
+<p>要回答这个问题，得从 Docker 的总体框架说起。</p>
+<center><img src="/imagesssssss/docker/docker_netarch.jpg" alt=""></center>
+
+<p>容器和虚拟机一样，都是虚拟化的产品，都包括计算虚拟化，存储虚拟化和 IO 虚拟化。容器作为轻量级的进程，不像虚拟机那般复杂，这三块分别靠三个 Driver 来完成的，execdriver 负责计算虚拟化，networkdriver 负责网络虚拟化，graphdriver 负责存储虚拟化。由此可见，Docker 靠 Driver 这种设计思想来支撑起它的基础平台，再往深了挖，它的每个子模块都随处可见这种设计思想，就网络这个子模块来看，也是如此。</p>
+<h3 id="2-Docker-的网络模型"><a href="#2-Docker-的网络模型" class="headerlink" title="2 Docker 的网络模型"></a>2 Docker 的网络模型</h3><hr>
+<h4 id="docker-engine-libcontainer"><a href="#docker-engine-libcontainer" class="headerlink" title="docker engine + libcontainer"></a>docker engine + libcontainer</h4><hr>
+<p>期初的 Docker 网络子模块的代码是分散在 docker daemon 和 libcontainer 中的，libcontainer 是一个独立的容器管理包，execdriver 和 networkdriver 都是通过 libcontainer 来实现对容器的具体操作。</p>
+<p>随着业务场景越来越复杂，这种内嵌的方式很难针对不同的网络场景进行扩展。后来，Docker 收购了一个做多主机网络解决方案的公司 SocketPlane，然后让那帮人专门来解决这个问题。这就是接下来要介绍的 libnetwork。</p>
+<h4 id="libnetwork-amp-amp-CNM"><a href="#libnetwork-amp-amp-CNM" class="headerlink" title="libnetwork &amp;&amp; CNM"></a>libnetwork &amp;&amp; CNM</h4><hr>
+<p>libnetwork 起初的做法很简单，就是将 docker engine 和 libcontainer 中网络相关的代码抽出来，合并成一个单独的库，做成网络抽象层，并对外提供 API。Docker 的愿景就是希望 libnetwork 能够做像 libcontainer 那样，成为一个多平台的容器网络基础包。</p>
+<p>后来受一个 GitHub issue ( <a href="https://github.com/moby/moby/issues/9983" target="_blank" rel="noopener">https://github.com/moby/moby/issues/9983</a>) 的启发，libnetwork 引入容器网络模型（Container Network Model，CNM），该模型进一步对 Docker 的网络结构进行了细分，提出了三个概念：network、sandbox 和 endpoint。</p>
+<h5 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h5><p>network 是一个抽象的概念，你可以把它理解成一个网络的插件，或者是网络的 Driver，比如说单主机网络的 Driver 就有 none、host、bridge，joined container 这四种，多主机网络就有 overlay、macvlan、flannel 这些。network 可以独立出去做，只需调用 Docker 对外提供的 API 就可以作为插件集成到 Docker 网络中使用。</p>
+<h5 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a><strong>sandbox</strong></h5><p>sandbox 实现了容器内部的网络栈，它定义容器的虚拟网卡，路由表和 DNS 等配置，其实就是一个标准的 linux network namespace 实现。</p>
+<h5 id="endpoint"><a href="#endpoint" class="headerlink" title="endpoint"></a><strong>endpoint</strong></h5><p>network 实现了一个第三方的网络栈，sandbox 则实现了容器内部的网络栈，那这两者怎么联系起来呢？答案就是通过 endpoint，endpoint 实现了 veth pair，一个 endpoint 就表示一对 veth pair，一端挂在容器中，另一端挂在 network 中。</p>
+<center><img src="/imagesssssss/docker/cnm.jpg" alt=""></center>
+
+<p>network、sandbox 和 endpoint 三者之间的关系：<br>一个 network 可以包含多个 endpoint，自然也就包含多个 sandbox。<br>一个 sandbox 可以包含多个 endpoint，可以属于多个 network。<br>一个 endpoint 只可以属于一个 network，并且只属于一个 sandbox。</p>
+<p>如上图显示三个容器，每个容器一个 sandbox，除了第二个容器有两个 endpoint 分别接入 network1 和 network2 之外，其余 sandbox 都只有一个 endpoint 分别接入不同的 network。</p>
+<p>到此，我们就可以解答文章开篇提到的问题，“不同的网络方案如何集成到 Docker 网络模型中而不改变原有结构？”</p>
+<p>答案就是基于 libnetwork CNM，将各个网络模型以插件或 Driver 的形式集成到 Docker 网络中来，与 docker daemon 协同工作，实现容器网络。Docker 原生的 Driver 包括单主机的 none、bridge、joined container 和 多主机的 overlay、macvlan，第三方 Driver 就包括多主机的 flannel、weave、calico 等。</p>
+<center><img src="/imagesssssss/docker/libnetwork.png" alt=""></center>
+
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><hr>
+<ol>
+<li>libnetwork 基于 CNM 模型将 Docker 网络结构从原生方案中抽离出来，增强了网络扩展性，以至于现在各种网络方案层出不穷，都可以轻松集成到 Docker 中。</li>
+<li>network，sandbox，endpoint 三个概念。</li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagesssssss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/libnetwork/"><i class="fas fa-hashtag fa-fw"></i>libnetwork</a>
+                
+                    <a href="/tags/CNM/"><i class="fas fa-hashtag fa-fw"></i>CNM</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/16/云计算/容器网络之多主机网络/">
+              
+                  容器网络之多主机网络
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-16
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>上篇文章介绍了容器网络的单主机网络，本文将进一步介绍多主机网络，也就是跨主机的网络。总结下来，多主机网络解决方案包括但不限于以下几种：overlay、macvlan、flannel、weave、cacico 等，下面将分别一一介绍这几种网络，</p>
+<p>PS：本文仅从原理上对几种网络进行简单的对比总结，不涉及太多的细节。</p>
+<h3 id="1-overlay"><a href="#1-overlay" class="headerlink" title="1 overlay"></a>1 overlay</h3><hr>
+<p>俗称隧道网络，它是基于 VxLAN 协议来将二层数据包封装到 UDP 中进行传输的，目的是扩展二层网段，因为 VLAN 使用 12bit 标记 VLAN ID，最多支持 4094 个 VLAN，这对于大型云网络会成为瓶颈，而 VxLAN ID 使用 24bit 来标记，支持多达 16777216 个二层网段，所以 VxLAN 是扩展了 VLAN，也叫做大二层网络。</p>
+<p>overlay 网络需要一个全局的“上帝”来记录它网络中的信息，比如主机地址，子网等，这个上帝在 Docker 中是由服务发现协议来完成的，服务发现本质上是一个 key-value 数据库，要使用它，首先需要向它告知（注册）一些必要的信息（如网络中需要通信的主机），然后它就会自动去收集、同步网络的信息，同时，还会维护一个 IP 地址池，分配给主机中的容器使用。Docker 中比较有名的服务发现有 Consul、Etcd 和 ZooKeeper。overlay 网络常用 Consul。</p>
+<center><img src="/imagesss/docker/overlay.jpg" alt=""></center>
+
+<p>创建 overlay 网络会创建一个 Linux bridge br0，br0 会创建两个接口，一个 veth2 作为与容器的虚拟网卡相连的 veth pair，另一个 vxlan1 负责与其他 host 建立 VxLAN 隧道，跨主机的容器就通过这个隧道来进行通信。</p>
+<p>为了保证 overlay 网络中的容器与外网互通，Docker 会创建另一个 Linux bridge docker_gwbridge，同样，该 bridge 也存在一对 veth pair，要与外围通信的容器可以通过这对 veth pair 到达 docker_gwbridge，进而通过主机 NAT 访问外网。</p>
+<h3 id="2-macvlan"><a href="#2-macvlan" class="headerlink" title="2 macvlan"></a>2 macvlan</h3><hr>
+<p>macvlan 就如它的名字一样，是一种网卡虚拟化技术，它能够将一个物理网卡虚拟出多个接口，每个接口都可以配置 MAC 地址，同样每个接口也可以配自己的 IP，每个接口就像交换机的端口一样，可以为它划分 VLAN。</p>
+<p>macvlan 的做法其实就是将这些虚拟出来的接口与 Docker 容器直连来达到通信的目的。一个 macvlan 网络对应一个接口，不同的 macvlan 网络分配不同的子网，因此，相同的 macvlan 之间可以互相通信，不同的 macvlan 网络之间在二层上不能通信，需要借助三层的路由器才能完成通信，如下，显示的就是两个不同的 macvlan 网络之间的通信流程。</p>
+<center><img src="/imagesss/docker/macvlan.jpg" alt=""></center>
+
+<p>我们用一个 Linux 主机，通过配置其路由表和 iptables，将其配成一个路由器（当然是虚拟的），就可以完成不同 macvlan 网络之间的数据交换，当然用物理路由器也是没毛病的。</p>
+<h3 id="3-flannel"><a href="#3-flannel" class="headerlink" title="3 flannel"></a>3 flannel</h3><hr>
+<p>flannel 网络也需要借助一个全局的上帝来同步网络信息，一般使用的是 etcd。</p>
+<p>flannel 网络不会创建新的 bridge，而是用默认的 docker0，但创建 flannel 网络会在主机上创建一个虚拟网卡，挂在 docker0 上，用于跨主机通信。</p>
+<center><img src="/imagesss/docker/flannel.jpg" alt=""></center>
+
+<p>组件方式让 flannel 多了几分灵活性，它可以使用二层的 VxLAN 隧道来封装数据包完成跨主机通信，也可以使用纯三层的方案来通信，比如 host-gw，只需修改一个配置文件就可以完成转化。</p>
+<h3 id="4-weave"><a href="#4-weave" class="headerlink" title="4 weave"></a>4 weave</h3><hr>
+<p>weave 网络没有借助服务发现协议，也没有 macvlan 那样的虚拟化技术，只需要在不同主机上启动 weave 组件就可以完成通信。</p>
+<p>创建 weave 网络会创建两个网桥，一个是 Linux bridge weave，一个是 datapath，也就是 OVS，weave 负责将容器加入 weave 网络中，OVS 负责将跨主机通信的数据包封装成 VxLAN 包进行隧道传输。</p>
+<center><img src="/imagesss/docker/weave.jpg" alt=""></center>
+
+<p>同样，weave 网络也不支持与外网通信，Docker 提供 docker0 来满足这个需求。</p>
+<p>weave 网络通过组件化的方式使得网络分层比较清晰，两个网桥的分工也比较明确，一个用于跨主机通信，相当于一个路由器，一个负责将本地网络加入 weave 网络。</p>
+<h3 id="5-calico"><a href="#5-calico" class="headerlink" title="5 calico"></a>5 calico</h3><hr>
+<p>calico 是一个纯三层的网络，它没有创建任何的网桥，它之所以能完成跨主机的通信，是因为它记住 etcd 将网络中各网段的路由信息写进了主机中，然后创建的一对的 veth pair，一块留在容器的 network namespace 中，一块成了主机中的虚拟网卡，加入到主机路由表中，从而打通不同主机中的容器通信。</p>
+<center><img src="/imagesss/docker/calico.jpg" alt=""></center>
+
+<p>calico 相较其他几个网络方案最大优点是它提供 policy 机制，用户可以根据自己的需求自定义 policy，一个 policy 可能对应一条 ACL，用于控制进出容器的数据包，比如我们建立了多个 calico 网络，想控制其中几个网络可以互通，其余不能互通，就可以修改 policy 的配置文件来满足要求，这种方式大大增加了网络连通和隔离的灵活性。</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><hr>
+<p>1、除了以上的几种方案，跨主机容器网络方案还有很多，比如：Romana，Contiv 等，本文就不作过多展开了，大家感兴趣可以查阅相关资料了解。</p>
+<p>2、跨主机的容器网络通常要为不同主机的容器维护一个 IP 池，所以大多方案需要借助第三方的服务发现方案。</p>
+<p>3、跨主机容器网络按传输方式可以分为纯二层网络，隧道网络（大二层网络），以及纯三层网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagesss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/overlay/"><i class="fas fa-hashtag fa-fw"></i>overlay</a>
+                
+                    <a href="/tags/macvlan/"><i class="fas fa-hashtag fa-fw"></i>macvlan</a>
+                
+                    <a href="/tags/flannel/"><i class="fas fa-hashtag fa-fw"></i>flannel</a>
+                
+                    <a href="/tags/weave/"><i class="fas fa-hashtag fa-fw"></i>weave</a>
+                
+                    <a href="/tags/cacico/"><i class="fas fa-hashtag fa-fw"></i>cacico</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/11/云计算/virtio_user_简介/">
+              
+                  virtio-user 简介
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-11
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/DPDK/">DPDK</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>在看本文之前，建议先看 virtio 简介，vhost 简介，vhost-user 简介。</p>
+<p>virtio-user 是 DPDK 针对特定场景提出的一种解决方案，它主要有两种场景的用途，一种是用于 DPDK 应用容器对 virtio 的支持，这是 DPDK v16.07 开始支持的；另一种是用于和内核通信，这是 DPDK v17.02 推出的。</p>
+<h3 id="1-virtio-user-用于容器网络"><a href="#1-virtio-user-用于容器网络" class="headerlink" title="1 virtio_user 用于容器网络"></a>1 virtio_user 用于容器网络</h3><hr>
+<p>我们知道，对于虚拟机，有 virtio 这套半虚拟化的标准协议来指导虚拟机和宿主机之间的通信，但对于容器的环境，直接沿用 virtio 是不行的，原因是虚拟机是通过 Qemu 来模拟的，Qemu 会将它虚拟出的整个 KVM 虚拟机的信息共享给宿主机，但对于 DPDK 加速的容器化环境来说显然是不合理的。因为 DPDK 容器与宿主机的通信只用得到虚拟内存中的大页内存部分，其他都是用不到的，全部共享也没有任何意义，DPDK 主要基于大页内存来收发数据包的。</p>
+<p>所以，virtio_user 其实就是在 virtio PMD 的基础上进行了少量修改形成的，简单来说，就是添加大页共享的部分逻辑，并精简了整块共享内存部分的逻辑。</p>
+<p>有兴趣可以对照 /driver/net/virtio 中的代码和 DPDK virtio_user 代码，其实大部分是相同的。</p>
+<p>从 DPDK 的角度看，virtio_user 是作为一个虚拟设备（vdev）来加载的，它充当的是一个 virtio 前端驱动，与之对应的后端通信驱动，是用户态的 vhost_user，在使用的时候，我们只需要定义好相应的适配接口即可，如下：</p>
+<center><img src="/images/docker/virtio_user.jpg" alt=""></center>
+
+<p>vhost 和 vhost_user 本质上是采用共享内存的 IPC 方式，通过在 host 端创建 vhost_user 共享内存文件，然后 virtio_user 启动的时候指定该文件即可，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1）首先创建 vhost_user 共享内存文件</span><br><span class="line">--vdev &apos;eth_vhost_user0,iface=/tmp/vhost_user0&apos;</span><br><span class="line">2）启动 virtio_user 指定文件路径</span><br><span class="line">--vdev=virtio_user0,path=/tmp/vhost_user0</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-virtio-user-作为-exception-path-用于与内核通信"><a href="#2-virtio-user-作为-exception-path-用于与内核通信" class="headerlink" title="2 virtio_user 作为 exception path 用于与内核通信"></a>2 virtio_user 作为 exception path 用于与内核通信</h3><hr>
+<p>virtio_user 的一个用途就是作为 exception path 用于与内核通信。我们知道，DPDK 是旁路内核的转包方案，这也是它高性能的原因，但有些时候从 DPDK 收到的包（如控制报文）需要丢到内核网络协议栈去做进一步的处理，这个路径在 DPDK 中就被称为 exception path。</p>
+<p>在这之前，已经存在几种 exception path 的方案，如传统的 Tun/Tap，KNI（Kernel NIC Interface），AF_Packet 以及基于 SR-IOV 的 Flow Bifurcation。这些方案就不做过多介绍了，感兴趣的可看 DPDK 官网，上面都有介绍。</p>
+<center><img src="/images/docker/virtio_user1.jpg" alt=""></center>
+
+<p>和容器网络的方案使用 vhost_user 作为后端驱动一样，要使得 virtio_user 和内核通信，只需加载内核模块 vhost.ko，让它充当的是 virtio_user 的后端通信驱动即可。</p>
+<p>所以，我们可以看到，其实这两种方案本质上是一样，只是换了个后端驱动而已，这也是 virtio 的优势所在，定义一套通用的接口标准，需要什么类型的通信方式只需加载相应驱动即可，改动非常少，扩展性非常高。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/06/云计算/Docker_容器网络之单主机网络/">
+              
+                  Docker 容器网络之单主机网络
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-06
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>当容器逐步向容器集群，容器云技术演进的时候，一个不得不面对的问题就是各个容器的管理问题，有些容器需要交互，有些容器需要隔离，如何保证这些操作能够顺利地进行，这个时候，很多容器管理和编排的平台就应运而生了。首先，当然是 Docker 社区自己开发的 Swarm+Machine+Compose 的集群管理套件，然后还有 Twitter 主推 Apache 的 Mesos，最有名的应该为 Google 开源的 Kubernetes。</p>
+<p>这些平台综合了容器集群资源管理，服务发现和扩容缩融等问题，是一个集大成的解决方案，但其实这些问题本质上都离不开网络，资源在各容器之间调度需要网络，服务发现需要网络，所以，可以说网络是容器集群环境下最基础的一环。</p>
+<p>Docker 容器网络根据容器的部署位置，可以分为单主机网络（host）和多主机网络（multi-host），本文先看 Docker host 网络。</p>
+<p>Docker host 网络分为 none，host，joined container 和 bridge 网络。</p>
+<p>none 网络模式下，Docker 容器拥有自己的 network namespace，但是并不为容器进行任何的网络配置，也就是说容器除了 network namespace 本身自带的 localback 网卡外什么都没有，包括网卡、IP、路由等信息。用户如何要使用 none 网络，就需要自己添加特定的网卡，并配置 IP、路由等信息，但一般不会这么干，none 网络很好地做到了隔离，一般是用来跑那些对安全性要求极高且不需要联网的应用。</p>
+<p>比如某个容器的唯一用途是生成随机密码，就可以放到 none 网络中避免密码被窃取。</p>
+<p>想要使 Docker 使用 none 网络，只需要在创建容器的时候附带 –network = none 即可。</p>
+<p>host 网络，顾名思义就是 Docker 容器使用宿主机的网络，相当于和 host 共用了同一个 network namespace，Docker 容器使用 host 的网卡、IP 和路由等功能对外通信。</p>
+<p>虽然这种模式下 Docker 没有创建独立的 network namespace，但其他 namespace 仍然是隔离的，如文件系统、进程列表等。host 网络最大的好处就是使得 Docker 容器对外通信变得简单，直接使用 host 的 IP 进行通信即可，但缺点也很明显，就是降低了隔离性，同时还会存在和其他容器对网络资源的竞争与冲突的问题。</p>
+<p>同样要使用 host 网络，只需创建容器时附带 –network = host 即可。</p>
+<center><img src="/images/docker/net_host.png" alt=""></center>
+
+<p>joined container 网络和 host 网络不同的是，它是和其他的 container 共享一个 network namespace，一个 network namespace 可以被一个或者多个 Docker 容器共享。在这种模式下，两个容器之间可以通过 localback 回环网卡通信，增加了容器间通信的便利性。</p>
+<p>同样可以在创建容器时，使用参数 –network = container:another_container_name 来和另外容器共享网络。</p>
+<center><img src="/images/docker/net_con.png" alt=""></center>
+
+<p>bridge 网络是最常用的网络模式，它兼顾了安全性和功能的完备性，但其与外部通信要通过 NAT 转换，在复杂的网络场景下会存在诸多不便。</p>
+<p>bridge 网络在创建的时候通过 –network = bridge 指定，Docker daemon 会为创建的容器自动创建一个 Docker 网桥——docker0（也可以人为指定名称 –driver bridge my_net），这个 docker0 就用来联结 Docker 容器和 host 的桥梁。</p>
+<p>然后，Docker daemon 会创建一对虚拟网卡 veth pair，一块网卡留在宿主机的 root network namespace 中，并绑定到 docker0 上，另一块放在新创建的 network namespace 中，命名为 eth0，并为其配置 IP 和路由，将其网关设为 docker0，如下，这样整个容器的 bridge 网络通信环境就建立起来了，其他容器的建立方式也是如此，最终各容器之间就通过 docker0 这个桥梁互联互通了。</p>
+<center><img src="/images/docker/net_bridge.jpg" alt=""></center>
+
+<p>下文将讨论更为复杂的 multi-host 网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+</section>
+
+
+
+<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
+
+
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+
+      
+    
+  
+    
+      
+      
+        
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

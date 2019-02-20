@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Tag: Kubernetes | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            
+    <script>
+        window.subData= { title:'标签 : Kubernetes'}
+    </script>
+
+
+<section class="post-list">
+    
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/08/30/云计算/Kubernetes_笔记_01_初识_Kubernetes_新时代的领航者/">
+              
+                  Kubernetes 笔记 01 初识 Kubernetes 新时代的领航者
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-30
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/k8s/2.jpg" alt=""></center>
+
+<p>Hi，大家好，我是 CloudDeveloper！欢迎大家和我一起学习 K8S。</p>
+<p>大明王朝时期，明成祖朱棣为了发展海外贸易和建立自己的声望，派郑和七下西洋，创下了这段中国古代规模最大、船只最多（240多艘）、海员最多（2.7 万人）、时间最久的，比欧洲国家航海时间早半个多世纪的远洋航行壮举。</p>
+<center><img src="/images/k8s/3.jpg" alt=""></center>
+
+<p>Kubernetes 这个名字起源于古希腊，是「舵手」的意思，所以它的 Logo 既像一张渔网，又像一个罗盘。如果 Docker 把自己定位为驮着集装箱在大海上遨游的鲸鱼，那么 Kubernetes 就是掌舵大航海时代话语权的舵手，指挥着这条鲸鱼按照主人设定的路线巡游。</p>
+<center><img src="/images/k8s/dockervsk8s.jpg" alt=""></center>
+
+<p>Kubernetes 脱胎于 Google 老牌的集群管理软件「Borg」，虽然自诞生至今才三年多（第一个正式版本 Kubernetes 1.0 于 2015 年 7 月才正式发布），但要论其历史，却是早已在 Google 内部身经百战 10 余年，Kubernetes 站在 Borg 这个前辈的肩膀上，吸取了它过去十年间的经验和教训，才有了今天的成绩。这也是 Docker 火了之后，Google 迫不及待想推 Kubernetes 的原因。</p>
+<p>Kubernetes 也常被人们称为「K8S」，原因是 K 和 S 之间正好有 8 个字母，读音上也和 8 相似，为了阅读方便，人们都乐于这么称呼。</p>
+<p>有了 Google 的背书，K8S 一经推出就一鸣惊人，迅速称霸容器技术领域。</p>
+<p>可以说，K8S 是以容器技术为基础打造的一个云计算时代的全新分布式系统架构，它的架构设计开放，除了支持 Docker，还支持其他容器技术，比如 Rocket、RKT 等。</p>
+<p>Google 的加持，开放的生态，让它在与其他竞争对手的 博弈中占据上风，轻松拿下容器编排这个市场。</p>
+<p>2017年9月，Mesosphere 宣布支持 K8S，接着，10月，Docker 在 DockerCon EU 2017 大会上也宣布拥抱 K8S，至此，K8S 正式霸占容器技术领域，彻底掌控容器技术的未来。</p>
+<center><img src="/images/k8s/vsplat.jpg" alt=""></center>
+
+<p>K8S 为了扩大影响力，推出没多久就加入 OpenStack 阵营，目的是希望 K8S 能被 OpenStack 生态圈所容纳，与 KVM 虚拟机一样成为 OpenStack 平台上的一等公民。</p>
+<blockquote>
+<p>这意味着以容器为代表的应用形态和以虚拟机为代表的系统形态将完美融合于 OpenStack 之上，并与软件定义网络和软件定义存储一起统治下一代数据中心。</p>
+</blockquote>
+<p>K8S 在云计算领域刮起了一道强劲之风，但凡跟云计算相关的公司都无法无视它的存在，错过它，也许就错过了未来。我们来看看它从诞生至今的 Google 趋势（和 Docker Swarm 和 Mesos 进行了对比）：</p>
+<center><img src="/images/k8s/k8strend.jpg" alt=""></center>
+
+<p>可以看到，K8S 从诞生之初便一路飙升，将对手甩开了十几条街，未来也将会以火箭的速度保持上升。</p>
+<p>目前，除了云计算相关的公司，很多互联网公司、甚至传统企业都在纷纷布局自家的 K8S 产品，可以说，K8S 是当前容器行业最炙手可热的明星。</p>
+<p>作为一个 IT 从业人员，你无法忽视它的存在。谁能比别人领先一步掌握新技术，谁就能在竞争中赢得了先机。</p>
+<p>虽然说，现在学习 K8S 并不是最佳时机，但还不算太晚，就像一句话说的：</p>
+<blockquote>
+<p>学习一门技术最好的时间是 10 年前，其次是现在。</p>
+</blockquote>
+<p>后面我会推一个我学习 K8S 的笔记教程，一方面是加深自己对知识的理解，另一方面也是希望能分享给有需要的人。分享是一种美德，你在看到我的分享的同时，也希望你能动动手指把它分享给你的朋友，这样我的分享也没有白费。</p>
+<p>最后，我这里有一份 《K8S 指南》，这是容器网络专家倪朋飞利用自己业余时间写的一本小册子，质量还是挺不错的，有需要的后台回复“K8S”。另外需要加群学习的后台回复“加群”。</p>
+<blockquote>
+<p>文中图片来源于网络，侵权必删<br>参考：k8s 指南</p>
+</blockquote>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/08/28/云计算/Kubernetes_新时代的宠儿/">
+              
+                  Kubernetes 新时代的宠儿
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-28
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="Kubernetes-是什么"><a href="#Kubernetes-是什么" class="headerlink" title="Kubernetes 是什么"></a>Kubernetes 是什么</h3><hr>
+<p>Kubernetes 简称为 K8S。简单说，K8S 是一个用于容器集群的分布式系统架构。首先，它是基于容器技术，容器是和虚拟机并列的一种虚拟化技术，相比虚拟机来说，容器更加轻量，资源利用率更高，更适合于云原生应用。</p>
+<p>其次，K8S 掌管的是容器集群，就像它的名字一样，一个舵手指挥着一个个的集装箱航行。容器会被频繁地销毁、重建和调度，为了最大化地利用集群资源和减少人力成本，K8S 在其中以高效的策略，自动化的运维方式指挥着这一切，就像一台永动机一样，管理员可以一劳永逸。</p>
+<center><img src="/images/k8s/k8swhat.jpg" alt=""></center>
+
+<p>最后，K8S 的架构非常开放，分布式的组件结构，使得它可以轻松地适应大规模的集群环境，Google 庞大的数据中心就是它最好的历练。</p>
+<h3 id="为什么-K8S-能赢？"><a href="#为什么-K8S-能赢？" class="headerlink" title="为什么 K8S 能赢？"></a>为什么 K8S 能赢？</h3><hr>
+<p>随着 2014 年 Docker 大火之后，已经涌现出大量的容器集群管理平台，其中，Docker 自家的 Swarm，在 Twitter 内部久经考验的 Mesos，以及 Google 的 K8S 最为知名，号称容器编排三驾马车。下图是三家的热度走势图：</p>
+<center><img src="/images/k8s/k8strend.jpg" alt=""></center>
+
+<p>K8S 自诞生日起便一骑绝尘，甩对手十几条街。为什么 K8S 能赢？我自以为是生态。</p>
+<p>K8S 架构开放，向下可以容纳各种 container runtime，便不是没了 Docker 不行。向上可以承载各种 PaaS 平台，还能和 OpenStack、VMware 这些 IaaS 平台和平相处。它由此组建的生态系统，随随便便可以吃下任何一个平台。再加上 Google 的加持，谁能不爱？</p>
+<h3 id="有哪些公司在使用-K8S？"><a href="#有哪些公司在使用-K8S？" class="headerlink" title="有哪些公司在使用 K8S？"></a>有哪些公司在使用 K8S？</h3><hr>
+<p>据不完全统计，除了 AWS、Azure、Google、Microsoft 等巨头在容器领域里多年的博弈外，国内的很多互联网公司，如 BAT、蚂蚁、今日头条、滴滴等技术大厂，也都将容器和 K8S 列入我来的战略重心，无数中小型企业也正走在容器化的道路上。</p>
+<p>从长远角度来看，K8S 将会成为企业服务器端技术栈标准中的一环，并连同它所推崇的容器化理念，成为广大后端技术人员和开发者的一门必修课。</p>
+<h3 id="怎么学-K8S？"><a href="#怎么学-K8S？" class="headerlink" title="怎么学 K8S？"></a>怎么学 K8S？</h3><hr>
+<p>现在快餐时代，如何学习才能更高效？我觉得排在第一位的应该是站在巨人的肩膀上学习。国内有很多研究 K8S 的大牛，其中一批是浙江大学研究所的研究员，他们出了国内第一本深入解读 Docker 和 K8S 原理的书《容器与容器云》。</p>
+<p>看书虽然效果是奇好的，但效率并不高，想要效率高，我觉得学习大牛的知识总结可能才是最有效的。</p>
+<p>正巧，今天我看到那批研究员中的一位作者张磊（现在在微软研究院）在极客时间开了一个 K8S 专栏，我觉得是雨后逢甘露，第一时间就买了。</p>
+<p>这里简单给大家介绍下，有需要的朋友一定不要错过。</p>
+<p>课程有 51 节，原价 99 元，现在优惠 68 元，9月8日恢复原价，如果你扫我下面的二维码买的话，我<font color="red">返你 8 元</font>（注意：这个是我特地给你的福利，别的地方是没有的），也就是说，你只用<font color="red"> 60 元</font>就可以买了，每节课 1 块多一点。另外，你买了之后还可以以同样的方式分享给你的好友，双方都受益。如果你讨厌这样的方式，那么忽略就好。</p>
+<p>我作为一名云计算爱好者，一方面是希望为前辈们宣传一波，另一方面我也是给我的读者们尽量争取一些实打实的福利。希望能帮助到你。</p>
+<p>大家买了之后记得加我微信哈，我返你钱。</p>
+<p>另外，K8S 是用 Go 语言写的，我推荐大家和 Go 一起学效果最好，大家可以看我之前写的这篇文章学习 Go 语言最好的时间是 10 年前，其次是现在。</p>
+<p>下面还有一个目录，大家可以看看，真的很良心。</p>
+<center><img src="/images/k8s/k8scourse.jpg" alt=""></center>
+
+<p>课程目录：</p>
+<center><img src="/images/k8s/k8sdir.jpg" alt=""></center>
+
+
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/08/23/云计算/集群：孙悟空分身术/">
+              
+                  集群：孙悟空分身术
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-23
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>在孙悟空的七十二变中，我觉得最厉害的非分身能力莫属，这也是他百试不得其爽的终极大招，每每都能打得妖怪摸不着北。</p>
+<center><img src="/images/k8s/mon.jpg" alt=""></center>
+
+<p>集群，学名叫 Cluster，可以翻译为簇、聚类、集群等多种意思，不同的翻译，在技术世界里所表示的意思都不尽相同，但都有一个共同的指向，即群体。集群就是由一组计算机所组成的实体，通常作为一个整体向用户提供资源。<br>集群的研究和发展离不开人们对高性能计算的追求，像我们熟悉的向量机、对称多处理机、工作站、超级计算机等等都是对高性能计算追求下的产物。</p>
+<p>这些系统要么是提高 CPU 的主频和总线带宽来提高系统性能，要么是增加 CPU 个数和内存容量来提高性能，但这些手段对性能的提高都是有限的。有人做过实验，当 CPU 个数超过某一阈值时，系统的性能反而会变差。其主要的瓶颈就在于 CPU 访问内存的带宽并不能随着 CPU 个数的增加而有效增加。</p>
+<center><img src="/images/k8s/clusterperf.jpg" alt=""></center>
+
+<p>相反，集群系统的性能可扩展能力是线性增长的。我们可以简单通过增加机器数来增加集群的运算能力，相比购买高性能的大型计算机，同等运算能力下，我们可以获得更高的性价比。同时，系统的可靠性也得到了增强。</p>
+<h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><hr>
+<p>早在七十年代计算机厂商和研究机构就开始了对集群系统的研究和开发，首先创造性发明集群的是 Seymour Cray（西摩·克雷）—— 超级计算机之父。</p>
+<center><img src="/images/k8s/cray.jpg" alt=""></center>
+
+<p>Seymour 是一位美国工程师，在 1960 年代，CDC 公司涉足高性能计算领域，彼时还是大型机的天下，这些大型机设计非常复杂，生产周期漫长，价格还非常昂贵。当时在 CDC 公司担任总设计师的 Seymour 决心建造出心目中的高性能计算机。</p>
+<p>Seymour 出于工程师的直觉，很快想到并行是提高计算机性能的有效方式。他使用廉价的方式来获得跟大型机一样的运算能力。他将多个普通的处理器连接起来，使它们能够协同工作，这就是高性能计算机的原型。</p>
+<p>后来，IBM、HP 等公司学习了 Seymour 的这套架构，高性能计算机开始迅速推广，逐步取代原有的大型机。高性能计算机为当时的登月计划等大型科研项目作出了非常重要的贡献。</p>
+<p>然后进入八十年代，在摩尔定律的指导下，CPU 频率不断提高，芯片不断降价，个人计算机强势崛起。苹果、微软等公司借助这股东风成为个人计算机时代的王者。随之而来的就是高性能计算机市场遭到了吞噬，被迫只能退守公司服务器市场。</p>
+<p>但很快，随着互联网的普及，高性能计算机又迎来新的一波热潮。互联网上用户量庞大，普通 PC 难以应付如此众多的网络请求，必须要依赖由高性能计算机组成的服务器集群。在 2000 年左右的网络泡沫时期，成就了很多像 Sun 这样的服务器生产商。</p>
+<p>如今，IT 行业向云计算冲击，诸如 Google、Apple、Amazon 等很巨头纷纷建立起了自己的数据中心。集群的规模在不断扩大，为海量的数据提高基础设施提供了支撑。根据不同的应用场景，集群也演变出多种形态，比如高性能集群、高可用集群、负载均衡集群等等。</p>
+<h3 id="集群元素"><a href="#集群元素" class="headerlink" title="集群元素"></a>集群元素</h3><hr>
+<p>集群不是简单的硬件堆叠，而是硬件和软件的结合。从软件上说，集群至少需要：</p>
+<p>构建于 TCP/IP 协议上的通信软件，用于集群中节点之间的通信。</p>
+<p>一套中心管理软件，用于统一管理集群中节点的资源、任务和容错等等。</p>
+<p>这两点比较好理解，集群的规模往往是比较庞大的，对于管理员来说，需要随时能够知晓集群中各节点的业务正常与否，出问题了应该怎么保证业务能够不中断，遇到流量高峰和低谷的时候，又该怎么响应，这些操作如果纯靠人工来完成那必将很惨烈。依靠软件和网络来完成自动化的管理方式，可以将管理员解放出来。当然，以上说的两点是比较宽泛的，用户可以根据自身需求来部署不同的集群元素。</p>
+<p>一个比较经典的集群模型当属 Beowulf 集群，它通过一个节点统一将来自网络的请求分配给各个节点进行计算处理。</p>
+<center><img src="/images/k8s/beowulf.jpg" alt=""></center>
+
+<h3 id="集群与分布式"><a href="#集群与分布式" class="headerlink" title="集群与分布式"></a>集群与分布式</h3><hr>
+<p>集群与分布式像一对孪生兄弟，傻傻分不清楚。在我看来，它们之间没有特别明确的分界线，集群离不开分布式，分布式也需要集群。如果一定要做个区分，可以套用一个比喻来描述两者的区别：</p>
+<p>一家餐厅刚开业，由于成本限制招了一个厨师，慢慢地，餐厅生意越做越好，一个厨师已经很难应付过来，于是又招了一个，这两个厨师水平相当，都能做同样的事，两个厨师之间的关系就是集群。两厨师除了炒菜，还要负责洗菜、配菜等等的活，工作负荷已经严重超标，为了让厨师能专心炒菜，把菜做到极致，餐厅又招了配菜师来辅助厨师，厨师和配菜师之间的关系就是分布式。</p>
+<p>这个例子比较形象，在网站开发中也有类似的关系，两个全栈工程师之间就是集群的关系，前端工程师和后端工程师之间就属于分布式的关系。</p>
+<center><img src="/images/k8s/cluint.jpg" alt=""></center>
+
+<p>@知乎大闲人柴毛毛</p>
+<p>所以，一定要有区分的话就是：集群是一个业务部署在多个服务器上，而分布式是一个业务拆分成多个子业务部署在不同的服务器上。但在实际部署中，为了高性能，需要分布式部署，为了高可用，需要集群部署，这两者都是业务所必须的指标。所以，集群和分布式之间的关系是相互补充的。</p>
+<h3 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h3><hr>
+<p>随着虚拟化技术的发展，一台服务器可以虚拟出多个虚拟机，对外提供业务，这种方式大大提高了资源的利用率，集群的部署也逐步从物理机过渡到虚拟机，灵活性大大提高。但同时也带来了更多新的研究课题。虚拟化计算、虚拟化存储、虚拟化网络、虚拟化安全等等这些课题共同推动着云计算产业迈出一个又一个的台阶。</p>
+<h3 id="数据中心"><a href="#数据中心" class="headerlink" title="数据中心"></a>数据中心</h3><hr>
+<p>数据中心是集中存放和运行服务器的地方，是规模最大的集群。随着云计算和大数据概念的风起云涌，Google、Amazon 等这些明星公司幕后的数据中心也开始走入大众的视野。数据中心要求有优秀的架构设计、电路设计、空间设计等等，还要有机制能够应对各种各样的意外，否则一点小小的失误，公司的股价恐怕就要跳水。</p>
+<p>地理位置的选择也是数据中心考虑的一个指标，随着绿色数据中心概念的兴起，越来越多人关注数据中心所带来的能源问题和环境问题，选择一个远离市区，并且能利用天然水源和气温的地方，将会为数据中心的建设节约大量的成本。Google 等大公司的数据中心就有意放在高纬度、高海拔的地区，以及有湖泊、河流流经地区，以享受天然的空调和冷却水。</p>
+<center><img src="/images/k8s/datacenter.jpg" alt=""></center>
+
+
+
+<p>云计算之所以能被称之为“云”计算，是因为具有体量庞大的资源池，集群就是用来构建这个资源池的，说集群是云计算的基石一点都不为过。目前有很多集群管理软件，大家比较熟悉的像 Mesos，k8s 都属于这个范畴，后面会带来相关的干货，大家尽情期待。</p>
+<blockquote>
+<p>PS：文中图片均来自于网络，侵权必删<br>参考：<a href="http://dwz.cn/h9lwjvOR" target="_blank" rel="noopener">http://dwz.cn/h9lwjvOR</a></p>
+</blockquote>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+                    <a href="/tags/集群/"><i class="fas fa-hashtag fa-fw"></i>集群</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/02/20/云计算/2018_云计算领域的技术趋势预测/">
+              
+                  2018 云计算领域的技术趋势预测
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/云计算/">云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/cloud/6.jpg" alt=""></center>
+
+<p>作为一个技术人，保持对技术的敏感是必要的，尤其是在互联网这个行业，昨天还觉得移动互联网挺酷炫的，今天就被人工智能这波潮流给掩盖掉了锋芒，泯然众人矣。虽然我们不一定要赶时髦，踏踏实实做好技术才是好的，但保持这样一份好奇心，也许会让我们的技术之路走得更加顺畅一点。</p>
+<p>对于云计算这个领域，虽然早已是陈词滥调，但新瓶装旧酒，总会玩出很多新鲜的花样。作为一个没什么经验的初学者，我斗胆预测一下 2018 年云计算领域的几大技术趋势，仅供参考。</p>
+<h3 id="混合云"><a href="#混合云" class="headerlink" title="混合云"></a>混合云</h3><hr>
+<p>混合云其实叫嚣了很多年，但一直没有得到真正的应用，现在大部分企业和个人还是部署公有云和私有云为主，随着市场的增长和用户需求的增加，尤其是对云安全这块的需求，相信在 2018 年会有众多客户将业务迁移到混合云上。公有云市场的一些大公司，像阿里云，腾讯云会大力布局其混合云市场，而私有云市场则会更多选择与公有云大公司合作来布局自己的混合云市场，另外，像 zstack 这样的混合云开源技术框架会得到较多青睐，兴许可以成为下一个 OpenStack。</p>
+<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><hr>
+<p>2014 年，AWS 推出了 serverless （无服务器）计算服务  Lambda，微服务便是在这样一种模式下提出的一种架构设计思想。此后几年各大互联网公司都在引入微服务的设计思想，应用在自家的业务产品中。可以说，微服务架构设计得好，不管是开发测试，还是运维管理都会大大提升效率和增强产品的可维护性和可扩展性。2018 年，微服务将会引发一波小高潮。很多大公司会开放他们的微服务设计框架，及相关的开源项目。</p>
+<h3 id="kubernetes-k8s-容器编排"><a href="#kubernetes-k8s-容器编排" class="headerlink" title="kubernetes( k8s ) 容器编排"></a>kubernetes( k8s ) 容器编排</h3><hr>
+<p>容器技术现在基本上已经成为各大互联网公司的标配，随着部署的容器应用的增多，容器云的编排与管理已经成了不得不面对的问题。k8s 的强势崛起，在短短时间之内就刮起一阵旋风，令 docker 家族闻风丧胆，最终不得不缴械投降，2018 年，k8s 会得到井喷式应用。</p>
+<h3 id="雾计算"><a href="#雾计算" class="headerlink" title="雾计算"></a>雾计算</h3><hr>
+<p>雾计算，或者边缘计算，在学术界已经不算什么新鲜词了，但在工业界还少有耳闻，但其实 cisco 和一些物联网公司早已开发出自己的雾计算产品，并大量应用在网络边缘的计算设备中。据我所知的，智云这家公司早已推出自己的雾计算平台，并应用在很多物联网项目中，大公司中，百度在 2018 年年初也率先推出了自己的雾计算项目「智能边缘」，旨在通过提供 “IoT Edge SDK” 组件的方式进行数据的本地处理，结合 AI 技术，为用户打造实时响应，智能推断，安全可靠的服务体验。相信在 2018 年会有更多的雾计算产品出现，我们拭目以待吧。</p>
+<p>以上就是我对 2018 年云计算这个领域技术趋势的大致预测，预测本身就代表着不确定性，但保持对新技术的敏感性，能让我们提前做一些准备，毕竟作为技术人，终身学习是最基本的职业素养。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+                    <a href="/tags/混合云/"><i class="fas fa-hashtag fa-fw"></i>混合云</a>
+                
+                    <a href="/tags/微服务/"><i class="fas fa-hashtag fa-fw"></i>微服务</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+</section>
+
+
+    <br>
+    <div class="prev-next">
+        <div class="prev-next">
+            
+                <a class="prev" rel="prev" href="/tags/Kubernetes/">
+                    <section class="post prev">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页&nbsp;
+                    </section>
+                </a>
+            
+            <p class="current">
+                2 / 2
+            </p>
+            
+
+        </div>
+    </div>
+
+
+
+<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
+
+
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+
+      
+    
+  
+    
+      
+      
+        
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Docker 基础技术之 Linux cgroups 详解 | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">Docker 基础技术之 Linux cgroups 详解</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-28
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>前面两篇文章我们总结了 Docker 背后使用的资源隔离技术 Linux namespace，本篇将讨论另外一个技术——资源限额，这是由 Linux cgroups 来实现的。</p>
+<blockquote>
+<p>cgroups 是 Linux 内核提供的一种机制，这种机制可以根据需求把一系列任务及子任务整合（或分隔）到按资源划分等级的不同组内，从而为系统资源管理提供一个统一的框架。（来自 《Docker 容器与容器云》）</p>
+</blockquote>
+<p>通俗来说，cgroups 可以限制和记录任务组（进程组或线程组）使用的物理资源（包括 CPU、内存、IO 等）。</p>
+<p>为了方便用户（程序员）操作，cgroups 以一个伪文件系统的方式实现，并对外提供 API，用户对文件系统的操作就是对 cgroups 的操作。</p>
+<p>从实现上来，cgroups 实际上是给每个执行任务挂了一个钩子，当任务执行过程中涉及到对资源的分配使用时，就会触发钩子上的函数对相应的资源进行检测，从而对资源进行限制和优先级分配。</p>
+<h3 id="cgroups-的作用"><a href="#cgroups-的作用" class="headerlink" title="cgroups 的作用"></a>cgroups 的作用</h3><hr>
+<p>总结下来，cgroups 提供以下四个功能：</p>
+<p><strong>资源限制：</strong> cgroups 可以对任务使用的资源总额进行限制，如设定应用运行时使用内存的上限，一旦超过这个配额就发出 OOM（Out of Memory）提示。</p>
+<p><strong>优先级分配：</strong> 通过分配的 CPU 时间片数量和磁盘 IO 带宽大小，实际上就相当于控制了任务运行的优先级。</p>
+<p><strong>资源统计：</strong> cgroups 可以统计系统的资源使用，如 CPU 使用时长、内存用量等，这个功能非常适用于计费。</p>
+<p><strong>任务控制：</strong> cgroups 可以对任务执行挂起、恢复等操作。</p>
+<h3 id="cgroups-的子系统"><a href="#cgroups-的子系统" class="headerlink" title="cgroups 的子系统"></a>cgroups 的子系统</h3><hr>
+<p>cgroups 在设计时根据不同的资源类别分为不同的子系统，一个子系统本质上是一个资源控制器，比如 CPU 资源对应 CPU 子系统，负责控制 CPU 时间片的分配，内存对应内存子系统，负责限制内存的使用量。进一步，一个子系统或多个子系统可以组成一个 cgroup，cgroups 中的资源控制都是以 cgroup 为单位来实现，一个任务（或进程或线程）可以加入某个 cgroup，也可以从一个 cgroup 移动到另一个 cgroup，但这里有一些限制，在此就不再赘述了，详细查阅相关资料了解。</p>
+<p>对于我们来说，最关键的是知道怎么用，下面就针对 CPU、内存和 IO 资源来看 Docker 是如何使用的？</p>
+<p>对于 CPU，Docker 使用参数 -c 或 –cpu-shares 来设置一个容器使用的 CPU 权重，权重的大小也影响了 CPU 使用的优先级。</p>
+<p>如下，启动两个容器，并分配不同的 CPU 权重，最终 CPU 使用率情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name &quot;container_A&quot; -c 1024 ubuntu</span><br><span class="line">docker run --name &quot;container_B&quot; -c 512 ubuntu</span><br></pre></td></tr></table></figure></p>
+<center><img src="/images/docker/cgroup_cpu.png" alt=""></center>
+
+<p>当只有一个容器时，即使指定较少的 CPU 权重，它也会占满整个 CPU，说明这个权重只是相对权重，如下将上面的 “container_A” 停止，“container_B” 就分配到全部可用的 CPU。</p>
+<center><img src="/images/docker/cgroup_cpu1.png" alt=""></center>
+
+<p>对于内存，Docker 使用 -m（设置内存的限额）和 –memory-swap（设置内存和 swap 的限额）来控制容器内存的使用量，如下，给容器限制 200M 的内存和 100M 的 swap，然后给容器内的一个工作线程分配 280M 的内存，因为 280M 在容许的 300M 范围内，没有问题。其内存分配过程是不断分配又释放，如下：</p>
+<center><img src="/images/docker/cgroup_mem.jpg" alt=""></center>
+
+<p>如果让工作线程使用内存超过 300M，则出现内存超限的错误，容器退出，如下：</p>
+<center><img src="/images/docker/cgroup_mem1.jpg" alt=""></center>
+
+<p>对于 IO 资源，其使用方式与 CPU 一样，使用 –blkio-weight 来设置其使用权重，IO 衡量的两个指标是 bps（byte per second，每秒读写的数据量） 和 iops（io per second， 每秒 IO 的次数）,实际使用，一般使用这两个指标来衡量 IO 读写的带宽，几种使用参数如下：</p>
+<ul>
+<li>–device-read-bps，限制读某个设备的 bps。</li>
+<li>–device-write-bps，限制写某个设备的 bps。</li>
+<li>–device-read-iops，限制读某个设备的 iops。</li>
+<li>–device-write-iops，限制写某个设备的 iops。</li>
+</ul>
+<p>假如限制容器对其文件系统 /dev/sda 的 bps 写速率为 30MB/s，则在容器中用 dd 测试其写磁盘的速率如下，可见小于 30MB/s。</p>
+<center><img src="/images/docker/cgroup_dev.png" alt=""></center>
+
+<p>如果是正常情况下，我的机器可以达到 56.7MB/s，一般都是超 1G 的。</p>
+<center><img src="/images/docker/cgroup_dev1.png" alt=""></center>
+
+<p>上面几个资源使用限制的例子，本质上都是调用了 Linux kernel 的 cgroups 机制来实现的，每个容器创建后，Linux 会为每个容器创建一个 cgroup 目录，以容器的 ID 命名，目录在 /sys/fs/cgroup/ 中，针对上面的 CPU 资源限制的例子，我们可以在  /sys/fs/cgroup/cpu/docker 中看到相关信息，如下：</p>
+<center><img src="/images/docker/cgroup_info.jpg" alt=""></center>
+
+<p>其中，cpu.shares 中保存的就是限制的数值，其他还有很多项，感兴趣可以动手实验看看。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>cgroups 的作用，cgroups 的实现，cgroups 的子系统机制，CPU、内存和 IO 的使用方式，以及对应 Linux 的 cgroups 文件目录。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2018-10-06T10:52:24+08:00" content="2018-10-06"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2018-10-06
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;云计算</a></div> <div class="metatag tags"><a class="tag" href="/tags/容器/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;容器</a></div> <div class="metatag tags"><a class="tag" href="/tags/Docker/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Docker</a></div> <div class="metatag tags"><a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Linux</a></div> <div class="metatag tags"><a class="tag" href="/tags/Cgroup/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Cgroup</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2018/04/06/云计算/Docker_容器网络之单主机网络/" rel="prev" title="Docker 容器网络之单主机网络">
+                                  
+                                      Docker 容器网络之单主机网络
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/容器/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器</a> <a class="tag" href="/tags/Docker/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Docker</a> <a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>网络</a> <a class="tag" href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器网络</a> <a class="tag" href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Bridge</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2018/03/13/云计算/Docker_基础技术之_Linux_namespace_源码分析/" rel="prev" title="Docker 基础技术之 Linux namespace 源码分析">
+                                    
+                                        Docker 基础技术之 Linux namespace 源码分析
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/容器/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器</a> <a class="tag" href="/tags/Docker/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Docker</a> <a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Linux</a> <a class="tag" href="/tags/Namespace/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Namespace</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="http://yoursite.com/2018/04/10/云计算/DPDK_入门最佳指南/">DPDK 入门最佳指南</a></li>
+            
+                <li><a href="http://yoursite.com/2018/04/06/云计算/Docker_容器网络之单主机网络/">Docker 容器网络之单主机网络</a></li>
+            
+                <li><a href="http://yoursite.com/2018/03/13/云计算/Docker_基础技术之_Linux_namespace_源码分析/">Docker 基础技术之 Linux namespace 源码分析</a></li>
+            
+                <li><a href="http://yoursite.com/2018/03/08/云计算/Docker_基础技术之_Linux_namespace_详解/">Docker 基础技术之 Linux namespace 详解</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'Docker 基础技术之 Linux cgroups 详解',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="pure">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content pure">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="pure">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content pure">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#cgroups-的作用"><span class="toc-text">cgroups 的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cgroups-的子系统"><span class="toc-text">cgroups 的子系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

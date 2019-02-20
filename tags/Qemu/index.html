@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Tag: Qemu | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            
+    <script>
+        window.subData= { title:'标签 : Qemu'}
+    </script>
+
+
+<section class="post-list">
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/02/06/云计算/vhost_user_简介/">
+              
+                  vhost-user 简介
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-06
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="1-什么是-vhost-user"><a href="#1-什么是-vhost-user" class="headerlink" title="1. 什么是 vhost-user"></a>1. 什么是 vhost-user</h3><p>在 vhost 的方案中，由于 vhost 实现在内核中，guest 与 vhost 的通信，相较于原生的 virtio 方式性能上有了一定程度的提升，从 guest 到 kvm.ko 的交互只有一次用户态的切换以及数据拷贝。这个方案对于不同 host 之间的通信，或者 guest 到 host nic 之间的通信是比较好的，但是对于某些用户态进程间的通信，比如数据面的通信方案，openvswitch 和与之类似的 SDN 的解决方案，guest 需要和 host 用户态的 vswitch 进行数据交换，如果采用 vhost 的方案，guest 和 host 之间又存在多次的上下文切换和数据拷贝，为了避免这种情况，业界就想出将 vhost 从内核态移到用户态。这就是 vhost-user 的实现。</p>
+<h3 id="2-vhost-user-的实现"><a href="#2-vhost-user-的实现" class="headerlink" title="2 vhost-user 的实现"></a>2 vhost-user 的实现</h3><hr>
+<p>vhost-user 和 vhost 的实现原理是一样，都是采用  vring 完成共享内存，eventfd 机制完成事件通知。不同在于 vhost 实现在内核中，而 vhost-user 实现在用户空间中，用于用户空间中两个进程之间的通信，其采用共享内存的通信方式。</p>
+<center><img src="/images/virt/vhost_user.png" alt=""></center>
+
+<p>vhost-user 基于 C/S 的模式，采用 UNIX 域套接字（UNIX domain socket）来完成进程间的事件通知和数据交互，相比 vhost 中采用 ioctl 的方式，vhost-user 采用 socket 的方式大大简化了操作。</p>
+<p>vhost-user 基于 vring 这套通用的共享内存通信方案，只要 client 和 server 按照 vring 提供的接口实现所需功能即可，常见的实现方案是 client 实现在 guest OS 中，一般是集成在 virtio 驱动上，server 端实现在 qemu 中，也可以实现在各种数据面中，如 OVS，Snabbswitch 等虚拟交换机。</p>
+<p>如果使用 qemu 作为 vhost-user 的 server 端实现，在启动 qemu 时，我们需要指定 -mem-path 和 -netdev 参数，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ qemu -m 1024 -mem-path /hugetlbfs,prealloc=on,share=on \</span><br><span class="line">-netdev type=vhost-user,id=net0,file=/path/to/socket \</span><br><span class="line">-device virtio-net-pci,netdev=net0</span><br></pre></td></tr></table></figure>
+<p>指定 -mem-path 意味着 qemu 会在 guest OS 的内存中创建一个文件，share=on 选项允许其他进程访问这个文件，也就意味着能访问 guest OS 内存，达到共享内存的目的。</p>
+<p>-netdev type=vhost-user 指定通信方案，file=/path/to/socket 指定 socket 文件。</p>
+<p>当 qemu 启动之后，首先会进行 vring 的初始化，并通过 socket 建立 C/S 的共享内存区域和事件机制，然后 client 通过 eventfd 将 virtio kick 事件通知到 server 端，server 端同样通过 eventfd 进行响应，完成整个数据交互。 </p>
+<center><img src="/images/virt/vhost_user_flow.jpg" alt=""></center>
+
+<h3 id="3-几个例子"><a href="#3-几个例子" class="headerlink" title="3 几个例子"></a>3 几个例子</h3><hr>
+<p>开源社区中实现了一个项目 Vapp，主要是用来测试 vhost-user 的 C/S 模式的，github 地址如下：<br><a href="https://github.com/virtualopensystems/vapp.git" target="_blank" rel="noopener">https://github.com/virtualopensystems/vapp.git</a></p>
+<p>使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/virtualopensystems/vapp.git</span><br><span class="line">$ cd vapp</span><br><span class="line">$ make</span><br><span class="line">// 运行 server 端</span><br><span class="line">$ ./vhost -s ./vhost.sock</span><br><span class="line">// 运行 client 端</span><br><span class="line">$ ./vhost -q ./vhost.sock</span><br></pre></td></tr></table></figure>
+<p>通过以上步骤，就可以启动 vhost-user 的 C/S 模式。</p>
+<p>另外还有例子就是集成在虚拟交换机 Snabbswitch 上的 vhost-user，通过以下方式获得 vhost-user 分支：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b vhostuser --recursive https://github.com/SnabbCo/snabbswitch.git</span><br><span class="line">$ cd snabbswitch</span><br><span class="line">$ make</span><br><span class="line">测试：</span><br><span class="line">$ sudo src/snabbswitch -t apps.vhost.vhost_user</span><br></pre></td></tr></table></figure>
+<p>还有例子就是 qemu 上的实现，这也是最原早的实现，同样通过以下方式来获得使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b vhost-user-v5 https://github.com/virtualopensystems/qemu.git</span><br><span class="line">$ mkdir qemu/obj</span><br><span class="line">$ cd qemu/obj/</span><br><span class="line">$ ../configure --target-list=x86_64-softmmu</span><br><span class="line">$ make -j</span><br></pre></td></tr></table></figure>
+<p>除此之外，还有很多的实现，如 OVS 和 DPDK 上都有实现，这实际上是集成了 vhost-user 的通用 API。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
+<p>virtio，vhost，vhost-user 是基于场景和性能而提出的三种 guest 和 host 之间的通信方案，三种方案，各有优劣。<br>vhost-user 用在很多数据面之上的进程间通信，效率高。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+                    <a href="/tags/vhost-user/"><i class="fas fa-hashtag fa-fw"></i>vhost_user</a>
+                
+                    <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
+                
+                    <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/01/23/云计算/vhost_简介/">
+              
+                  vhost 简介
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-23
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="1-什么是-vhost"><a href="#1-什么是-vhost" class="headerlink" title="1. 什么是 vhost"></a>1. 什么是 vhost</h3><hr>
+<p>vhost 是 virtio 的一种后端实现方案，在 virtio 简介中，我们已经提到 virtio 是一种半虚拟化的实现方案，需要虚拟机端和主机端都提供驱动才能完成通信，通常，virtio 主机端的驱动是实现在用户空间的 qemu 中，而 vhost 是实现在内核中，是内核的一个模块 vhost-net.ko。为什么要实现在内核中，有什么好处呢，请接着往下看。</p>
+<center><img src="/images/virt/vhost.jpg" alt=""></center>
+
+<h3 id="2-为什么要用-vhost"><a href="#2-为什么要用-vhost" class="headerlink" title="2. 为什么要用 vhost"></a>2. 为什么要用 vhost</h3><hr>
+<p>在 virtio 的机制中，guest 与 用户空间的 Hypervisor 通信，会造成多次的数据拷贝和 CPU 特权级的上下文切换。例如 guest 发包给外部网络，首先，guest 需要切换到 host kernel，然后 host kernel 会切换到 qemu 来处理 guest 的请求， Hypervisor 通过系统调用将数据包发送到外部网络后，会切换回 host kernel ， 最后再切换回 guest。这样漫长的路径无疑会带来性能上的损失。</p>
+<p>vhost 正是在这样的背景下提出的一种改善方案，它是位于 host kernel 的一个模块，用于和 guest 直接通信，数据交换直接在 guest 和 host kernel 之间通过 virtqueue 来进行，qemu 不参与通信，但也没有完全退出舞台，它还要负责一些控制层面的事情，比如和 KVM 之间的控制指令的下发等。</p>
+<h3 id="3-vhost-的数据流程"><a href="#3-vhost-的数据流程" class="headerlink" title="3. vhost 的数据流程"></a>3. vhost 的数据流程</h3><hr>
+<p>下图左半部分是 vhost 负责将数据发往外部网络的过程， 右半部分是 vhost 大概的数据交互流程图。其中，qemu 还是需要负责 virtio 设备的适配模拟，负责用户空间某些管理控制事件的处理，而 vhost  实现较为纯净，以一个独立的模块完成 guest 和 host kernel 的数据交换过程。</p>
+<center><img src="/images/virt/vhost_flow.png" alt=""></center>
+
+<p>vhost 与 virtio 前端的通信主要采用一种事件驱动 eventfd 的机制来实现，guest 通知 vhost 的事件要借助 kvm.ko 模块来完成，vhost 初始化期间，会启动一个工作线程 work 来监听 eventfd，一旦 guest 发出对 vhost 的 kick event，kvm.ko 触发 ioeventfd 通知到 vhost，vhost 通过 virtqueue 的 avail ring 获取数据，并设置 used ring。同样，从 vhost 工作线程向 guest 通信时，也采用同样的机制，只不过这种情况发的是一个回调的 call envent，kvm.ko 触发 irqfd 通知 guest。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><hr>
+<p>vhost 与 kvm 的事件通信通过 eventfd 机制来实现，主要包括两个方向的 event，一个是 guest 到 vhost 方向的 kick event，通过 ioeventfd 实现；另一个是 vhost 到 guest 方向的 call event，通过  irqfd 实现。</p>
+<p>代码分析整个通信的流程：<br><a href="http://royluo.org/2014/08/22/vhost/" target="_blank" rel="noopener">http://royluo.org/2014/08/22/vhost/</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+                    <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
+                
+                    <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/12/06/云计算/I:O_虚拟化的三种形式/">
+              
+                  I/O 虚拟化的三种形式
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-06
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>上文「I/O 虚拟化」简单介绍了 I/O 虚拟化的做法，本文重点关注一下三种 I/O 虚拟化的分类——全虚拟化、半虚拟化和 I/O 直通（透传）。</p>
+<h3 id="I-O-全虚拟化"><a href="#I-O-全虚拟化" class="headerlink" title="I/O 全虚拟化"></a>I/O 全虚拟化</h3><hr>
+<p>这种方式比较好理解，简单来说，就是通过纯软件的形式来模拟虚拟机的 I/O 请求。以 qemu-kvm 来举例，内核中的 kvm 模块负责截获 I/O 请求，然后通过事件通知告知给用户空间的设备模型 qemu，qemu 负责完成本次 I/O 请求的模拟。更具体的内容可以翻阅前文。</p>
+<center><img src="/images/virt/iofull.jpg" alt=""></center>
+
+<p><strong>优点：</strong>  </p>
+<p>不需要对操作系统做修改，也不需要改驱动程序，因此这种方式对于多种虚拟化技术的「可移植性」和「兼容性」比较好。</p>
+<p><strong>缺点：</strong></p>
+<p>纯软件形式模拟，自然性能不高，另外，虚拟机发出的 I/O 请求需要虚拟机和 VMM 之间的多次交互，产生大量的上下文切换，造成巨大的开销。</p>
+<h3 id="I-O-半虚拟化"><a href="#I-O-半虚拟化" class="headerlink" title="I/O 半虚拟化"></a>I/O 半虚拟化</h3><hr>
+<p>针对 I/O 全虚拟化纯软件模拟性能不高这一点，I/O 半虚拟化前进了一步。它提供了一种机制，使得 Guest 端与 Host 端可以建立连接，直接通信，摒弃了截获模拟这种方式，从而获得较高的性能。</p>
+<p>值得注意的有两点：1）采用 I/O 环机制，使得 Guest 端和 Host 端可以共享内存，减少了虚拟机与 VMM 之间的交互；2）采用事件和回调的机制来实现 Guest 与 Host VMM 之间的通信。这样，在进行中断处理时，就可以直接采用事件和回调机制，无需进行上下文切换，减少了开销。</p>
+<p>要实现这种方式， Guest 端和 Host 端需要采用类似于 C/S 的通信方式建立连接，这也就意味着要修改 Guest 和 Host 端操作系统内核相应的代码，使之满足这样的要求。为了描述方便，我们统称 Guest 端为前端，Host 端为后端。</p>
+<center><img src="/images/virt/iohalf.png" alt=""></center>
+
+<p>前后端通常采用的实现方式是驱动的方式，即前后端分别构建通信的驱动模块，前端实现在内核的驱动程序中，后端实现在 qemu 中，然后前后端之间采用共享内存的方式传递数据。关于这方面一个比较好的开源实现是 virtio，后面会有专门的文章来讲述之。</p>
+<p><strong>优点：</strong></p>
+<p>性能较 I/O 全虚拟化有了较大的提升</p>
+<p><strong>缺点：</strong></p>
+<p>要修改操作系统内核以及驱动程序，因此会存在移植性和适用性方面的问题，导致其使用受限。</p>
+<h3 id="I-O-直通或透传技术"><a href="#I-O-直通或透传技术" class="headerlink" title="I/O 直通或透传技术"></a>I/O 直通或透传技术</h3><hr>
+<p>上面两种虚拟化方式，还是从软件层面上来实现，性能自然不会太高。最好的提高性能的方式还是从硬件上来解决。如果让虚拟机独占一个物理设备，像宿主机一样使用物理设备，那无疑性能是最好的。</p>
+<p>I/O 直通技术就是提出来完成这样一件事的。它通过硬件的辅助可以让虚拟机直接访问物理设备，而不需要通过 VMM 或被 VMM 所截获。</p>
+<p>由于多个虚拟机直接访问物理设备，会涉及到内存的访问，而内存又是共享的，那怎么来隔离各个虚拟机对内存的访问呢，这里就要用到一门技术——IOMMU，简单说，IOMMU 就是用来隔离虚拟机对内存资源访问的。</p>
+<p>I/O 直通技术需要硬件支持才能完成，这方面首选是 Intel 的 VT-d 技术，它通过对芯片级的改造来达到这样的要求，这种方式固然对性能有着质的提升，不需要修改操作系统，移植性也好。</p>
+<p>但该方式也是有一定限制的，这种方式仅限于物理资源丰富的机器，因为这种方式仅仅能满足一个设备分配给一个虚拟机，一旦一个设备被虚拟机占用了，其他虚拟机时无法使用该设备的。</p>
+<center><img src="/images/virt/iommu.png" alt=""></center>
+
+<p>为了解决这个问题，使一个物理设备能被更多的虚拟机所共享。学术界和工业界都对此作了大量的改进，PCI-SIG 发布了 SR-IOV  (Single Root I/O Virtualizmion) 规范，其中详细阐述了硬件供应商在多个虚拟机中如何共享单个 I/O 设备硬件。</p>
+<p>SR-IOV标准定义了设备原生共享所需的「软硬件支持」。硬件支持包括芯片组对 SR-IOV 设备的识别，为保证对设备的安全、隔离访问还需要北桥芯片的 VT-d 支持，为保证虚拟机有独立的内存空间，CPU 要支持 IOMMU。软件方面，VMM 将驱动管理权限交给 Guest，Guest 操作系统必须支持 SR-IOV 功能。</p>
+<p>SR-IOV 单独引入了两种软件实体功能：</p>
+<ul>
+<li><p>PF（physical function）：包含轻量级的 PCIe 功能，负责管理 SR-IOV 设备的特殊驱动，其主要功能是为 Guest 提供设备访问功能和全局贡献资源配置的功能。</p>
+</li>
+<li><p>VF（virtual function）：包含轻量级的 PCIe 功能。其功能包含三个方面：向虚拟机操作系统提供的接口；数据的发送、接收功能；与 PF 进行通信，完成全局相关操作。</p>
+</li>
+</ul>
+<p>每个 SR-IOV 设备都可有一个物理功能 PF，并且每个 PF 最多可有 64,000 个与其关联的虚拟功能  VF。</p>
+<p>一般，Guest 通过物理功能 PF 驱动发现设备的 SR-IOV 功能后将包括发送、接收队列在内的物理资源依据 VF 数目划分成多个子集，然后 PF 驱动将这些资源子集抽象成 VF 设备，这样，VF 设备就可以通过某种通信机制分配给虚拟机了。</p>
+<center><img src="/images/virt/iosriov.jpg" alt=""></center>
+
+<p>尽管 I/O 直通技术消除了虚拟机 I/O 中 VMM 干预引起的额外开销，但在 I/O 操作中 I/O 设备会产生大量的中断，出于安全等因素考虑，虚拟机无法直接处理中断，因此中断请求需要由 VMM 安全、隔离地路由至合适的虚拟机。所以，其实实际使用中，都是软硬件虚拟化方式结合使用的。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
+                
+                    <a href="/tags/SR-IOV/"><i class="fas fa-hashtag fa-fw"></i>SR-IOV</a>
+                
+                    <a href="/tags/IOMMU/"><i class="fas fa-hashtag fa-fw"></i>IOMMU</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/12/02/云计算/I:O_虚拟化/">
+              
+                  I/O 虚拟化
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-02
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>I/O 虚拟化在虚拟化技术中算是比较复杂，也是最重要的一部分。从整体上看，I/O 虚拟化也包括基于软件的虚拟化和硬件辅助的虚拟化，软件虚拟化部分又可以分为全虚拟化和半虚拟化，如果根据设备类型再细分的话，又可以分为字符设备 I/O 虚拟化（键盘、鼠标、显示器）、块设备 I/O 虚拟化（磁盘、光盘）和网络设备 I/O 虚拟化（网卡）等。</p>
+<p>我们先看下在没有虚拟机存在的情况下，I/O 设备请求是怎样的。某个应用或进程发出 I/O 请求，通过系统调用等方式进入内核，调用相应的驱动程序，请求到具体的 I/O 设备，然后再将结果返回到调用者进行回显。</p>
+<p>那么存在虚拟机的情况下，又是怎样的呢。按理说，虚拟机是宿主机上的一个进程，应该可以以类似的 I/O 请求方式访问到宿主机上的 I/O 设备，但别忘了，虚拟机处在非 Root 的虚拟化模式下，请求无法直接下发到宿主机，必须借助于 VMM 来截获并模拟虚拟机的 I/O 请求。</p>
+<p>至于怎么截获并模拟，每一种 VMM 的实现方案都不一样，像 qemu-kvm ，截获操作是由内核态的 kvm 来完成，模拟操作是由用户态的 qemu 来完成的，这也是 kvm 不同于其他 VMM 实现方案的地方。kvm 这样做也是为了提升性能和保持内核的纯净性，关于这块的知识不清楚的可以查阅前文。</p>
+<p>从层次上看，虚拟机发出 I/O 请求到完成相应的 I/O 操作，中间要经过虚拟机的设备驱动，到 VMM 的设备模型，再到宿主机的设备驱动，最终才到真正的 I/O 设备。</p>
+<p>那什么是设备模型，设备模型就是 VMM 中进行设备模拟，并处理所有设备请求和响应的逻辑模块，对于 qemu-kvm，qemu 其实就可以看做是一个设备模型。</p>
+<center><img src="/images/virt/io_virt.png" alt=""></center>
+
+<p>上图显示的就是设备模型的逻辑层次关系，对于不同构造的虚拟机，其逻辑层次是类似的：VMM 截获虚拟机的 I/O 操作，将这些操作传递给设备模型进行处理，设备模型运行在一个特定的环境下，这可以是宿主机，可以是 VMM 本身，也可以是另一个虚拟机。</p>
+<p>下图显示的就是在宿主机中设备模型的实现，也就是 qemu-kvm 的实现方案，在这个例子中，VMM 主要部分实现为内核模块，设备模型实现为一个用户态进程，当虚拟机发生 I/O 之后，VMM 作为内核模块将其截获后，会通过内核态-用户态接口传递给用户态的设备模型处理，设备模型运行与宿主机操作系统之上，可以使用相应的系统调用和所有运行时库，宿主机操作系统就是设备模型的运行环境。</p>
+<center><img src="/images/virt/io_module.png" alt=""></center>
+
+<p>所以，设备模型在这里起着一个桥梁的作用，由虚拟机设备驱动发出的 I/O 请求先通过设备模型转化为物理 I/O 设备的请求，再通过调用物理设备驱动来完成相应的 I/O 操作。反过来，设备驱动将 I/O 操作结果通过设备模型，返回给虚拟机的虚拟设备驱动程序。</p>
+<p>上面说的这种方式是纯软件模拟的，或者说得再专业一点就是全虚拟化，全虚拟化就是 VMM 完全虚拟出一套宿主机的设备模型，宿主机有什么就虚拟出什么，这样，虚拟机发出的任何 I/O 请求都是无感知的，也是说虚拟机认为自己在“直接”使用物理的 I/O 设备，其实不是，全是虚拟出来的。</p>
+<p>有了全虚拟化，自然就有半虚拟化，半虚拟化的提出就是解决全虚拟化的性能问题的。通过上面的分析，不难看出，这种截获再模拟的方式导致一次 I/O 请求要经过多次的内核态和用户态的切换，性能肯定不理想。半虚拟化就是尽量避免这种情况发生。</p>
+<p>半虚拟化中，虚拟机能够感知到自己是处于虚拟化状态，虚拟机和宿主机之间通过某种机制来达成这种感知，也就是两者之间需要建立一套通信接口，虚拟机的 I/O 请求走这套接口，而不是走截获模拟那种方式，这样就可以提升性能。这套接口一个比较好的实现就是 virtio，Linux 2.6.30 版本之后就被集成到了 Linux 内核模块中。</p>
+<p>半虚拟化虽然提升了性能，但是还是基于软件模拟的方式，性能上还是无法与直接访问物理 I/O 设备相抗衡，那能不能做到呢，答案是一定的，那就是从硬件上去入手了。</p>
+<p>以 Intel VT-d 为首的技术就是硬件辅助的 I/O 虚拟化技术，但是业界一般不是直接使用硬件，而是配合相应的软件技术来完成，比较常用的两门技术是 PCI Pass-Through 和 SR-IOV。</p>
+<p>本文仅是简单总结下 I/O 虚拟化的方式，分类，以及存在的技术问题。后面会针对具体的类别或问题进行展开。</p>
+<p>PS：如果你觉得本文对你有一点帮助，点赞，转发，不胜感激。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/20/云计算/KVM_初探/">
+              
+                  KVM 初探
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>KVM 是业界最为流行的 Hypervisor，全称是 Kernel-based Virtual Machine。它是作为 Linux kernel 中的一个内核模块而存在，模块名为 kvm.ko，也可以看作是一个进程，被内核调度并管理，从 Linux 2.6.20 版本开始被完全正式加入到内核的主干开发和正式发布代码中。 KVM 主要用于管理 CPU 和内存的虚拟化，IO 设备的虚拟化则是由 Qemu 来完成。为什么会有这样的分工，请继续往下看。</p>
+<h3 id="KVM-与-Qemu-的前世今生"><a href="#KVM-与-Qemu-的前世今生" class="headerlink" title="KVM 与 Qemu 的前世今生"></a>KVM 与 Qemu 的前世今生</h3><hr>
+<p>Qemu 是一个纯软件实现的开源「模拟」软件，它能够模拟整套虚拟机的实现，包括 CPU、内存、各种 IO 设备、鼠标、键盘、USB 、网卡、声卡等等，基本上没有它不能模拟的。有人可能会比较疑惑它跟 KVM 之间到底有何关系，我们可以把它们看成是合作关系，好基友，谁都离不开彼此。</p>
+<p>KVM 离不开 Qemu。KVM 实现初期，为了简化开发和代码重用，在 Qemu 的基础上进行了修改，主要是将比较耗性能的 CPU 虚拟化和内存虚拟化部分移到了内核中实现，保留 IO 虚拟化模块在用户空间实现。这样的做法主要是考虑到性能的原因，CPU 和 内存虚拟化是非常复杂的虚拟化模块，而且使用非常频繁，如果实现在用户空间的话，用户态和内核态的频繁切换势必会对性能造成很大的影响。那为什么要单独保留 IO 虚拟化在用户空间呢，这个也是权衡之下的结果，首先 IO 设备太多了，其次 IO 虚拟化相对其他两个模块使用不是很频繁，开销会小一些，所以，为了尽可能保持内核的纯净性，才有了这样的分配。</p>
+<p>Qemu 离不开 KVM。上面也说了，Qemu 是一个纯软件的实现，运行在用户空间，性能非常低下，所以，从 Qemu 的角度，可以说是 Qemu 使用了 KVM 的虚拟化功能，为自身虚拟机提供加速。</p>
+<p>早期两者还没有区分（没有同居），KVM 修改的模块叫 qemu-kvm，到 Qemu1.3 版本之后，两者就合二为一了（同居啦），如果我们在用 Qemu 创建虚拟机时，要加载 KVM 模块，需要为其指定参数 <code>--enable-kvm</code>。</p>
+<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>KVM 与 Qemu 的关系（图片来源于网络，侵权必删）</center>
+
+<h3 id="KVM-架构"><a href="#KVM-架构" class="headerlink" title="KVM 架构"></a>KVM 架构</h3><hr>
+<p>KVM 是基于硬件虚拟化（Intel VT 或 AMD-V）实现的一套虚拟化解决方案，通过以上一个与 Qemu 关系的分析，我们基本上知道它在虚拟化领域处在一个什么样的地位。它其实只负责 CPU 和内存的虚拟化，不负责任何设备的模拟，而是提供接口给用户空间的 Qemu 来模拟。这个接口是 /dev/kvm，<br>Qemu 通过 /dev/kvm 接口设置一个虚拟机的地址空间，然后向它提供模拟好的 I/O 设备，并将相关的设备回显操作映射到宿主机，完成整个 I/O 设备的虚拟化操作。</p>
+<center><img src="/imagesss/virt/kvm_arch.png" alt=""><br>KVM 架构</center>
+
+
+<p>/dev/kvm 接口是 Qemu 和 KVM 交互的“桥梁”，基本的原理是：/dev/kvm 本身是一个设备文件，这就意味着可以通过 ioctl 函数来对该文件进行控制和管理，从而可以完成用户空间与内核空间的数据交互。在 KVM 与 Qemu 的通信过程主要就是一系列针对该设备文件的 ioctl 调用。</p>
+<p>我就拿创建虚拟机举个例子，虚拟机本质上是宿主机的一个进程，包括用户态数据结构和内核态数据结构，用户态部分由 Qemu 创建并初始化，内核态部分则由 KVM 来完成，完成后会返回一个文件句柄来代表所创建的虚拟机，针对该文件句柄的 ioctl 调用就可以对虚拟机进行相应的管理，比如建立虚拟机地址空间和宿主机地址空间的映射关系，创建多个线程（虚拟处理器，vCPU）来供虚拟机使用等，对于创建出的 vCPU，也会生成相应的文件句柄，同样，对 vCPU 的文件句柄的 ioctl 调用就可以对 vCPU 进行管理。</p>
+<p>关于这块的具体细节，后面会有文章来专门讨论。</p>
+<h3 id="VMM-管理工具-——-libvirt"><a href="#VMM-管理工具-——-libvirt" class="headerlink" title="VMM 管理工具 —— libvirt"></a>VMM 管理工具 —— libvirt</h3><hr>
+<p>目前，虚拟化这个领域可以说是百花齐放，针对不同的场景提出了很多的虚拟化解决方案，KVM、Xen、VMware、VirtualBox、Hyper-V 等等，具体的这些方案有什么特点，可以看前文「虚拟化技术总览」。这么多方案势必有很多通用的模块，不同之处可能在于，与不同硬件厂商的适配上，为了支持更多厂商，以及应用更多的领域，有很多 IaaS 解决方案需要融合多种虚拟化技术。这个时候如果有一个平台类的管理工具就会非常方便，libvirt 就是这样一个工具。</p>
+<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>libvirt 架构（图片来源于网络，侵权必删）</center>
+
+<p>libvirt 除了能够支持多种虚拟化方案之外，还支持 OpenVZ、LXC 等容器虚拟化系统。它提供一套完善的虚拟机管理工具，支持 GUI 和命令行的形式，如 virsh、virt-install、virt-manager。由于它的通用性和易管理，很多云计算框架平台都在底层使用 libvirt 的 API 来管理虚拟机，比如 OpenStack、OpenNebula、Eucalyptus 等。这个工具我们仅仅提一下，有兴趣的可以装个玩玩。</p>
+<p>下面给出 KVM 和 Qemu 的 git 路径，有兴趣的可以把源码下下来研究下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kvm.git：</span><br><span class="line">git clone git://git.kernel.org/pub/scm/virt/kvm/kvm.git</span><br><span class="line">qemu.git（包括了 kvm）:</span><br><span class="line">git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagesss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/19/云计算/一文读懂_Qemu_模拟器/">
+              
+                  一文读懂 Qemu 模拟器
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-19
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/虚拟化/">虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="Qemu-架构"><a href="#Qemu-架构" class="headerlink" title="Qemu 架构"></a>Qemu 架构</h3><hr>
+<p>Qemu  是纯软件实现的虚拟化模拟器，几乎可以模拟任何硬件设备，我们最熟悉的就是能够模拟一台能够独立运行操作系统的虚拟机，虚拟机认为自己和硬件打交道，但其实是和 Qemu 模拟出来的硬件打交道，Qemu 将这些指令转译给真正的硬件。</p>
+<p>正因为 Qemu 是纯软件实现的，所有的指令都要经 Qemu 过一手，性能非常低，所以，在生产环境中，大多数的做法都是配合 KVM 来完成虚拟化工作，因为 KVM 是硬件辅助的虚拟化技术，主要负责 比较繁琐的 CPU 和内存虚拟化，而 Qemu 则负责 I/O 虚拟化，两者合作各自发挥自身的优势，相得益彰。</p>
+<center><img src="/images/virt/qemu.png" alt=""><br>Qemu 总结结构</center>
+
+
+
+
+<p>从本质上看，虚拟出的每个虚拟机对应 host 上的一个 Qemu 进程，而虚拟机的执行线程（如 CPU 线程、I/O 线程等）对应 Qemu 进程的一个线程。下面通过一个虚拟机启动过程看看 Qemu 是如何与 KVM 交互的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 第一步，获取到 KVM 句柄</span><br><span class="line">kvmfd = open(&quot;/dev/kvm&quot;, O_RDWR);</span><br><span class="line">// 第二步，创建虚拟机，获取到虚拟机句柄。</span><br><span class="line">vmfd = ioctl(kvmfd, KVM_CREATE_VM, 0);</span><br><span class="line">// 第三步，为虚拟机映射内存，还有其他的 PCI，信号处理的初始化。</span><br><span class="line">ioctl(kvmfd, KVM_SET_USER_MEMORY_REGION, &amp;mem);</span><br><span class="line">// 第四步，将虚拟机镜像映射到内存，相当于物理机的 boot 过程，把镜像映射到内存。</span><br><span class="line">// 第五步，创建 vCPU，并为 vCPU 分配内存空间。</span><br><span class="line">ioctl(kvmfd, KVM_CREATE_VCPU, vcpuid);</span><br><span class="line">vcpu-&gt;kvm_run_mmap_size = ioctl(kvm-&gt;dev_fd, KVM_GET_VCPU_MMAP_SIZE, 0);</span><br><span class="line">// 第五步，创建 vCPU 个数的线程并运行虚拟机。</span><br><span class="line">ioctl(kvm-&gt;vcpus-&gt;vcpu_fd, KVM_RUN, 0);</span><br><span class="line">// 第六步，线程进入循环，并捕获虚拟机退出原因，做相应的处理。</span><br><span class="line">for (;;) &#123;</span><br><span class="line">ioctl(KVM_RUN)</span><br><span class="line">switch (exit_reason) &#123;</span><br><span class="line">case KVM_EXIT_IO:  /* ... */</span><br><span class="line">case KVM_EXIT_HLT: /* ... */</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">// 这里的退出并不一定是虚拟机关机，</span><br><span class="line">// 虚拟机如果遇到 I/O 操作，访问硬件设备，缺页中断等都会退出执行，</span><br><span class="line">// 退出执行可以理解为将 CPU 执行上下文返回到 Qemu。</span><br></pre></td></tr></table></figure>
+<h3 id="Qemu-源码结构"><a href="#Qemu-源码结构" class="headerlink" title="Qemu 源码结构"></a>Qemu 源码结构</h3><hr>
+<p>Qemu 软件虚拟化实现的思路是采用二进制指令翻译技术，主要是提取 guest 代码，然后将其翻译成 TCG 中间代码，最后再将中间代码翻译成 host 指定架构的代码，如 x86 体系就翻译成其支持的代码形式，ARM 架构同理。</p>
+<center><img src="/images/virt/qemu_src.png" alt=""></center>
+
+<p>所以，从宏观上看，源码结构主要包含以下几个部分：</p>
+<ul>
+<li>/vl.c：最主要的模拟循环，虚拟机环境初始化，和 CPU 的执行。</li>
+<li>/target-arch/translate.c：将 guest 代码翻译成不同架构的 TCG 操作码。</li>
+<li>/tcg/tcg.c：主要的 TCG 代码。</li>
+<li>/tcg/arch/tcg-target.c：将 TCG 代码转化生成主机代码。</li>
+<li>/cpu-exec.c：主要寻找下一个二进制翻译代码块，如果没有找到就请求得到下一个代码块，并且操作生成的代码块。</li>
+</ul>
+<p>其中，涉及的主要几个函数如下：</p>
+<center><img src="/images/virt/qemu_dir.png" alt=""></center>
+
+<p>知道了这个总体的代码结构，再去具体了解每一个模块可能会相对容易一点。</p>
+<h3 id="Qemu-的使用"><a href="#Qemu-的使用" class="headerlink" title="Qemu 的使用"></a>Qemu 的使用</h3><hr>
+<h4 id="1-源码下载"><a href="#1-源码下载" class="headerlink" title="1. 源码下载"></a>1. 源码下载</h4><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">centos：sudo apt-get install qemu</span><br><span class="line">ubuntu：sudo yum install qemu -y</span><br><span class="line">安装包：</span><br><span class="line">$wget http://wiki.qemu-project.org/download/qemu-2.0.0.tar.bz2</span><br><span class="line">$tar xjvf qemu-2.0.0.tar.bz2</span><br><span class="line">Git：</span><br><span class="line">$git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure>
+<h4 id="2-编译及安装"><a href="#2-编译及安装" class="headerlink" title="2. 编译及安装"></a>2. 编译及安装</h4><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$cd qemu-2.0.0 //如果使用的是git下载的源码，执行cd qemu</span><br><span class="line">$./configure --enable-kvm --enable-debug --enable-vnc --enable-werror  --target-list=&quot;x86_64-softmmu&quot;</span><br><span class="line">$make -j8</span><br><span class="line">$sudo make install</span><br></pre></td></tr></table></figure>
+<p>configure 脚本用于生成 Makefile，其选项可以用 ./configure –help 查看。</p>
+<p>这里使用到的选项含义如下：</p>
+<ul>
+<li>–enable-kvm：编译 KVM 模块，使 Qemu 可以利用 KVM 来访问硬件提供的虚拟化服务。</li>
+<li>–enable-vnc：启用 VNC。</li>
+<li>–enalbe-werror：编译时，将所有的警告当作错误处理。</li>
+<li>–target-list：选择目标机器的架构。默认是将所有的架构都编译，但为了更快的完成编译，指定需要的架构即可。</li>
+</ul>
+<p>安装好之后，会生成如下应用程序：</p>
+<center><img src="/images/virt/qemu_app.png" alt=""></center>
+
+
+<ul>
+<li>ivshmem-client/server：这是一个 guest 和 host 共享内存的应用程序，遵循 C/S 的架构。</li>
+<li>qemu-ga：这是一个不利用网络实现 guest 和 host 之间交互的应用程序（使用 virtio-serial），运行在 guest 中。</li>
+<li>qemu-io：这是一个执行 Qemu I/O 操作的命令行工具。</li>
+<li>qemu-system-x86_64：Qemu 的核心应用程序，虚拟机就由它创建的。</li>
+<li>qemu-img：创建虚拟机镜像文件的工具，下面有例子说明。</li>
+<li>qemu-nbd：磁盘挂载工具。</li>
+</ul>
+<p>下面通过创建虚拟机操作来对这些工具有个初步的认识。</p>
+<h4 id="3-创建虚拟机"><a href="#3-创建虚拟机" class="headerlink" title="3. 创建虚拟机"></a>3. 创建虚拟机</h4><hr>
+<ul>
+<li>使用qemu-img创建虚拟机镜像</li>
+</ul>
+<p>虚拟机镜像用来模拟虚拟机的硬盘，在启动虚拟机之前需要创建镜像文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create -f qcow2 test-vm-1.qcow2 10G</span><br></pre></td></tr></table></figure></p>
+<p>-f 选项用于指定镜像的格式，qcow2 格式是 Qemu 最常用的镜像格式，采用来写时复制技术来优化性能。test-vm-1.qcow2 是镜像文件的名字，10G是镜像文件大小。镜像文件创建完成后，可使用 qemu-system-x86 来启动x86 架构的虚拟机：</p>
+<ul>
+<li>使用 qemu-system-x86 来启动 x86 架构的虚拟机<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 test-vm-1.qcow2</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>因为 test-vm-1.qcow2 中并未给虚拟机安装操作系统，所以会提示 “No bootable device”，无可启动设备。</p>
+<ul>
+<li>启动 VM 安装操作系统镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2 -cdrom ./Centos-Desktop-x86_64-20-1.iso</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>-m 指定虚拟机内存大小，默认单位是 MB， -enable-kvm 使用 KVM 进行加速，-cdrom 添加 fedora 的安装镜像。可在弹出的窗口中操作虚拟机，安装操作系统，安装完成后重起虚拟机便会从硬盘 ( test-vm-1.qcow2 ) 启动。之后再启动虚拟机只需要执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2</span><br></pre></td></tr></table></figure></p>
+<p>qemu-img 支持非常多种的文件格式，可以通过 qemu-img -h 查看<br>其中 raw 和 qcow2 是比较常用的两种，raw 是 qemu-img 命令默认的，qcow2 是 qemu 目前推荐的镜像格式，是功能最多的格式。这些知识后面会有文章来专门讲述。</p>
+<p>这篇文章写得有点长，可能是 Qemu 唯一一篇文章，这并不是说 Qemu 不重要，而是我们平时在使用过程中主要把它当工具用，遇到不懂的查就行了，当然，如果你觉得看代码爽一点，非常鼓励，如果看了有什么心得，我们可以一起交流交流。好了，老铁们，看在我深夜一点还在写干货给你们，就给我点个赞吧。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+</section>
+
+
+
+<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
+
+
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+
+      
+    
+  
+    
+      
+      
+        
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
