@@ -1774,9 +1774,9 @@
       
         <tags>
             
-            <tag> 老罗 </tag>
-            
             <tag> 锤子科技 </tag>
+            
+            <tag> 老罗 </tag>
             
         </tags>
       
@@ -1851,11 +1851,11 @@
       
         <tags>
             
+            <tag> 锤子科技 </tag>
+            
             <tag> 老罗 </tag>
             
             <tag> 罗胖 </tag>
-            
-            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -2089,9 +2089,9 @@
       
         <tags>
             
-            <tag> 老罗 </tag>
-            
             <tag> 锤子科技 </tag>
+            
+            <tag> 老罗 </tag>
             
         </tags>
       
@@ -2359,6 +2359,25 @@
     
     
     <entry>
+      <title>让自己快乐的九种途径</title>
+      <link href="/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/"/>
+      <url>/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/</url>
+      
+        <content type="html"><![CDATA[<p>1、放弃完美，多一分轻松<br>2、面对现实，多一分从容<br>3、欣赏自己，多一分自信<br>4、善于取舍，多一分捷径<br>5、远离奢华，多一分平和<br>6、积极进取，多一分成功<br>7、善待他人，多一分爱心<br>8、学会转弯，多一分领悟<br>9、把握尺度，多一分淡定</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 杂谈 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JabRef、Pycharm显示乱码的解决方法（大同小异）</title>
       <link href="/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/"/>
       <url>/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/</url>
@@ -2378,25 +2397,6 @@
             <tag> 乱码 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>让自己快乐的九种途径</title>
-      <link href="/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/"/>
-      <url>/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/</url>
-      
-        <content type="html"><![CDATA[<p>1、放弃完美，多一分轻松<br>2、面对现实，多一分从容<br>3、欣赏自己，多一分自信<br>4、善于取舍，多一分捷径<br>5、远离奢华，多一分平和<br>6、积极进取，多一分成功<br>7、善待他人，多一分爱心<br>8、学会转弯，多一分领悟<br>9、把握尺度，多一分淡定</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 杂谈 </category>
-          
-      </categories>
-      
       
     </entry>
     
