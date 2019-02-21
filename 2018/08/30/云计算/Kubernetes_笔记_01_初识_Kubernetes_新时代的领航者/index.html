@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Kubernetes 笔记 01 初识 Kubernetes 新时代的领航者 | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">Kubernetes 笔记 01 初识 Kubernetes 新时代的领航者</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-30
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/k8s/2.jpg" alt=""></center>
+
+<p>Hi，大家好，我是 CloudDeveloper！欢迎大家和我一起学习 K8S。</p>
+<p>大明王朝时期，明成祖朱棣为了发展海外贸易和建立自己的声望，派郑和七下西洋，创下了这段中国古代规模最大、船只最多（240多艘）、海员最多（2.7 万人）、时间最久的，比欧洲国家航海时间早半个多世纪的远洋航行壮举。</p>
+<a id="more"></a>
+<center><img src="/images/k8s/3.jpg" alt=""></center>
+
+<p>Kubernetes 这个名字起源于古希腊，是「舵手」的意思，所以它的 Logo 既像一张渔网，又像一个罗盘。如果 Docker 把自己定位为驮着集装箱在大海上遨游的鲸鱼，那么 Kubernetes 就是掌舵大航海时代话语权的舵手，指挥着这条鲸鱼按照主人设定的路线巡游。</p>
+<center><img src="/images/k8s/dockervsk8s.jpg" alt=""></center>
+
+<p>Kubernetes 脱胎于 Google 老牌的集群管理软件「Borg」，虽然自诞生至今才三年多（第一个正式版本 Kubernetes 1.0 于 2015 年 7 月才正式发布），但要论其历史，却是早已在 Google 内部身经百战 10 余年，Kubernetes 站在 Borg 这个前辈的肩膀上，吸取了它过去十年间的经验和教训，才有了今天的成绩。这也是 Docker 火了之后，Google 迫不及待想推 Kubernetes 的原因。</p>
+<p>Kubernetes 也常被人们称为「K8S」，原因是 K 和 S 之间正好有 8 个字母，读音上也和 8 相似，为了阅读方便，人们都乐于这么称呼。</p>
+<p>有了 Google 的背书，K8S 一经推出就一鸣惊人，迅速称霸容器技术领域。</p>
+<p>可以说，K8S 是以容器技术为基础打造的一个云计算时代的全新分布式系统架构，它的架构设计开放，除了支持 Docker，还支持其他容器技术，比如 Rocket、RKT 等。</p>
+<p>Google 的加持，开放的生态，让它在与其他竞争对手的 博弈中占据上风，轻松拿下容器编排这个市场。</p>
+<p>2017年9月，Mesosphere 宣布支持 K8S，接着，10月，Docker 在 DockerCon EU 2017 大会上也宣布拥抱 K8S，至此，K8S 正式霸占容器技术领域，彻底掌控容器技术的未来。</p>
+<center><img src="/images/k8s/vsplat.jpg" alt=""></center>
+
+<p>K8S 为了扩大影响力，推出没多久就加入 OpenStack 阵营，目的是希望 K8S 能被 OpenStack 生态圈所容纳，与 KVM 虚拟机一样成为 OpenStack 平台上的一等公民。</p>
+<blockquote>
+<p>这意味着以容器为代表的应用形态和以虚拟机为代表的系统形态将完美融合于 OpenStack 之上，并与软件定义网络和软件定义存储一起统治下一代数据中心。</p>
+</blockquote>
+<p>K8S 在云计算领域刮起了一道强劲之风，但凡跟云计算相关的公司都无法无视它的存在，错过它，也许就错过了未来。我们来看看它从诞生至今的 Google 趋势（和 Docker Swarm 和 Mesos 进行了对比）：</p>
+<center><img src="/images/k8s/k8strend.jpg" alt=""></center>
+
+<p>可以看到，K8S 从诞生之初便一路飙升，将对手甩开了十几条街，未来也将会以火箭的速度保持上升。</p>
+<p>目前，除了云计算相关的公司，很多互联网公司、甚至传统企业都在纷纷布局自家的 K8S 产品，可以说，K8S 是当前容器行业最炙手可热的明星。</p>
+<p>作为一个 IT 从业人员，你无法忽视它的存在。谁能比别人领先一步掌握新技术，谁就能在竞争中赢得了先机。</p>
+<p>虽然说，现在学习 K8S 并不是最佳时机，但还不算太晚，就像一句话说的：</p>
+<blockquote>
+<p>学习一门技术最好的时间是 10 年前，其次是现在。</p>
+</blockquote>
+<p>后面我会推一个我学习 K8S 的笔记教程，一方面是加深自己对知识的理解，另一方面也是希望能分享给有需要的人。分享是一种美德，你在看到我的分享的同时，也希望你能动动手指把它分享给你的朋友，这样我的分享也没有白费。</p>
+<p>最后，我这里有一份 《K8S 指南》，这是容器网络专家倪朋飞利用自己业余时间写的一本小册子，质量还是挺不错的，有需要的后台回复“K8S”。另外需要加群学习的后台回复“加群”。</p>
+<blockquote>
+<p>文中图片来源于网络，侵权必删<br>参考：k8s 指南</p>
+</blockquote>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2019-02-21T22:34:54+08:00" content="2019-02-21"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2019-02-21
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;云计算</a></div> <div class="metatag tags"><a class="tag" href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Kubernetes</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2018/08/31/云计算/Kubernetes_笔记_02_demo_初体验/" rel="prev" title="Kubernetes 笔记 02 demo 初体验">
+                                  
+                                      Kubernetes 笔记 02 demo 初体验
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Kubernetes</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2018/08/28/云计算/Kubernetes_新时代的宠儿/" rel="prev" title="Kubernetes 新时代的宠儿">
+                                    
+                                        Kubernetes 新时代的宠儿
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Kubernetes</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="https://chambai.github.io/2018/09/03/云计算/Kubernetes_笔记_03_扫清概念/">Kubernetes 笔记 03 扫清概念</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/08/31/云计算/Kubernetes_笔记_02_demo_初体验/">Kubernetes 笔记 02 demo 初体验</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/08/28/云计算/Kubernetes_新时代的宠儿/">Kubernetes 新时代的宠儿</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/08/23/云计算/集群：孙悟空分身术/">集群：孙悟空分身术</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+        <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+        
+        
+        
+          
+            <section id="comments">
+              <div id="valine_container" class="valine_thread">
+                <i class="fas fa-spinner fa-spin fa-fw"></i>
+              </div>
+            </section>
+          
+        
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'Kubernetes 笔记 01 初识 Kubernetes 新时代的领航者',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/01-Docker/" href="/categories/01-Docker/"><div class="name">01 Docker</div><div class="badge">(0)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/工具/" href="/categories/工具/"><div class="name">工具</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(6)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/科技互联/" href="/categories/科技互联/"><div class="name">科技互联</div><div class="badge">(4)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/算法结构/" href="/categories/算法结构/"><div class="name">算法结构</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/读书笔记/" href="/categories/读书笔记/"><div class="name">读书笔记</div><div class="badge">(3)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Algorithm/" style="font-size: 14px; color: #999">Algorithm</a> <a href="/tags/Bridge/" style="font-size: 16px; color: #8b8b8b">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 17px; color: #858585">CPU</a> <a href="/tags/Cgroup/" style="font-size: 15px; color: #929292">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 16px; color: #8b8b8b">DPDK</a> <a href="/tags/Docker/" style="font-size: 21px; color: #696969">Docker</a> <a href="/tags/I-O/" style="font-size: 17px; color: #858585">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 20px; color: #707070">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23px; color: #5c5c5c">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 15px; color: #929292">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23px; color: #5c5c5c">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 16px; color: #8b8b8b">NUMA</a> <a href="/tags/Namespace/" style="font-size: 15px; color: #929292">Namespace</a> <a href="/tags/OVS/" style="font-size: 17px; color: #858585">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 15px; color: #929292">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 19px; color: #777">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 16px; color: #8b8b8b">git</a> <a href="/tags/github/" style="font-size: 15px; color: #929292">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 15px; color: #929292">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 15px; color: #929292">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 15px; color: #929292">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 15px; color: #929292">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21px; color: #696969">容器</a> <a href="/tags/容器网络/" style="font-size: 18px; color: #7e7e7e">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/影评/" style="font-size: 14px; color: #999">影评</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 19px; color: #777">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 15px; color: #929292">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/网络/" style="font-size: 22px; color: #636363">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 16px; color: #8b8b8b">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23px; color: #5c5c5c">虚拟化</a> <a href="/tags/读书/" style="font-size: 15px; color: #929292">读书</a> <a href="/tags/边缘计算/" style="font-size: 15px; color: #929292">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 16px; color: #8b8b8b">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 16px; color: #8b8b8b">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="pure">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content pure">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+    
+      
+      
+      
+        
+          <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+          
+            
+              <script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+            
+          
+          <script>
+          var GUEST_INFO = ['nick','mail','link'];
+          var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+            return GUEST_INFO.indexOf(item) > -1
+          });
+          var notify = 'false' == true;
+          var verify = 'false' == true;
+          var valine = new Valine();
+          valine.init({
+            el: '#valine_container',
+            notify: notify,
+            verify: verify,
+            guest_info: guest_info,
+            
+            appId: "YKimc4VTkSp7UMdEBOiXetqa-gzGzoHsz",
+            appKey: "swRaTvf3t6ihlCowdCVBNzVA",
+            placeholder: "快来评论吧~",
+            pageSize:'10',
+            avatar:'mp',
+            lang:'zh-cn',
+            highlight:''
+          })
+          </script>
+        
+      
+    
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
