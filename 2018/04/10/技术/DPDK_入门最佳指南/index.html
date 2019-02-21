@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>DPDK 入门最佳指南 | 小白的网志空间</title>
+  
+  
+  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="pure"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header pure">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          小白的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">DPDK 入门最佳指南</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-10
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/DPDK/">DPDK</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="01-写在前面"><a href="#01-写在前面" class="headerlink" title="01 写在前面"></a>01 写在前面</h3><hr>
+<p>我的读者当中应该有一部分人是做 DPDK 相关的，我自己虽然现在已经不做 DPDK 了，但对这块仍然有兴趣，今天这篇文章就来总结下 DPDK 的技术栈。注意：这篇文章是小白文，不适合大神哦。</p>
+<p>文章从 DPDK 的产生背景，到核心技术，再到应用场景，都进行了阐述，有可能是你见过的讲得最全面的文章了，当然，讲得全面自然会少了深度，你如果不屑忽略就好了。</p>
+<p>其实，本文之前已经发过，但在整理的时候不小心删了，索性就重发一次，但这一次多了一些内容，文末我还会推荐一些学习资料，有需要的可以拉到最下面查看获取方法。</p>
+<h3 id="02-高性能网络技术"><a href="#02-高性能网络技术" class="headerlink" title="02 高性能网络技术"></a>02 高性能网络技术</h3><hr>
+<p>随着云计算产业的异军突起，网络技术的不断创新，越来越多的网络设备基础架构逐步向基于通用处理器平台的架构方向融合，从传统的物理网络到虚拟网络，从扁平化的网络结构到基于 SDN 分层的网络结构，无不体现出这种创新与融合。</p>
+<p>这在使得网络变得更加可控制和成本更低的同时，也能够支持大规模用户或应用程序的性能需求，以及海量数据的处理。究其原因，其实是高性能网络编程技术随着网络架构的演进不断突破的一种必然结果。</p>
+<h3 id="03-C10K-到-C10M-问题的演进"><a href="#03-C10K-到-C10M-问题的演进" class="headerlink" title="03 C10K 到 C10M 问题的演进"></a>03 C10K 到 C10M 问题的演进</h3><hr>
+<p>说到高性能网络编程，一定逃不过 C10K 问题（即单机 1 万个并发连接问题），不过这个问题已经成为历史了，很多技术可以解决它，如常用的 I/O 多路复用模型，select, poll, epoll 等。在此基础上也出了很多优秀的框架，比如 Nginx 基于事件驱动的 Web 服务框架，以及基于 Python 开发的 Tornado 和 Django 这种非阻塞的 Web 框架。</p>
+<p>如今，关注的更多是 C10M 问题（即单机 1 千万个并发连接问题）。很多计算机领域的大佬们从硬件上和软件上都提出了多种解决方案。从硬件上，比如说，现在的类似很多 40Gpbs、32-cores、256G RAM 这样配置的 X86 服务器完全可以处理 1 千万个以上的并发连接。</p>
+<p>但是从硬件上解决问题就没多大意思了，首先它成本高，其次不通用，最后也没什么挑战，无非就是堆砌硬件而已。所以，抛开硬件不谈，我们看看从软件上该如何解决这个世界难题呢？</p>
+<p>这里不得不提一个人，就是 Errata Security 公司的 CEO Robert Graham，他在 Shmoocon 2013 大会上很巧妙地解释了这个问题。有兴趣可以查看其 YouTube 的演进视频： C10M Defending The Internet At Scale。</p>
+<center><img src="/images/sdn/c10m.jpg" alt=""></center>
+
+<p>他提到了 UNIX 的设计初衷其实为电话网络的控制系统而设计的，而不是一般的服务器操作系统，所以，它仅仅是一个负责数据传送的系统，没有所谓的控制层面和数据层面的说法，不适合处理大规模的网络数据包。最后他得出的结论是：</p>
+<blockquote>
+<p>OS 的内核不是解决 C10M 问题的办法，恰恰相反 OS 的内核正式导致 C10M 问题的关键所在。</p>
+</blockquote>
+<h3 id="04-为什么这么说？基于-OS-内核的数据传输有什么弊端？"><a href="#04-为什么这么说？基于-OS-内核的数据传输有什么弊端？" class="headerlink" title="04 为什么这么说？基于 OS 内核的数据传输有什么弊端？"></a>04 为什么这么说？基于 OS 内核的数据传输有什么弊端？</h3><hr>
+<p><strong>1、中断处理：</strong> 当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。</p>
+<p><strong>2、内存拷贝：</strong> 正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.1%。</p>
+<p><strong>3、上下文切换：</strong> 频繁到达的硬件中断和软中断都可能随时抢占系统调用的运行，这会产生大量的上下文切换开销。另外，在基于多线程的服务器设计框架中，线程间的调度也会产生频繁的上下文切换开销，同样，锁竞争的耗能也是一个非常严重的问题。</p>
+<p><strong>4、局部性失效：</strong> 如今主流的处理器都是多个核心的，这意味着一个数据包的处理可能跨多个 CPU 核心，比如一个数据包可能中断在 cpu0，内核态处理在 cpu1，用户态处理在 cpu2，这样跨多个核心，容易造成 CPU 缓存失效，造成局部性失效。如果是 NUMA 架构，更会造成跨 NUMA 访问内存，性能受到很大影响。</p>
+<p><strong>5、内存管理：</strong> 传统服务器内存页为 4K，为了提高内存的访问速度，避免 cache miss，可以增加 cache 中映射表的条目，但这又会影响 CPU 的检索效率。</p>
+<p>综合以上问题，可以看出内核本身就是一个非常大的瓶颈所在。那很明显解决方案就是想办法绕过内核。</p>
+<h3 id="05-解决方案探讨"><a href="#05-解决方案探讨" class="headerlink" title="05 解决方案探讨"></a>05 解决方案探讨</h3><hr>
+<p>针对以上弊端，分别提出以下技术点进行探讨。</p>
+<p><strong>1、控制层和数据层分离：</strong> 将数据包处理、内存管理、处理器调度等任务转移到用户空间去完成，而内核仅仅负责部分控制指令的处理。这样就不存在上述所说的系统中断、上下文切换、系统调用、系统调度等等问题。</p>
+<p><strong>2、多核技术：</strong> 使用多核编程技术代替多线程技术，并设置 CPU 的亲和性，将线程和 CPU 核进行一比一绑定，减少彼此之间调度切换。</p>
+<p><strong>3、NUMA 亲和性：</strong> 针对 NUMA 系统，尽量使 CPU 核使用所在 NUMA 节点的内存，避免跨内存访问。</p>
+<p><strong>4、大页内存：</strong> 使用大页内存代替普通的内存，减少 cache-miss。</p>
+<p><strong>5、无锁技术：</strong> 采用无锁技术解决资源竞争问题。</p>
+<p>经研究，目前业内已经出现了很多优秀的集成了上述技术方案的高性能网络数据处理框架，如 6wind、Windriver、Netmap、DPDK 等，其中，Intel 的 DPDK 在众多方案脱颖而出，一骑绝尘。</p>
+<center><img src="/images/sdn/dpdk.png" alt=""></center>
+
+<p>DPDK 为 Intel 处理器架构下用户空间高效的数据包处理提供了库函数和驱动的支持，它不同于 Linux 系统以通用性设计为目的，而是专注于网络应用中数据包的高性能处理。</p>
+<p>也就是 DPDK 绕过了 Linux 内核协议栈对数据包的处理过程，在用户空间实现了一套数据平面来进行数据包的收发与处理。在内核看来，DPDK 就是一个普通的用户态进程，它的编译、连接和加载方式和普通程序没有什么两样。</p>
+<h3 id="06-DPDK-的突破"><a href="#06-DPDK-的突破" class="headerlink" title="06 DPDK 的突破"></a>06 DPDK 的突破</h3><hr>
+<p>相对传统的基于内核的网络数据处理，DPDK 对从内核层到用户层的网络数据流程进行了重大突破，我们先看看传统的数据流程和 DPDK 中的网络流程有什么不同。</p>
+<p><strong>传统 Linux 内核网络数据流程：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">硬件中断---&gt;取包分发至内核线程---&gt;软件中断---&gt;内核线程在协议栈中处理包---&gt;处理完毕通知用户层</span><br><span class="line">用户层收包--&gt;网络层---&gt;逻辑层---&gt;业务层</span><br></pre></td></tr></table></figure></p>
+<p><strong>dpdk 网络数据流程：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">硬件中断---&gt;放弃中断流程</span><br><span class="line">用户层通过设备映射取包---&gt;进入用户层协议栈---&gt;逻辑层---&gt;业务层</span><br></pre></td></tr></table></figure></p>
+<p>下面就具体看看 DPDK 做了哪些突破？</p>
+<h4 id="6-1-UIO-（用户空间的-I-O-技术）的加持。"><a href="#6-1-UIO-（用户空间的-I-O-技术）的加持。" class="headerlink" title="6.1 UIO （用户空间的 I/O 技术）的加持。"></a><strong>6.1 UIO （用户空间的 I/O 技术）的加持。</strong></h4><hr>
+<p>DPDK 能够绕过内核协议栈，本质上是得益于 UIO 技术，通过 UIO 能够拦截中断，并重设中断回调行为，从而绕过内核协议栈后续的处理流程。</p>
+<p>UIO 设备的实现机制其实是对用户空间暴露文件接口，比如当注册一个 UIO 设备 uioX，就会出现文件 /dev/uioX，对该文件的读写就是对设备内存的读写。除此之外，对设备的控制还可以通过 /sys/class/uio 下的各个文件的读写来完成。</p>
+<center><img src="/images/sdn/uio.jpg" alt=""></center>
+
+<h4 id="6-2-内存池技术"><a href="#6-2-内存池技术" class="headerlink" title="6.2 内存池技术"></a><strong>6.2 内存池技术</strong></h4><hr>
+<p>DPDK 在用户空间实现了一套精巧的内存池技术，内核空间和用户空间的内存交互不进行拷贝，只做控制权转移。这样，当收发数据包时，就减少了内存拷贝的开销。</p>
+<h4 id="6-3-大页内存管理"><a href="#6-3-大页内存管理" class="headerlink" title="6.3 大页内存管理"></a><strong>6.3 大页内存管理</strong></h4><hr>
+<p>DPDK 实现了一组大页内存分配、使用和释放的 API，上层应用可以很方便使用 API 申请使用大页内存，同时也兼容普通的内存申请。</p>
+<h4 id="6-4-无锁环形队列"><a href="#6-4-无锁环形队列" class="headerlink" title="6.4 无锁环形队列"></a><strong>6.4 无锁环形队列</strong></h4><hr>
+<p>DPDK 基于 Linux 内核的无锁环形缓冲 kfifo 实现了自己的一套无锁机制。支持单生产者入列/单消费者出列和多生产者入列/多消费者出列操作，在数据传输的时候，降低性能的同时还能保证数据的同步。</p>
+<h4 id="6-5-poll-mode-网卡驱动"><a href="#6-5-poll-mode-网卡驱动" class="headerlink" title="6.5 poll-mode 网卡驱动"></a><strong>6.5 poll-mode 网卡驱动</strong></h4><hr>
+<p>DPDK 网卡驱动完全抛弃中断模式，基于轮询方式收包，避免了中断开销。</p>
+<h4 id="6-6-NUMA"><a href="#6-6-NUMA" class="headerlink" title="6.6 NUMA"></a><strong>6.6 NUMA</strong></h4><hr>
+<p>DPDK 内存分配上通过 proc 提供的内存信息，使 CPU 核心尽量使用靠近其所在节点的内存，避免了跨 NUMA 节点远程访问内存的性能问题。</p>
+<h4 id="6-7-CPU-亲和性"><a href="#6-7-CPU-亲和性" class="headerlink" title="6.7 CPU 亲和性"></a><strong>6.7 CPU 亲和性</strong></h4><hr>
+<p>DPDK 利用 CPU 的亲和性将一个线程或多个线程绑定到一个或多个 CPU 上，这样在线程执行过程中，就不会被随意调度，一方面减少了线程间的频繁切换带来的开销，另一方面避免了 CPU 缓存的局部失效性，增加了 CPU 缓存的命中率。</p>
+<h4 id="6-8-多核调度框架"><a href="#6-8-多核调度框架" class="headerlink" title="6.8 多核调度框架"></a><strong>6.8 多核调度框架</strong></h4><hr>
+<p>DPDK 基于多核架构，一般会有主从核之分，主核负责完成各个模块的初始化，从核负责具体的业务处理。</p>
+<p>除了上述之外，DPDK 还有很多的技术突破，可以用下面这张图来概之。</p>
+<center><img src="/images/sdn/dpdkarch.jpg" alt=""></center>
+
+<h3 id="07-DPDK-的应用"><a href="#07-DPDK-的应用" class="headerlink" title="07 DPDK 的应用"></a>07 DPDK 的应用</h3><hr>
+<p>DPDK 作为优秀的用户空间高性能数据包加速套件，现在已经作为一个“胶水”模块被用在多个网络数据处理方案中，用来提高性能。如下是众多的应用。</p>
+<center><img src="/images/sdn/dpdkapp.jpg" alt=""></center>
+
+<h4 id="数据面（虚拟交换机）"><a href="#数据面（虚拟交换机）" class="headerlink" title="数据面（虚拟交换机）"></a><strong>数据面（虚拟交换机）</strong></h4><hr>
+<p><strong>OVS</strong></p>
+<p>Open vSwitch 是一个多核虚拟交换机平台，支持标准的管理接口和开放可扩展的可编程接口，支持第三方的控制接入。</p>
+<p><a href="https://github.com/openvswitch/ovs" target="_blank" rel="noopener">https://github.com/openvswitch/ovs</a></p>
+<p><strong>VPP</strong></p>
+<p>VPP 是 cisco 开源的一个高性能的包处理框架，提供了 交换/路由 功能，在虚拟化环境中，使它可以当做一个虚拟交换机来使用。在一个类 SDN 的处理框架中，它往往充当数据面的角色。经研究表明，VPP 性能要好于 OVS+DPDK 的组合，但它更适用于 NFV，适合做特定功能的网络模块。</p>
+<p><a href="https://wiki.fd.io/view/VPP" target="_blank" rel="noopener">https://wiki.fd.io/view/VPP</a></p>
+<p><strong>Lagopus</strong></p>
+<p>Lagopus 是另一个多核虚拟交换的实现，功能和 OVS 差不多，支持多种网络协议，如 Ethernet，VLAN，QinQ，MAC-in-MAC，MPLS 和 PBB，以及隧道协议，如 GRE，VxLan 和 GTP。</p>
+<p><a href="https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md" target="_blank" rel="noopener">https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md</a></p>
+<p><strong>Snabb</strong></p>
+<p>Snabb 是一个简单且快速的数据包处理工具箱。</p>
+<p><a href="https://github.com/SnabbCo/snabbswitch/blob/master/README.md" target="_blank" rel="noopener">https://github.com/SnabbCo/snabbswitch/blob/master/README.md</a></p>
+<h4 id="数据面（虚拟路由器）"><a href="#数据面（虚拟路由器）" class="headerlink" title="数据面（虚拟路由器）"></a><strong>数据面（虚拟路由器）</strong></h4><hr>
+<p><strong>OPENCONTRAIL</strong></p>
+<p>一个集成了 SDN 控制器的虚拟路由器，现在多用在 OpenStack 中，结合 Neutron 为 OpenStack 提供一站式的网络支持。</p>
+<p><a href="http://www.opencontrail.org/" target="_blank" rel="noopener">http://www.opencontrail.org/</a></p>
+<p><strong>CloudRouter</strong></p>
+<p>一个分布式的路由器。</p>
+<p><a href="https://cloudrouter.org/" target="_blank" rel="noopener">https://cloudrouter.org/</a></p>
+<h4 id="用户空间协议栈"><a href="#用户空间协议栈" class="headerlink" title="用户空间协议栈"></a><strong>用户空间协议栈</strong></h4><hr>
+<p><strong>mTCP</strong></p>
+<p>mTCP 是一个针对多核系统的高可扩展性的用户空间 TCP/IP 协议栈。</p>
+<p><a href="https://github.com/eunyoung14/mtcp/blob/master/README" target="_blank" rel="noopener">https://github.com/eunyoung14/mtcp/blob/master/README</a></p>
+<p><strong>IwIP</strong></p>
+<p>IwIP 针对 RAM 平台的精简版的 TCP/IP 协议栈实现。</p>
+<p><a href="http://git.savannah.gnu.org/cgit/lwip.git/tree/README" target="_blank" rel="noopener">http://git.savannah.gnu.org/cgit/lwip.git/tree/README</a></p>
+<p><strong>Seastar</strong></p>
+<p>Seastar 是一个开源的，基于 C++ 11/14 feature，支持高并发和低延迟的异步编程高性能库。</p>
+<p><a href="http://www.seastar-project.org/" target="_blank" rel="noopener">http://www.seastar-project.org/</a></p>
+<p><strong>f-stack</strong></p>
+<p>腾讯开源的用户空间协议栈，移植于 FreeBSD协议栈，粘合了 POSIX API，上层应用（协程框架，Nginx,Redis），纯 C 编写，易上手。</p>
+<p><a href="https://github.com/f-stack/f-stack" target="_blank" rel="noopener">https://github.com/f-stack/f-stack</a></p>
+<h4 id="存储加速"><a href="#存储加速" class="headerlink" title="存储加速"></a><strong>存储加速</strong></h4><hr>
+<p><strong>SPDK</strong></p>
+<p>SPDK 是 DPDK 的孪生兄弟，专注存储性能加速，目前的火热程度丝毫不亚于 DPDK，Intel 近来对 SPDK 特别重视，隔三差五就发布新版本。</p>
+<p><a href="https://github.com/spdk/spdk" target="_blank" rel="noopener">https://github.com/spdk/spdk</a></p>
+<h3 id="08-总结"><a href="#08-总结" class="headerlink" title="08 总结"></a>08 总结</h3><hr>
+<p>DPDK 绕过了 Linux 内核协议栈，加速数据的处理，用户可以在用户空间定制协议栈，满足自己的应用需求，目前出现了很多基于 DPDK 的高性能网络框架，OVS 和 VPP 是常用的数据面框架，mTCP 和 f-stack 是常用的用户态协议栈，SPDK 是存储性能加速器，很多大公司都在使用 DPDK 来优化网络性能。</p>
+<blockquote>
+<p>PS：本文所有的图来自网络，侵权必删。</p>
+</blockquote>
+<h3 id="09-DPDK-资料推荐"><a href="#09-DPDK-资料推荐" class="headerlink" title="09 DPDK 资料推荐"></a>09 DPDK 资料推荐</h3><hr>
+<p>在我看来，DPDK 最好的学习资料是官网，没有之一：</p>
+<p><a href="http://core.dpdk.org/doc/" target="_blank" rel="noopener">http://core.dpdk.org/doc/</a></p>
+<p>其次是看 Intel 技术专家出的书 《深入浅出 DPDK》。</p>
+<center><img src="/images/sdn/dpdkbook.jpg" alt=""></center>
+
+<p>本书详细介绍了DPDK 技术发展趋势，数据包处理，硬件加速技术，包处理和虚拟化 ，以及 DPDK 技术在 SDN，NFV ，网络存储等领域的实际应用。</p>
+<p>本书是国内第一本全面的阐述网络数据面的核心技术的书籍，面向 IT 网络通讯行业的从业人员，以及大专院校的学生，用通俗易懂的文字打开了一扇通向新一代网络处理架构的大门。</p>
+<p>本书我有电子版（但只有一部分，推荐大家买书），需要的公众号后台回复 “DPDK” 查看获取方式。</p>
+<p>除了书之外，就是看大牛的博客，加入相关的群和优秀的人一起学习，我整理了几份网上较好的博客资料，和书一起附赠，如果想加群学习，回复 “加群”。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2018-10-06T10:52:24+08:00" content="2018-10-06"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2018-10-06
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/NUMA/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;NUMA</a></div> <div class="metatag tags"><a class="tag" href="/tags/SDN/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;SDN</a></div> <div class="metatag tags"><a class="tag" href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;DPDK</a></div> <div class="metatag tags"><a class="tag" href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;性能分析</a></div> <div class="metatag tags"><a class="tag" href="/tags/UIO/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;UIO</a></div> <div class="metatag tags"><a class="tag" href="/tags/大页内存/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;大页内存</a></div> <div class="metatag tags"><a class="tag" href="/tags/OVS/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;OVS</a></div> <div class="metatag tags"><a class="tag" href="/tags/VPP/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;VPP</a></div> <div class="metatag tags"><a class="tag" href="/tags/mTCP/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;mTCP</a></div> <div class="metatag tags"><a class="tag" href="/tags/fstack/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;fstack</a></div> <div class="metatag tags"><a class="tag" href="/tags/SPDK/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;SPDK</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2018/04/11/技术/virtio_user_简介/" rel="prev" title="virtio-user 简介">
+                                  
+                                      virtio-user 简介
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>虚拟化</a> <a class="tag" href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>DPDK</a> <a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>网络</a> <a class="tag" href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器网络</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2018/04/06/技术/Docker_容器网络之单主机网络/" rel="prev" title="Docker 容器网络之单主机网络">
+                                    
+                                        Docker 容器网络之单主机网络
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/容器/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器</a> <a class="tag" href="/tags/Docker/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Docker</a> <a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>网络</a> <a class="tag" href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>容器网络</a> <a class="tag" href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Bridge</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="https://chambai.github.io/2018/04/16/技术/容器网络之多主机网络/">容器网络之多主机网络</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/04/11/技术/virtio_user_简介/">virtio-user 简介</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/04/06/技术/Docker_容器网络之单主机网络/">Docker 容器网络之单主机网络</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/03/28/技术/Docker_基础技术之_Linux_cgroups_详解/">Docker 基础技术之 Linux cgroups 详解</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'DPDK 入门最佳指南',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="pure">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content pure">
+    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content pure">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：CloudDeveloper</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="pure">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content pure">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(0)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/云计算/" href="/categories/云计算/"><div class="name">云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/虚拟化/" href="/categories/虚拟化/"><div class="name">虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/雾计算/" href="/categories/雾计算/"><div class="name">雾计算</div><div class="badge">(2)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="pure">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content pure">
+      <a href="/tags/Bridge/" style="font-size: 16px; color: #8b8b8b">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 17px; color: #858585">CPU</a> <a href="/tags/Cgroup/" style="font-size: 15px; color: #929292">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 16px; color: #8b8b8b">DPDK</a> <a href="/tags/Docker/" style="font-size: 21px; color: #696969">Docker</a> <a href="/tags/I-O/" style="font-size: 17px; color: #858585">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 20px; color: #707070">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23px; color: #5c5c5c">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 23px; color: #5c5c5c">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 16px; color: #8b8b8b">NUMA</a> <a href="/tags/Namespace/" style="font-size: 15px; color: #929292">Namespace</a> <a href="/tags/OVS/" style="font-size: 17px; color: #858585">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 15px; color: #929292">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 19px; color: #777">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 15px; color: #929292">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 15px; color: #929292">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 15px; color: #929292">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 15px; color: #929292">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21px; color: #696969">容器</a> <a href="/tags/容器网络/" style="font-size: 18px; color: #7e7e7e">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 19px; color: #777">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 15px; color: #929292">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 22px; color: #636363">网络</a> <a href="/tags/虚拟化/" style="font-size: 23px; color: #5c5c5c">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 15px; color: #929292">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 16px; color: #8b8b8b">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="pure">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content pure">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="pure">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content pure">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="pure">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content pure">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#01-写在前面"><span class="toc-text">01 写在前面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#02-高性能网络技术"><span class="toc-text">02 高性能网络技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#03-C10K-到-C10M-问题的演进"><span class="toc-text">03 C10K 到 C10M 问题的演进</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#04-为什么这么说？基于-OS-内核的数据传输有什么弊端？"><span class="toc-text">04 为什么这么说？基于 OS 内核的数据传输有什么弊端？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#05-解决方案探讨"><span class="toc-text">05 解决方案探讨</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#06-DPDK-的突破"><span class="toc-text">06 DPDK 的突破</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-UIO-（用户空间的-I-O-技术）的加持。"><span class="toc-text">6.1 UIO （用户空间的 I/O 技术）的加持。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-内存池技术"><span class="toc-text">6.2 内存池技术</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-大页内存管理"><span class="toc-text">6.3 大页内存管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-4-无锁环形队列"><span class="toc-text">6.4 无锁环形队列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-5-poll-mode-网卡驱动"><span class="toc-text">6.5 poll-mode 网卡驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-6-NUMA"><span class="toc-text">6.6 NUMA</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-7-CPU-亲和性"><span class="toc-text">6.7 CPU 亲和性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-8-多核调度框架"><span class="toc-text">6.8 多核调度框架</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#07-DPDK-的应用"><span class="toc-text">07 DPDK 的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据面（虚拟交换机）"><span class="toc-text">数据面（虚拟交换机）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据面（虚拟路由器）"><span class="toc-text">数据面（虚拟路由器）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#用户空间协议栈"><span class="toc-text">用户空间协议栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储加速"><span class="toc-text">存储加速</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#08-总结"><span class="toc-text">08 总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#09-DPDK-资料推荐"><span class="toc-text">09 DPDK 资料推荐</span></a></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

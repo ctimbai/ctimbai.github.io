@@ -178,107 +178,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/04/06/云计算/Docker_容器网络之单主机网络/">
-              
-                  Docker 容器网络之单主机网络
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-06
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>当容器逐步向容器集群，容器云技术演进的时候，一个不得不面对的问题就是各个容器的管理问题，有些容器需要交互，有些容器需要隔离，如何保证这些操作能够顺利地进行，这个时候，很多容器管理和编排的平台就应运而生了。首先，当然是 Docker 社区自己开发的 Swarm+Machine+Compose 的集群管理套件，然后还有 Twitter 主推 Apache 的 Mesos，最有名的应该为 Google 开源的 Kubernetes。</p>
-<p>这些平台综合了容器集群资源管理，服务发现和扩容缩融等问题，是一个集大成的解决方案，但其实这些问题本质上都离不开网络，资源在各容器之间调度需要网络，服务发现需要网络，所以，可以说网络是容器集群环境下最基础的一环。</p>
-<p>Docker 容器网络根据容器的部署位置，可以分为单主机网络（host）和多主机网络（multi-host），本文先看 Docker host 网络。</p>
-<p>Docker host 网络分为 none，host，joined container 和 bridge 网络。</p>
-<p>none 网络模式下，Docker 容器拥有自己的 network namespace，但是并不为容器进行任何的网络配置，也就是说容器除了 network namespace 本身自带的 localback 网卡外什么都没有，包括网卡、IP、路由等信息。用户如何要使用 none 网络，就需要自己添加特定的网卡，并配置 IP、路由等信息，但一般不会这么干，none 网络很好地做到了隔离，一般是用来跑那些对安全性要求极高且不需要联网的应用。</p>
-<p>比如某个容器的唯一用途是生成随机密码，就可以放到 none 网络中避免密码被窃取。</p>
-<p>想要使 Docker 使用 none 网络，只需要在创建容器的时候附带 –network = none 即可。</p>
-<p>host 网络，顾名思义就是 Docker 容器使用宿主机的网络，相当于和 host 共用了同一个 network namespace，Docker 容器使用 host 的网卡、IP 和路由等功能对外通信。</p>
-<p>虽然这种模式下 Docker 没有创建独立的 network namespace，但其他 namespace 仍然是隔离的，如文件系统、进程列表等。host 网络最大的好处就是使得 Docker 容器对外通信变得简单，直接使用 host 的 IP 进行通信即可，但缺点也很明显，就是降低了隔离性，同时还会存在和其他容器对网络资源的竞争与冲突的问题。</p>
-<p>同样要使用 host 网络，只需创建容器时附带 –network = host 即可。</p>
-<center><img src="/images/docker/net_host.png" alt=""></center>
-
-<p>joined container 网络和 host 网络不同的是，它是和其他的 container 共享一个 network namespace，一个 network namespace 可以被一个或者多个 Docker 容器共享。在这种模式下，两个容器之间可以通过 localback 回环网卡通信，增加了容器间通信的便利性。</p>
-<p>同样可以在创建容器时，使用参数 –network = container:another_container_name 来和另外容器共享网络。</p>
-<center><img src="/images/docker/net_con.png" alt=""></center>
-
-<p>bridge 网络是最常用的网络模式，它兼顾了安全性和功能的完备性，但其与外部通信要通过 NAT 转换，在复杂的网络场景下会存在诸多不便。</p>
-<p>bridge 网络在创建的时候通过 –network = bridge 指定，Docker daemon 会为创建的容器自动创建一个 Docker 网桥——docker0（也可以人为指定名称 –driver bridge my_net），这个 docker0 就用来联结 Docker 容器和 host 的桥梁。</p>
-<p>然后，Docker daemon 会创建一对虚拟网卡 veth pair，一块网卡留在宿主机的 root network namespace 中，并绑定到 docker0 上，另一块放在新创建的 network namespace 中，命名为 eth0，并为其配置 IP 和路由，将其网关设为 docker0，如下，这样整个容器的 bridge 网络通信环境就建立起来了，其他容器的建立方式也是如此，最终各容器之间就通过 docker0 这个桥梁互联互通了。</p>
-<center><img src="/images/docker/net_bridge.jpg" alt=""></center>
-
-<p>下文将讨论更为复杂的 multi-host 网络。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
-                
-                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/03/28/云计算/Docker_基础技术之_Linux_cgroups_详解/">
+          <a href="/2018/03/28/技术/Docker_基础技术之_Linux_cgroups_详解/">
               
                   Docker 基础技术之 Linux cgroups 详解
               
@@ -402,7 +302,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/03/13/云计算/Docker_基础技术之_Linux_namespace_源码分析/">
+          <a href="/2018/03/13/技术/Docker_基础技术之_Linux_namespace_源码分析/">
               
                   Docker 基础技术之 Linux namespace 源码分析
               
@@ -521,7 +421,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/03/08/云计算/Docker_基础技术之_Linux_namespace_详解/">
+          <a href="/2018/03/08/技术/Docker_基础技术之_Linux_namespace_详解/">
               
                   Docker 基础技术之 Linux namespace 详解
               
@@ -670,7 +570,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/03/02/云计算/容器生态系统/">
+          <a href="/2018/03/02/技术/容器生态系统/">
               
                   容器生态系统
               
@@ -786,7 +686,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/28/云计算/容器进化史/">
+          <a href="/2018/02/28/技术/容器进化史/">
               
                   容器进化史
               
@@ -890,7 +790,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/20/云计算/2018_云计算领域的技术趋势预测/">
+          <a href="/2018/02/20/技术/2018_云计算领域的技术趋势预测/">
               
                   2018 云计算领域的技术趋势预测
               
@@ -979,7 +879,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/13/云计算/雾计算技术架构浅析与应用概览/">
+          <a href="/2018/02/13/技术/雾计算技术架构浅析与应用概览/">
               
                   雾计算技术架构浅析与应用概览
               
@@ -1113,7 +1013,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/06/云计算/vhost_user_简介/">
+          <a href="/2018/02/06/技术/vhost_user_简介/">
               
                   vhost-user 简介
               
@@ -1217,7 +1117,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/01/23/云计算/vhost_简介/">
+          <a href="/2018/01/23/技术/vhost_简介/">
               
                   vhost 简介
               
@@ -1290,6 +1190,127 @@
                     <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
                 
                     <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/01/21/技术/用户空间网络提升_NFV_的性能/">
+              
+                  用户空间网络提升 NFV 的性能
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-21
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/NFV/">NFV</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">本文是一篇翻译，翻译自：</span><br><span class="line">https://software.intel.com/en-us/blogs/2015/06/12/user-space-networking-fuels-nfv-performance，文章有点老了，15年写的，但是文章总结了一些用户态的协议栈，很有学习参考的意义。</span><br></pre></td></tr></table></figure>
+<h3 id="用户态协议栈"><a href="#用户态协议栈" class="headerlink" title="用户态协议栈"></a>用户态协议栈</h3><hr>
+<p>如今，作为一个网络空间的软件开发人员是非常激动人心的，因为工程师的角色随着这个世界的规则在逐渐发生改变。</p>
+<p>过去这 15 年来，人们对高性能网络做了很多努力，网络模型也发生了很多改变，起初，数据包的收发都要推送到内核才能完成，现在，不用内核态的参与也可以完成。这种改变的背后主要是在解决以下的几个问题：1）用户态和内核态上下文切换的开销；2）软硬中断的开销；3）数据拷贝的开销等等。</p>
+<center><img src="/images/sdn/mtcp.jpg" alt=""></center>
+
+<p>最近，很多人在讨论 mTCP——一个实现了用户态协议栈的开源库，这种技术在很大程度上就颠覆了传统的网络模型，使得网络收发包的效率大大提升。它充分利用了 CPU 的亲和性，共享内存，批处理等技术来实现高效的 I/O 事件。与之类似的技术也相继被提出。</p>
+<p>实验表明，mTCP 这种用户态协议栈，相较原生的内核协议栈，在处理多种流行的应用时的性能得到较大提升，如 SSLShader 提升了 33%，lighttpd 提升了 320%。</p>
+<center><img src="/images/sdn/user_tcp_stack.png" alt=""></center>
+
+<p>软件形态的改变离不开硬件的革新。由以前的单核系统到如今多核系统的性能扩展，直接导致了网络软件架构的改变。例如，以前内核所做的所有功能和处理，包括网络驱动程序，现在都可以被直接放到用户空间中来实现，应用程序可以直接访问底层的 NUMA 结构，利用 CPU 的亲和性，以及多核特性并行处理任务。这种设计避免了上下文之间的切换开销，可以显著降低数据传输的延迟和 CPU 使用，同时提高吞吐量和带宽。另外，提供一种运行到完成（run-to-completion）的模型能够让不同的核独立并行地完成不同的任务。</p>
+<p>随着网络的发展，我们现在看到了大量的开源项目，都在将内核协议栈移到用户空间来做。它们的做法存在一些区别，像 mTCP，它的协议栈是从零开始开发的，而其他很多项目则是基于 FreeBSD 的来做，这主要是因为 FreeBSD 的协议栈具有 “最健壮的网络协议栈的声誉”，此外，很多存储解决方案也是采用的 FreeBSD 来作为其核心操作系统。当然，Linux 协议栈也是可以采用的。</p>
+<p>这些用户态协议栈怎么做到绕过内核的，这就离不开 DPDK 的支持。利用 DPDK，用户态协议栈可以创建一个中断来将数据包从 NIC 的缓冲区直接映射到用户空间，然后利用协议栈的特性来管理 TCP/IP 数据包的处理和传输。</p>
+<p>DPDK 还可以作为一些 vSwitch（虚拟交换机）的加速器，这些 vSwitch 包含 OpenFlow 协议的完整实现，以及与 OpenStack Neutron 的整合。</p>
+<p>下面，我们收集了一些发现的开源项目，无论你决定使用一个 vSwitch 还是一个完整的网络协议栈，网络开发人员都有很多选择，可以将应用程序移到用户空间，并在多核系统上扩展性能。</p>
+<h4 id="DPDK-Enabled-vSwitch："><a href="#DPDK-Enabled-vSwitch：" class="headerlink" title="DPDK-Enabled vSwitch："></a>DPDK-Enabled vSwitch：</h4><hr>
+<p><strong>OVS</strong>      </p>
+<p>Open vSwitch 是一个多核虚拟交换机平台，支持标准的管理接口和开放可扩展的可编程接口，支持第三方的控制接入。<br><a href="https://github.com/openvswitch/ovs" target="_blank" rel="noopener">https://github.com/openvswitch/ovs</a></p>
+<p><strong>Lagopus</strong></p>
+<p>Lagopus 是另一个多核虚拟交换的实现，功能和 OVS 差不多，支持多种网络协议，如 Ethernet，VLAN，QinQ，MAC-in-MAC，MPLS 和 PBB，以及隧道协议，如 GRE，VxLan 和 GTP。<br><a href="https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md" target="_blank" rel="noopener">https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md</a></p>
+<p><strong>Snabb</strong></p>
+<p>Snabb 是一个简单且快速的数据包处理工具箱。<br><a href="https://github.com/SnabbCo/snabbswitch/blob/master/README.md" target="_blank" rel="noopener">https://github.com/SnabbCo/snabbswitch/blob/master/README.md</a></p>
+<p><strong>xDPd</strong></p>
+<p>xDPd 是一个多平台，多 OpenFlow 版本支持的开源 datapath，主要专注在性能和可扩展性上。<br><a href="https://github.com/bisdn/xdpd/blob/stable/README" target="_blank" rel="noopener">https://github.com/bisdn/xdpd/blob/stable/README</a></p>
+<h4 id="从零开发的用户空间协议栈套件"><a href="#从零开发的用户空间协议栈套件" class="headerlink" title="从零开发的用户空间协议栈套件"></a>从零开发的用户空间协议栈套件</h4><hr>
+<p><strong>mTCP</strong></p>
+<p>mTCP 是一个针对多核系统的高可扩展性的用户空间 TCP/IP 协议栈。<br><a href="https://github.com/eunyoung14/mtcp/blob/master/README" target="_blank" rel="noopener">https://github.com/eunyoung14/mtcp/blob/master/README</a></p>
+<p><strong>Mirage-Tcpip</strong></p>
+<p>mirage-tcpip 是一个针对 MirageOS 这种 “库操作系统” 而开发的一个用户态网络协议栈，开发的语言是 OCaml。<br><a href="https://github.com/mirage/mirage-tcpip" target="_blank" rel="noopener">https://github.com/mirage/mirage-tcpip</a></p>
+<p><strong>IwIP</strong></p>
+<p>IwIP 针对 RAM 平台的精简版的 TCP/IP 协议栈实现。<br><a href="http://git.savannah.gnu.org/cgit/lwip.git/tree/README" target="_blank" rel="noopener">http://git.savannah.gnu.org/cgit/lwip.git/tree/README</a></p>
+<h4 id="移植版的用户空间协议栈套件"><a href="#移植版的用户空间协议栈套件" class="headerlink" title="移植版的用户空间协议栈套件"></a>移植版的用户空间协议栈套件</h4><hr>
+<p><strong>Arrakis</strong>  </p>
+<p>针对多核系统的用户空间 OS，移植于 IwIP。<br><a href="https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS" target="_blank" rel="noopener">https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS</a></p>
+<p><strong>libuinet</strong></p>
+<p>用户空间的 TCP/IP 协议栈，移植于 FreeBSD。<br><a href="https://github.com/pkelsey/libuinet/blob/master/README" target="_blank" rel="noopener">https://github.com/pkelsey/libuinet/blob/master/README</a></p>
+<p><strong>NUSE (libos)</strong>  </p>
+<p>一个基于 Linux 的库操作系统，移植于 Linux。<br><a href="https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start" target="_blank" rel="noopener">https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start</a></p>
+<p><strong>OpenDP</strong> </p>
+<p>一个针对 DPDK TCP/IP 协议栈的数据面，移植于 FreeBSD。<br><a href="https://github.com/opendp/dpdk-odp/wiki" target="_blank" rel="noopener">https://github.com/opendp/dpdk-odp/wiki</a></p>
+<p><strong>OpenOnload</strong></p>
+<p>一个高性能的用户态协议栈，移植于 IwIP。<br><a href="http://www.openonload.org/download/openonload-201205-README.txt" target="_blank" rel="noopener">http://www.openonload.org/download/openonload-201205-README.txt</a></p>
+<p><strong>OSv</strong>  </p>
+<p>一个针对虚拟机的开源操作系统。移植于 FreeBSD。<br><a href="https://github.com/cloudius-systems/osv/blob/master/README.md" target="_blank" rel="noopener">https://github.com/cloudius-systems/osv/blob/master/README.md</a></p>
+<p><strong>Sandstorm</strong>  </p>
+<p>一个针对个人服务器安全的开源网络平台，移植于 FreeBSD。<br><a href="https://github.com/sandstorm-io/sandstorm/blob/master/README.md" target="_blank" rel="noopener">https://github.com/sandstorm-io/sandstorm/blob/master/README.md</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>1、这篇文字的亮点在于总结了当前阶段业界出现的一些用户空间协议栈，对于文章标题提到的 NFV 在文中则只字未提，但其实意思也很明了了。用户空间的协议栈是随着硬件技术的发展，以及新鲜应用场景应运而生的，换句话说，对于像 NFV 这种对性能要求比较高的场景，采用用户态的协议栈是比较合适的。</p>
+<p>2、文中是 2015 年写的，这意味着到现在为止，肯定出现了很多比上面总结还要多的方案，其中比较出名的有 SeaStar 和 腾讯开源的 F-Stack，后面找机会再进行详述，敬请期待吧。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
+                
+                    <a href="/tags/mTCP/"><i class="fas fa-hashtag fa-fw"></i>mTCP</a>
+                
+                    <a href="/tags/NFV/"><i class="fas fa-hashtag fa-fw"></i>NFV</a>
                 
             </div>
         
@@ -1401,7 +1422,7 @@
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
@@ -1439,7 +1460,7 @@
 </header>
 
     <div class="content pure">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 16px; color: #8b8b8b">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 17px; color: #858585">CPU</a> <a href="/tags/Cgroup/" style="font-size: 15px; color: #929292">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 16px; color: #8b8b8b">DPDK</a> <a href="/tags/Docker/" style="font-size: 21px; color: #696969">Docker</a> <a href="/tags/I-O/" style="font-size: 17px; color: #858585">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 20px; color: #707070">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23px; color: #5c5c5c">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 23px; color: #5c5c5c">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 16px; color: #8b8b8b">NUMA</a> <a href="/tags/Namespace/" style="font-size: 15px; color: #929292">Namespace</a> <a href="/tags/OVS/" style="font-size: 17px; color: #858585">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 15px; color: #929292">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 19px; color: #777">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 15px; color: #929292">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 15px; color: #929292">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 15px; color: #929292">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 15px; color: #929292">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21px; color: #696969">容器</a> <a href="/tags/容器网络/" style="font-size: 18px; color: #7e7e7e">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 19px; color: #777">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 15px; color: #929292">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 22px; color: #636363">网络</a> <a href="/tags/虚拟化/" style="font-size: 23px; color: #5c5c5c">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 15px; color: #929292">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 16px; color: #8b8b8b">雾计算</a>
     </div>
   </section>
 

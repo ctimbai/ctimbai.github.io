@@ -288,8 +288,6 @@
       
         
       
-        
-      
     
     
       
@@ -301,7 +299,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/29/云计算/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/">
+          <a href="/2018/09/29/技术/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/">
               
                   Kubernetes 笔记 11 Pod 扩容与缩容 双十一前后的忙碌
               
@@ -342,45 +340,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 11 篇。</p>
 <p>资源的伸缩在云计算环境中是至关重要的，云计算的动机就是企图提高资源的利用率，在用户请求高峰期的时候能够对资源进行横向扩容，反之，当用户请求回落低谷的时候，能够及时缩减资源，避免资源的浪费。</p>
-<p>这就像双十一的时候，随着用户不断地涌入，阿里后台需要不断调配更多的资源来支撑用户大量的请求，当过了双十一当天，再慢慢缩减资源的使用。</p>
-<p>Kubernetes 作为一个集群管理系统，提供了两种资源伸缩的方式：手动和自动。本文先来看手动方式。</p>
-<p>Kubernetes 的资源伸缩本质上指的是 Pod 的扩容和缩容（scale up/down），也就是增加或减少 Pod 的副本数。</p>
-<p>手动的方式是使用 <code>kubectl scale</code> 命令手动进行，或者基于 YAML 配置来实现。</p>
-<p>首先，定义一个 <code>nginx-deployment.yaml</code> 配置文件：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: web_server</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        images: nginx:1.12.1</span><br></pre></td></tr></table></figure>
-<p>其中定义了 3 个副本，执行 <code>kubectl create -f nginx-deployment.yaml</code> 创建 Pod。</p>
-<center><img src="/images/k8s/pod_scale.png" alt=""></center>
-
-
-<p>如果现在遇到高峰请求，我们急需进行扩容，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment nginx-deployment --replicas 5</span><br></pre></td></tr></table></figure></p>
-<p>将 Pod 扩增到 5 个。</p>
-<center><img src="/images/k8s/pod_scale_up.png" alt=""></center>
-
-
-<p>其中，用 <code>--replicas</code> 来指示增缩的数量，对于缩容，将 <code>--replicas</code> 设置为比当前 Pod 副本数量更小的数字即可，比如缩容到 2 个如下：</p>
-<center><img src="/images/k8s/pod_scale_down.png" alt=""></center>
-
-
-<p>可以看到，Pod 销毁会经历一个 <code>Terminating</code> 的过程，最终 3 个副本被删除，只保留了 2 个副本。</p>
-<p>以上是通过命令的形式来实现手动的扩容和缩容，我们也可以修改 YAML 配置文件中的 <code>replicas</code> 来实现，只要修改完之后执行 <code>kubectl apply</code> 即可。</p>
-<p>OK，本文到此为止，下文我们再来 Pod 伸缩的另一种方式——自动扩容和缩容。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/29/技术/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -401,7 +373,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/26/云计算/Kubernetes_笔记_10_Job_机器人加工厂/">
+          <a href="/2018/09/26/技术/Kubernetes_笔记_10_Job_机器人加工厂/">
               
                   Kubernetes 笔记 10 Job 机器人加工厂
               
@@ -440,97 +412,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 10 篇。</p>
 <p>通常，我们在执行任务时，会启用多个服务，有些任务需要长时间运行，全天 24 小时不中断，所以一般会启用 Daemon 类的 服务；而有些任务则只需要短暂执行，任务执行完，服务就没有存在的必要了。</p>
-<p>容器提供服务运行的环境，根据任务持续运行的时间，将容器分为两类：服务类容器和工作类容器。</p>
-<p>服务类容器需要一直运行来提供持续性的服务，而工作类容器则是运行一次性的任务，任务完成后便会退出。</p>
-<p>前面学习的 Deployment、ReplicaSet 和 DaemonSet 都用于管理服务类容器，而工作类容器则由本文要讲得 Job 来管理。</p>
-<p>Job 多用于执行一次性的任务，批处理任务等，Job 就像是现代化机械加工厂的机器人，当有任务来的时候，便会启动，按照预先设定好的程序执行任务，直至任务执行完，便会进入休眠状态。</p>
-<p>进一步，Job 根据任务的类型和执行的动作又分为以下几类：   </p>
-<ul>
-<li>单 Job 单任务：只启动一个 Job 来完成任务，同时 Job 只启用一个 Pod ，适用于简单的任务。</li>
-<li>多 Job 多任务：启动多个 Job 来处理批量任务，每个任务对应一个 Job，Pod 的数量可以自定义。</li>
-<li>单 Job 多任务：采用一个任务队列来存放任务，启动一个 Job 作为消费者来处理这些任务，Job 会启动多个 Pod，Pod 的数量可以自定义。</li>
-<li>定时 Job：也叫 CronJob，启动一个 Job 来定时执行任务，类似 Linux 的 Crontab 程序。</li>
-</ul>
-<p>上述 Job 的分类需要注意两点：</p>
-<p>1）Job 执行失败的重启策略；Job 执行的是一次性的任务，但也不保证一定能执行成功，如果执行失败，应该怎么处理？这个是由前面所讲的 Pod 重启策略来决定的。在 Job Controller 中，只允许定义两种策略：  </p>
-<ul>
-<li>Never：Pod 执行失败，不会重启该 Pod，但会根据 Job 定义的期望数重新创建 Pod。</li>
-<li>OnFailure：Pod 执行失败，则会尝试重启该 Pod。</li>
-</ul>
-<p>两种策略尝试的次数由 <code>spec.backoffLimits</code> 来限制，默认是 6 次（K8S 1.8.0 新加的特性）。</p>
-<p>2）批量任务的多次并行处理的限制；对于批量任务，通常是一个 Pod 对应一个任务，但有时为了加快任务的处理，会启动多个 Pod 来并行处理单个任务。可以通过下面两个参数来设置并行度：</p>
-<ul>
-<li><code>spec.completions</code>：总的启动 Pod 数，只有当所有 Pod 执行成功结束，任务才结束。</li>
-<li><code>spec.parallelism</code>：每个任务对应的 Pod 的并行数，当有一个 Pod 执行成功结束，该任务就执行结束。</li>
-</ul>
-<p>下面通过几个例子来实践一下上面的几种 Job 类别。</p>
-<h3 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h3><h4 id="单-Job-单-Pod-执行一次性任务"><a href="#单-Job-单-Pod-执行一次性任务" class="headerlink" title="单 Job 单 Pod 执行一次性任务"></a>单 Job 单 Pod 执行一次性任务</h4><p>首先，定义 Job 的 yaml 配置文件 myjob.yaml：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: myjob</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: myjob</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: hello</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;echo&quot;, &quot;hello, I&apos;m CloudDeveloper, Welcome&quot;]</span><br><span class="line">      restartPolicy: Never</span><br></pre></td></tr></table></figure>
-<p>执行 <code>kubectl create -f myjob.yaml</code> 创建 job 对象：</p>
-<center><img src="/images/k8s/job-yaml.png" alt=""></center>
-
-
-<p>可以看到期望创建的 Job 数为 1，成功执行的 Job 数也为 1，这表明该 Job 已经执行完任务退出了。这个 Job 执行的任务就是创建一个 Pod，Pod 中创建一个 busybox 容器，并进入容器输出一段字符串：<strong>“hello, I’m CloudDeveloper, Welcome”</strong>。</p>
-<p>查看一下 Pod 的状态：   </p>
-<center><img src="/images/k8s/job-pod.png" alt=""></center>
-
-
-<p>可以看到，该 Pod 的状态为 <code>Completed</code>，表示它已经执行完任务并成功退出了。那怎么看该任务的执行结果呢？可以执行 <code>kubectl logs myjob</code> 调出该 Pod 的历史执行信息进行查看：</p>
-<center><img src="/images/k8s/job-logs.png" alt=""></center>
-
-
-<p>看到历史输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello, I&apos;m CloudDeveloper, Welcome</span><br></pre></td></tr></table></figure>
-<p>以上是执行成功的情况，如果执行失败，会根据 <code>restartPolicy</code> 进行重启，重启的方式上面也说了。大家可以自己实践下。</p>
-<h4 id="多-Job-多-Pod-执行批量任务"><a href="#多-Job-多-Pod-执行批量任务" class="headerlink" title="多 Job 多 Pod 执行批量任务"></a>多 Job 多 Pod 执行批量任务</h4><p>首先，定义 Job 的 yaml 模板文件 job.yaml.txt，然后再根据这个模板文件创建多个 Job yaml 文件。模板文件如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: work-item-$ITEM</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: job</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: c</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;echo work item $ITEM &amp;&amp; sleep 2&quot;]</span><br><span class="line">      restartPolicy: Never</span><br></pre></td></tr></table></figure>
-<p>其中，<code>$ITEM</code> 作为各个 Job 项的标识。接着，使用以下脚本，根据 Job 模板创建三个 Job 配置文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in app book phone</span><br><span class="line">do</span><br><span class="line">  cat myjob_tmp.yaml | sed &quot;s/\$ITEM/$i/g&quot; &gt; ./jobs/job-$i.yaml</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<p>最后，创建三个 Job 对象，如下：</p>
-<center><img src="/images/k8s/job-multi.png" alt=""></center>
-
-
-<h4 id="单-Job-多-Pod-执行批量任务"><a href="#单-Job-多-Pod-执行批量任务" class="headerlink" title="单 Job 多 Pod 执行批量任务"></a>单 Job 多 Pod 执行批量任务</h4><p>这种方式是用一个队列来存放任务，然后启动一个 Job 来执行任务，Job 可以根据需求启动多个 Pod 来承载任务的执行。定义下面的配置文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: myjob</span><br><span class="line">spec:</span><br><span class="line">  completions: 6</span><br><span class="line">  parallelism: 2</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: myjob</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: hello</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;echo&quot;, &quot;hello CloudDeveloper&quot;]</span><br><span class="line">      restartPolicy: OnFailure</span><br></pre></td></tr></table></figure>
-<p>这里用到了上面说的两个参数：<code>completions</code> 和 <code>parallelism</code>，表示每次并行运行两个 Pod，直到总共 6 个 Pod 成功运行完成。如下：</p>
-<center><img src="/images/k8s/job-para.png" alt=""></center>
-
-
-<p>可以看到 DESIRED 和 SUCCESSFUL 最终均为 6，符合预期，实际上也有 6 个 Pod 成功运行并退出，呈 <code>Completed</code> 状态。</p>
-<p>随便查看其中一个 Pod 的历史执行情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># kubectl logs myjob-5lfnp</span><br><span class="line">hello CloudDeveloper</span><br></pre></td></tr></table></figure>
-<h4 id="定时任务-CronJob"><a href="#定时任务-CronJob" class="headerlink" title="定时任务 CronJob"></a>定时任务 CronJob</h4><p>定义一个 CronJob 配置文件，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1beta1</span><br><span class="line">kind: CronJob</span><br><span class="line">metadata:</span><br><span class="line">  name: hello</span><br><span class="line">spec:</span><br><span class="line">  schedule: &quot;*/1 * * * *&quot;</span><br><span class="line">  jobTemplate:</span><br><span class="line">    spec:</span><br><span class="line">      template:</span><br><span class="line">        spec:</span><br><span class="line">          containers:</span><br><span class="line">          - name: hello</span><br><span class="line">            images: busybox</span><br><span class="line">            command: [&quot;echo&quot;, &quot;Hello CloudDeveloper&quot;]</span><br><span class="line">          restartPolicy: OnFailure</span><br></pre></td></tr></table></figure>
-<p>kind 类型为 CronJob，<code>spec.schedule</code> 表示定时调度，指定什么时候运行 Job，格式与 Linux 的 Crontab 命令是一样的，这里 <code>*/1 * * * *</code> 的含义是每一分钟启动一次。</p>
-<p>创建 CronJob 对象，通过 <code>kubectl get cronjob</code> 查看 CronJob 的状态：  </p>
-<center><img src="/images/k8s/cronjob-get.png" alt=""></center>
-
-
-<p>过一段时间再查看 Pod 的状态：</p>
-<center><img src="/images/k8s/cronjob.png" alt=""></center>
-
-
-<p>可以看到，此时产生了 3 个 Pod，3 个 Jobs，这是每隔一分钟就会启动一个 Job。执行 <code>kubectl logs</code> 查看其中一个的历史执行情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># kubectl logs hello-1536764760-lm5kt</span><br><span class="line">Hello CloudDeveloper</span><br></pre></td></tr></table></figure>
-<p>到此，本文就结束了。我们从理论结合实践，梳理了 Job 的几种类型，下文我们开始看一种有状态的 Controller——StatefulSet。</p>
-<p>同样，需要学习资料的后台回复“K8S” 和 “K8S2”，想加群学习回复“加群”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/26/技术/Kubernetes_笔记_10_Job_机器人加工厂/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -551,7 +445,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/19/云计算/Kubernetes_笔记_09_DaemonSet_我是一只看门狗/">
+          <a href="/2018/09/19/技术/Kubernetes_笔记_09_DaemonSet_我是一只看门狗/">
               
                   Kubernetes 笔记 09 DaemonSet 我是一只看门狗
               
@@ -590,54 +484,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 9 篇。</p>
 <p>和上文中的 Deployment 一样，DaemonSet 也是一种副本管理机制，和 Deployment 可以在每个 Node 上运行好几个 Pod 副本不同的是，DaemonSet 始终保证每个 Node 最多只会运行一个副本，就像它的名称一样，作为一只看门狗（Daemon）守护在主人家里。</p>
-<p>那么，哪些应用适合用 DaemonSet 的方式来部署呢？</p>
-<p>主要有以下几类：</p>
-<ul>
-<li>监控类的，比如 Prometheus，collectd，New Relic agent，Ganglia gmond 等。</li>
-<li>系统管理类的，比如 kube-proxy, kube-flannel 等。</li>
-<li>日志收集类的，比如 fluentd，logstash 等。</li>
-<li>数据存储类的，比如 glusterd, ceph 等。</li>
-<li>……</li>
-</ul>
-<p>其中，系统管理类的应用主要是 K8S 自身的一些系统组件，我们可以通过 <code>kubectl get daemonset --namespace=kube-system</code> 查看到：  </p>
-<center><img src="/images/k8s/daemon-sys.png" alt=""></center>
-
-
-<p>DaemonSet <code>kube-proxy</code> 和 <code>kube-flannel-ds</code> 有 3 个副本，分别负责在每个节点上运行 kube-proxy 和 flannel 组件。</p>
-<p>kube-proxy 前面的文章讲过，它有负载均衡的功能，主要将外部对 Service 的访问导向后端的 Pod 上。显然，一个 Node 运行一个负载均衡器足矣。</p>
-<p>我们可以通过 <code>kubectl edit daemonset kube-proxy --namespace=kube-system</code> 来查看 kube-proxy 的 yaml 配置文件。</p>
-<center><img src="/images/k8s/kube-proxy-dae.png" alt=""></center>
-
-
-<p>可以看到它的 kind 是 DaemonSet。</p>
-<p>接着再来看 kube-flannel-ds，这是一个网络插件组件，主要用于构建 K8S 的集群网络，这里大家不懂可以跳过，不影响本文的理解，后面在讲到 K8S 网络的时候会重点讲这个网络方案。</p>
-<p>这里我们只需要知道，各个 Pod 间的网络连通就是 flannel 来实现的。</p>
-<p>这是一个第三方的插件，我们可以直接下载它的 yaml 文件进行安装，执行下面的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure>
-<p>得到 kube-flannel.yml 文件：</p>
-<center><img src="/images/k8s/kube-flannel-dae.png" alt=""></center>
-
-
-<p>这里只列出了一部分内容，kind 类型是 DaemonSet。</p>
-<p>其实 DaemonSet 配置文件的语法和结构和 Deployment 几乎完全一样，不同就在于将 kind 设为 DaemonSet。</p>
-<p>OK，DaemonSet 的探讨就到这里，下文我们继续讨论另外一种 Controller：Job。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/19/技术/Kubernetes_笔记_09_DaemonSet_我是一只看门狗/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -658,7 +517,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/16/云计算/Kubernetes_笔记_08_Deployment_副本管理_重新招一个员工来填坑/">
+          <a href="/2018/09/16/技术/Kubernetes_笔记_08_Deployment_副本管理_重新招一个员工来填坑/">
               
                   Kubernetes 笔记 08 Deployment 副本管理 重新招一个员工来填坑
               
@@ -697,65 +556,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 8 篇。</p>
 <p>Deployment 是 K8S v1.2 引入的概念，与之一起引入还有 ReplicaSet。这两个概念是等同的，准确说是 Deployment 内部调用 ReplicaSet 来实现。</p>
-<p>之前这个概念是由 Replication Controller 来实现的，但由于和 K8S 代码中的模块重名，所以就改成 Deployment + ReplicaSet 的组合。</p>
-<p>Deployment 实现了 Pod 的副本管理，使得应用的表现形态和用户期望的状态保持一致。比如用户期望应用部署为 3 副本，如果在运行过程中有一个副本挂了，那么 Deployment 会自动拉起一个副本。</p>
-<p>Deployment 对于应用的编排、自动扩容和缩容、升级回滚等功能都是至关重要的。</p>
-<p>下面我们通过一个例子来看看 Deployment 是如何工作的。</p>
-<p>定义一个 <code>nginx.yaml</code> 文件（对 yaml 文件不熟悉的可以查阅这篇文章）：   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1   </span><br><span class="line">kind: Deployment 	</span><br><span class="line">metadata: 	 </span><br><span class="line">  name: nginx-deployment	</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2 	 </span><br><span class="line">  template: 	 </span><br><span class="line">    metadata:</span><br><span class="line">      labels: 	 </span><br><span class="line">        app: web-server</span><br><span class="line">    spec:		 </span><br><span class="line">      containers:  </span><br><span class="line">      - name: nginx 	 </span><br><span class="line">        images: nginx:1.12.1     </span><br><span class="line">        ports:  </span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
-<p>这个文件定义了一个 nginx 容器应用，两个 Pod 副本。也就是每个 Pod 中会跑一个 nginx 应用。</p>
-<p>执行<code>kubectl create -f nginx.yaml</code>创建 Deployment 对象，在执行 <code>kubectl get deploy</code> 查看创建的 Deployment。</p>
-<center><img src="/images/k8s/deploy-yaml.png" alt=""></center>
-
-
-<p>可以看到，其中两个参数 <code>desired</code>（期待副本数）和 <code>current</code>（当前副本数）都为 2，保持一致，我们再执行 <code>kubectl get pod -o wide</code> 查看当前 Pod 的情况：</p>
-<center><img src="/images/k8s/deploy-pod.png" alt=""></center>
-
-
-<p>可以看到，创建了两个 Pod 自动调度到了 Node1 和 Node2 上。这说明每个 Pod 副本是由 Deployment 统一创建并维护的。</p>
-<p>为了一探究竟，我们继续深挖 Deployment。</p>
-<p>执行 <code>kubectl describe deployment nginx-deployment</code> 查看该 Deployment 的详细信息。</p>
-<center><img src="/images/k8s/deploy-replica.png" alt=""></center>
-
-
-<p>图中圈住的地方告诉我们，这里创建了一个 ReplicaSet，也就是说 Deployment 内部是调用 ReplicaSet 来完成 Pod 副本的创建的。是否是这样，我们继续验证。</p>
-<p>执行 <code>kubeclt get replicaset</code> 显示创建的 ReplicaSet 对象：</p>
-<center><img src="/images/k8s/deploy-get-replica.png" alt=""></center>
-
-
-<p>可以看到这里的 ReplicaSet 名称和上面 Deployment 信息里显示的是一样的，同样，执行 <code>kubectl describe replicaset xxx</code> 显示该 ReplicaSet 的详细信息。</p>
-<center><img src="/images/k8s/deploy-replica-events.png" alt=""></center>
-
-
-<p>图中，有两处地方值得注意。一处是 <code>Controlled By</code>，表明 ReplicaSet 是由谁创建并控制的，显然这里显示是 Deployment。第二处是 <code>Events</code>，Events 记录了 K8S 中每一种对象的日志信息，这里的信息有助于排错查问题。我们可以看到这里记录了两个 Pod 副本的创建，Pod 的名称和我们在上面执行 <code>kubectl get pod</code> 看到的结果是一样的。</p>
-<p>继续执行 <code>kubectl describe pod xxx</code> 查看其中一个 Pod 的详细信息：</p>
-<center><img src="/images/k8s/deploy-pod-des.png" alt=""></center>
-
-<p>可以看到这个 Pod 是由 ReplicaSet 创建的。</p>
-<p>到此，我们不难得出下面这幅图：</p>
-<center><img src="/images/k8s/deploy-pod1.png" alt=""></center>
-
-
-<p>用户通过 kubeclt 创建 Deployment，Deployment 又创建 ReplicaSet，最终由 ReplicaSet 创建 Pod。</p>
-<p>从命名上我们也可以看出，子对象的名字 = 父对象的名字 + 随机字符串。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文我们从实践上剖析了 Deployment 创建 Pod，实际上经过 ReplicaSet 进行创建。Deployment 最主要是对 Pod 进行副本管理，这样可以进行很多自动化管理的复杂操作，后面我们逐步从实践上去剖析 Pod 的各种操作。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/16/技术/Kubernetes_笔记_08_Deployment_副本管理_重新招一个员工来填坑/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -776,7 +589,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/13/云计算/历史上那些具有跨时代意义的云计算创业公司/">
+          <a href="/2018/09/13/技术/历史上那些具有跨时代意义的云计算创业公司/">
               
                   历史上那些具有跨时代意义的云计算创业公司
               
@@ -813,61 +626,20 @@
 </blockquote>
 <center><img src="/images/cloud/8.jpg" alt=""></center>
 
-
 <p>这里所说的不是像 Google、VMware、Cisco、Intel 等等这些巨头公司，而是在巨头的夹缝中冉冉升起的那些新星。由于知识面有限，列举不尽完全，大家可以留言说说你心目中还有哪些值得铭记的公司。</p>
-<h3 id="Rackspace"><a href="#Rackspace" class="headerlink" title="Rackspace"></a>Rackspace</h3><hr>
-<p>Rackspace 理应不算新星了，但说到“跨时代意义”，它是绝对的名副其实。原因就在于它和 NASA（美国国家航空航天局）合作开发了 OpenStack——一个让云计算产业进入井喷时代的项目。OpenStack 一经开源，短短两年时间就力压群雄成为开源社区仅次于 Linux 的全球第二大开源项目。</p>
-<center><img src="/images/cloud/rackspace.jpg" alt=""></center>
-
-<p>可以说是 OpenStack 拯救了 Rackspace。Rackspace 于 1998 成立，是最早期的一批云计算提供商，OpenStack 出来之前，一直不温不火，2010 年 OpenStack 出来之后，名声大震，一步跃居为全球仅次于 Amazon 和 VMware 的三大云计算中心之一。</p>
-<p>如今 OpenStack 已经更新到 Rocky 版本，在众多竞争者和效仿者的围追堵截之下，依然很强势，这和它优秀的架构是分不开的。我很好奇它更新到 Z 版本之后会发生什么？</p>
-<h3 id="dotCloud"><a href="#dotCloud" class="headerlink" title="dotCloud"></a>dotCloud</h3><hr>
-<p>OpenStack 带动了 IaaS 的发展，在这个节骨眼上，人们开始意识到，只有 IaaS 已经无法满足用户变态的需求了。</p>
-<p>时间也落在 2010 年，这个时候几个大胡子年轻人在旧金山成立了一家做 PaaS 的公司，起名 dotCloud，开始杀入 PaaS 领域。</p>
-<center><img src="/images/cloud/dotcloud.png" alt=""></center>
-
-<p>年轻一辈都意识到了商机，大佬们（Google、Microsoft、Amazon 等）能不意识到吗？于是大佬们也纷纷涉足 PaaS 领域，最终 dotCloud 寡不敌众，不得不缴械投降。</p>
-<p>dotCloud 的工程师于心不甘啊，辛辛苦苦画下的大饼就这样被割分完了。但也没办法，谁让人家是大佬呢。</p>
-<p>鉴于工程师们血液里都流淌着一股热爱分享的劲儿，他们决定将 dotCloud 的核心技术开源给世人。</p>
-<p>谁能想到，无心插柳柳成荫。这门技术瞬间风靡全球，开启了又一个新的时代。</p>
-<p>这门技术就是 Docker。</p>
-<center><img src="/images/cloud/docker.jpg" alt=""></center>
-
-<p>dotCloud 又火了，但为了纪念这个神圣的时刻，dotCloud 改名为 Docker Inc，全身心投入 Docker 的研发中。至于原来的 PaaS 业务，Docker 将其卖给了德国人的 cloudControl。但好景不长，cloudControl 于 2016 年就关闭了。</p>
-<p>如今，Docker 技术依然可圈可点，虽然很多人在 Kubernetes 出来之后，叫衰 Docker，但我却不以为然。</p>
-<h3 id="Nicira"><a href="#Nicira" class="headerlink" title="Nicira"></a>Nicira</h3><hr>
-<p>2007 年，斯坦福大学的 Nick McKeown 教授和他的天才学生 Martin Casado 博士根据他们的研究成果创办了 Nicira。这是 SDN 网络的鼻祖公司，Nick 教授和 Martin 博士也因此被人们称为 SDN 之父。</p>
-<p>Nicira 公司做了很多牛逼的事：发明了世界上第一个 SDN 控制器 NOX，第一个分布式交换机 Open vSwitch 及其配套协议 OpenFlow 协议，领导研发 OpenStack 网络驱动模块 Quantum/Neutron，开源了业界第一个与硬件无关，支持多种 X86 虚拟化平台的分布式网络虚拟化架构（DVNI），等等等等。</p>
-<p>Nicira 当时那套 SDN 的解决方案，放在今天来说都是很超前的东西。很快，Nicira 就被 VMware 和 Cisco 这些巨头盯上了。巨头们看上的不仅是 Nicira 的技术，更是 Nicira 那帮工程师天才般的智慧和对技术敏锐的洞察力。</p>
-<p>巨头们开始了疯狂的收购战，最终 VMware 以 12.6 亿美元拔得头筹。Martin 博士也带领他的一般众将归入了 VMware 的麾下。</p>
-<center><img src="/images/cloud/nicira.jpg" alt=""></center>
-
-<p>至此，Nicira 的舞台也算退出了。Open vSwitch 如今仍然占据 SDN 数据面的头把交椅。</p>
-<h3 id="Palo-Alto-Networks"><a href="#Palo-Alto-Networks" class="headerlink" title="Palo Alto Networks"></a>Palo Alto Networks</h3><hr>
-<p>2005 年，以色列的一个天才少年 Nir Zuk 在一间简陋的办公室里，一手创办了 PAN，这就是当下极富盛名的下一代防火墙的初创者（很多公司都宣称自己的防火墙是下一代防火墙，众说纷坛，其实争论这个没多大意义，人家 PAN 都还没说话呢）。</p>
-<center><img src="/images/cloud/palo.jpg" alt=""></center>
-
-<p>回看 Nir 的一生，也是颇具传奇，经历像极了乔布斯，但没乔布斯那么惨是被老东家赶出的，Nir 是因为老东家小气不肯给他资源做项目而无奈出走。谁能想到，PAN 能在短时间之内就超越了老东家。</p>
-<blockquote>
-<p>小公司要在大公司的夹缝中生长，需要天时地利人和，以及运气，就像 Docker，上帝为你关上一扇门，就会为你打开一扇窗。</p>
-</blockquote>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/13/技术/历史上那些具有跨时代意义的云计算创业公司/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/OpenStack/"><i class="fas fa-hashtag fa-fw"></i>OpenStack</a>
                 
@@ -888,7 +660,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/11/云计算/Kubernetes_笔记_07_豌豆荚之旅（二）/">
+          <a href="/2018/09/11/技术/Kubernetes_笔记_07_豌豆荚之旅（二）/">
               
                   Kubernetes 笔记 07 豌豆荚之旅（二）
               
@@ -927,58 +699,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学习 K8S，这是系列第 7 篇。</p>
 <p>上篇我们简单学习了 Pod 的基础知识，本篇开始讲述一些 Pod 的高阶知识（本文只做理论的简单阐述，后面会针对每个点进行实践）。</p>
-<h3 id="Pod-的生命周期管理"><a href="#Pod-的生命周期管理" class="headerlink" title="Pod 的生命周期管理"></a>Pod 的生命周期管理</h3><p>豌豆荚自诞生之日起，便注定要经历生老病死的一生。Pod 是由容器组成的，Pod 生命周期实际上是由容器的生命周期决定的。</p>
-<p>在整个生命周期过程中，Pod 会被定义为各种状态，如下：</p>
-<center><img src="/images/k8s/pod_lifetime.png" alt=""></center>
-
-
-<p>这些状态包括正常状态和异常状态，当出现异常状态时，K8S 的监控机制会检测到这种异常，并执行相应的异常处理。</p>
-<h3 id="Pod-的监控机制"><a href="#Pod-的监控机制" class="headerlink" title="Pod 的监控机制"></a>Pod 的监控机制</h3><p>Pod 的监控主要是监控 Pod 内容器的健康状况，并进行相关的异常处理和容错管理。</p>
-<p>当监控到某个容器异常退出或健康检查失败时，Pod 会执行重启策略，使得 Pod 内的容器健康运转。</p>
-<p>如下记录了 Pod 的重启策略和健康检查机制：</p>
-<center><img src="/images/k8s/pod_jk.png" alt=""></center>
-
-
-<h3 id="Pod-的调度管理"><a href="#Pod-的调度管理" class="headerlink" title="Pod 的调度管理"></a>Pod 的调度管理</h3><p>K8S Master 上的 Scheduler 服务负责实现 Pod 的调度管理，Pod  是静态的，只有真正被调度到具体的节点上才能发挥它的作用。K8S 根据不同的应用场景，定义了多种不同的调度策略。这些策略可以是根据算法自动完成的，也可以是人为指定的。具体可以看下面这张导图：</p>
-<center><img src="/images/k8s/pod_scheduler.png" alt=""></center>
-
-
-<p>笼统来看，有时候为了权衡应用场景和集群资源的需求，需要对 Pod 进行扩容和缩容，这同样属于 Pod 调度管理的范畴。</p>
-<h3 id="Pod-的存储管理"><a href="#Pod-的存储管理" class="headerlink" title="Pod 的存储管理"></a>Pod 的存储管理</h3><p>Pod 和容器的数据存储使用 Volume，K8S Volume 和 Docker 的 Volume 是一样的原理，都是文件系统上的一个目录，只不过在 K8S 中实现了更多的 backend driver。包括 emptyDir、hostPath、GCE Persistent Disk、NFS、Ceph 等。</p>
-<center><img src="/images/k8s/pod_volume.png" alt=""></center>
-
-
-<p>Volume 提供了对各种 driver 的抽象，容器在使用 Volume 读写数据的时候不需要关心底层具体存储方式的实现，对它来说，所有类型的 Volume 都是一个目录。</p>
-<p>当 Volume 被挂载到 Pod 中时，这个 Pod 中的容器都会共享这个 Volume，当其中的容器销毁时，Volume 中的数据也不会丢失，当 Pod 销毁时，根据不同的 driver 实现，数据也可以保存下来。</p>
-<p>Volume 提高了 Pod 内数据的持久化管理，延长了 Pod 和容器的生命周期。</p>
-<h3 id="Pod-的网络管理"><a href="#Pod-的网络管理" class="headerlink" title="Pod 的网络管理"></a>Pod 的网络管理</h3><p>在 K8S 中，定义了多种资源对象，很多对象本身就是一个通信的实体，比如容器、Pod、Service、Node。</p>
-<p>K8S 维护这多种对象之间的通信关系，比如：Pod 内容器之间的通信、Pod 与容器之间的通信、Pod 之间的通信、Pod 与 Service 之间的通信，以及外部的访问。</p>
-<p>这些通信机制的建立离不开 K8S 建立的完善的网络模型。K8S 使用了 CNI（容器网络规范）来标准化、归一化网络模型。</p>
-<p>第三方的厂商或开发者可以根据自身网络需求，遵从 CNI 的规范，实现各种网络方案，并以插件的形式提供给 K8S 使用。目前比较知名的网络方案有：flannel、calico、weave、canal 等。</p>
-<center><img src="/images/k8s/pod_net.png" alt=""></center>
-
-
-<p>这些网络方案各有千秋、虽然实现方式各有区别，但殊途同归，最终都是满足 K8S 中各种实体间的通信需求。</p>
-<p>OK，本文就到这里，我们通过两篇文章大致梳理了豌豆荚从出生到死亡要面临的多种人生的关卡。跨过去了，就成熟了，希望我们都能跨过自己人生的关卡。</p>
-<p>下文我们开始进入实践的部分。</p>
-<p>为了给大家更多的福利，这个系列的每一篇文章我都会送一些电子书，可能有重的，也有一些新书，之前送了《K8S 指南》和《容器与容器云》，这次送一本新书《》，大家有需要的后台回复“K8S2”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/11/技术/Kubernetes_笔记_07_豌豆荚之旅（二）/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -999,7 +732,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/09/云计算/Kubernetes_笔记_06_豌豆荚之旅（一）/">
+          <a href="/2018/09/09/技术/Kubernetes_笔记_06_豌豆荚之旅（一）/">
               
                   Kubernetes 笔记 06 豌豆荚之旅（一）
               
@@ -1038,73 +771,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学习 K8S，这是系列第 6 篇。</p>
 <p>Pod 中文译为豌豆荚，很形象，豌豆荚里面包裹的多颗小豌豆就是容器，小豌豆和亲密无间的老伙计壳荚子自出生之日起就得面对各种各样的人生大事：  </p>
-<ul>
-<li>容器、Pod、Node 之间的关系</li>
-<li>Pod 的生命周期管理</li>
-<li>Pod 的调度管理</li>
-<li>Pod 的监控</li>
-<li>Pod 的升级与回滚</li>
-<li>Pod 的扩容与缩容</li>
-<li>Pod 的存储管理</li>
-<li>Pod 的网络管理</li>
-<li>……</li>
-</ul>
-<h3 id="为什么需要-Pod？"><a href="#为什么需要-Pod？" class="headerlink" title="为什么需要 Pod？"></a>为什么需要 Pod？</h3><p>我们假设没有 Pod，应用部署的最小单元就是容器，会有什么问题？首先，应用调度粒度太细，不便于管理。想象一下淘宝网站运行着海量应用，每个应用又拆分成多个服务，每个服务部署在一个容器里，一个集群管理系统要管理庞大的容器集群，既要顾忌不同应用之间的隔离性，又要考虑相同应用之间的关联性，这在管理上将会是灾难性的难题。</p>
-<p>其次，资源利用率低。有很多应用之间存在某种强关联关系，它们需要彼此能共享对方的资源，双方的交互需要快捷有效，如果把它们部署到单独的容器中，资源利用和通信将成为最主要的系统瓶颈。</p>
-<p>Pod 的提出改变了这种局面，它将强关联的应用整合在一起，作为一个整体对外提供服务，既简化了管理的难度，又提高了资源的利用率。</p>
-<p>那哪些应用是强关联，适合放到一个 Pod 中呢？举个例子，比如下面这个 Pod 包含两个容器，一个 File Puller，一个是 Web Server。</p>
-<center><img src="/images/k8s/pod.png" alt=""></center>
-
-<p>File Puller 会定期从外部的 Content Manager 中拉取最新的文件，将其存放在 Volume 中。然后 Web Server 从 Volume 中读取文件，来响应 Consumer 的请求。</p>
-<p>这两个容器通过 Volume 来共享实时的数据，协作处理一个 Consumer 的请求，把它们放到同一个 Pod 中就是合适的。</p>
-<p>如果有应用和任何应用之间都不存在联系，那么它们就单独部署在一个 Pod 中，称为<code>one-container-per-pod</code>。即便只有一个容器，K8S 管理的也是 Pod 而不是直接管理容器。</p>
-<p>综上，Pod 在设计的时候，主要动机有以下两点：</p>
-<ol>
-<li>方便管理</li>
-</ol>
-<p>Pod 提供了比容器更高一层的抽象，K8S以 Pod 为最小单元进行应用的部署、调度、扩展、共享资源和管理周期。</p>
-<ol start="2">
-<li>资源共享和通信</li>
-</ol>
-<p>Pod 内的所有容器共享同一个网络空间，它们之间可以通过 <code>localhost</code> 相互通信。同样，所有容器共享 Volume，一个容器挂载一个 Volume，其余容器都可以访问这个 Volume。</p>
-<h3 id="容器、Pod、Node-之间的关系"><a href="#容器、Pod、Node-之间的关系" class="headerlink" title="容器、Pod、Node 之间的关系"></a>容器、Pod、Node 之间的关系</h3><p>容器是 Pod 的一个属性，定义了应用的类型及共享的资源。每个容器会分配一个 Port，Pod 内的容器通过 localhost:Port 的形式来通信。</p>
-<p>一个 Pod 包含一个或多个容器，每个 Pod 会分配一个唯一的 IP 地址，Pod 内的多个容器共享这个 IP 地址，每个容器的 Port 加上 Pod IP 共同组成一个 <code>Endpoint</code>，共同对外提供服务。</p>
-<p>在部署应用的时候，Pod 会被 Master 作为一个整体调度到一个 Node 上。如果开启多副本管理，则多个 Pod 会根据调度策略调度到不同的 Node 上。如果 Node 宕机，则该 Node 上的所有 Pod 会被自动调度到其他 Node 上。</p>
-<p>下面是容器、Pod、Node 三者之间的关系图：  </p>
-<center><img src="/images/k8s/pod_docker_node.png" alt=""></center>
-
-
-<h3 id="Pod-根容器"><a href="#Pod-根容器" class="headerlink" title="Pod 根容器"></a>Pod 根容器</h3><p>Pod 中有一个特殊的容器，叫 Pod 的根容器——Pause 容器，这是一个很小的容器，镜像大小大概为 200KB。</p>
-<center><img src="/images/k8s/pod_pause.png" alt=""></center>
-
-
-<p>Pause 容器存在的意义是: <strong>维护 Pod 的状态信息</strong>。</p>
-<p>由于 Pod 是作为一个整体进行调度，我们难以对这个整体的信息进行简单的判断和有效地进行行动。</p>
-<p>想象一下，假如 Pod 内一个容器死亡了，是算整体死亡呢还是 N/M 死亡率，如果 Pod 内所有容器都死亡了，那是不是该 Pod 也就死亡了，如果加入新的容器或原有容器故障恢复呢，如何让新成员快速融入环境？</p>
-<p>理论上，虽然 Pod 是由一组容器组成的，但 Pod 和容器是彼此独立的，也就是容器的故障不应该影响 Pod 的存在，Pod 有相应的手段来保证容器的健康状况。</p>
-<p>引入与业务无关的，并且不易死亡的 Pause 容器就可以很好的解决这个问题，Pause 容器的状态就代表了 Pod 的状态，只要 Pause 不死，那么不管应用容器发生什么变化，Pod 的状态信息都不会改变。</p>
-<p>这样，Pod 内的多个应用容器共享 Pause 容器的 IP 和 Volume，当加入新的容器或者原有的容器因故障重启后就可以根据 Pause 保存的状态快速学习到当前 Pod 的状态。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文简单学习了 Pod 的初级知识，包括 Pod 的设计动机，容器、Pod 和 Node 之间的关系，以及 Pod 的守护者——Pause 容器。</p>
-<p>容器的 Port + Pod IP = Endpoint，构成一个 Pod 的通信实体，Pod 中的容器共享网络和存储，这些共享信息是由 Pause 容器来维护的。</p>
-<p>下文继续豌豆荚之旅的第二个部分，学习 Pod 的管理哲学。</p>
-<p>为了给大家更多的福利，这个系列的每一篇文章我都会送一些电子书，可能有重的，也有一些新书，之前送了《K8S 指南》和《容器与容器云》，这次送一本由 K8S 中文社区主编的《K8S 中文手册》，大家有需要的后台回复“K8S2”</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/09/技术/Kubernetes_笔记_06_豌豆荚之旅（一）/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -1125,7 +804,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/07/云计算/Kubernetes_笔记_05_使用产品前请先阅读说明书/">
+          <a href="/2018/09/07/技术/Kubernetes_笔记_05_使用产品前请先阅读说明书/">
               
                   Kubernetes 笔记 05 使用产品前请先阅读说明书
               
@@ -1165,70 +844,19 @@
 <hr>
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 5 篇。</p>
 <p>生活中，随处可见，几乎每一款产品都会附带一份说明书，说明书可以记录产品的使用方法，也可以记录产品的配方。有了说明书，我们完全可以窥探一款产品的全貌。</p>
-<p>在 K8S 中，<code>yaml</code> 配置文件就是 K8S 资源对象的说明书，定义了对象包含的元素及采取的动作，每种对象都可以通过 yaml 配置文件来创建。</p>
-<center><img src="/images/k8s/yaml.jpg" alt=""></center>
-
-
-
-<h3 id="yaml-是什么"><a href="#yaml-是什么" class="headerlink" title="yaml 是什么"></a>yaml 是什么</h3><p>yaml 是一种用来写配置文件的语言，没错，它是一门语言。如果你用过 json，那么对它就不会陌生，yaml 又被称为是 json 的超集，使用起来比 json 更方便。</p>
-<p>结构上它有两种可选的类型：Lists 和 Maps。</p>
-<p>List 用 -（破折号） 来定义每一项，Map 则是一个 key:value 的键值对来表示。如下是一个 json 文件到 yaml 文件的转换：  </p>
-<p>json:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">    &quot;kind&quot;: &quot;Pod&quot;,</span><br><span class="line">    &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;xx&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    &quot;spec&quot;: &#123;</span><br><span class="line">        &quot;containers&quot;: [&#123;</span><br><span class="line">            &quot;name&quot;: &quot;front-end&quot;,</span><br><span class="line">            &quot;images&quot;: &quot;nginx&quot;,</span><br><span class="line">            &quot;ports&quot;: [&#123;</span><br><span class="line">                &quot;containerPort&quot;: &quot;80&quot;</span><br><span class="line">            &#125;]</span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            &quot;name&quot;: &quot;flaskapp-demo&quot;,</span><br><span class="line">            &quot;images&quot;: &quot;jcdemo/flaskapp&quot;,</span><br><span class="line">            &quot;ports&quot;: [&#123;</span><br><span class="line">                &quot;containerPort&quot;: &quot;5000&quot;</span><br><span class="line">            &#125;]</span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>yaml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">    name: xx</span><br><span class="line">spec:</span><br><span class="line">    containers:</span><br><span class="line">        - name: front-end</span><br><span class="line">        images: nginx</span><br><span class="line">        ports:</span><br><span class="line">            - containerPort: 80</span><br><span class="line">    - name: flaskapp-demo</span><br><span class="line">        images: jcdemo/flaskapp</span><br><span class="line">        ports: 8080</span><br></pre></td></tr></table></figure></p>
-<p>这个文件简单地定义了一个 Pod 对象，包含两个容器，我们可以很清晰地看到两者是如何转换的。</p>
-<h3 id="K8S-创建资源的两种方式"><a href="#K8S-创建资源的两种方式" class="headerlink" title="K8S 创建资源的两种方式"></a>K8S 创建资源的两种方式</h3><p>在 K8S 中，有两种创建资源的方式：kubectl 命令和 yaml 配置文件。</p>
-<p>两种方式各有各的好处。命令行的方式最为简单，一条命令就万事大吉，但缺点也很明显，你并不知道这条命令背后到底做了哪些事，配置文件就提供了一种让你知其然更知其所以然的方式。总的来说，它有以下好处：   </p>
-<ul>
-<li>完整性：配置文件描述了一个资源的完整状态，可以很清楚地知道一个资源的创建背后究竟做了哪些事；</li>
-<li>灵活性：配置文件可以创建比命令行更复杂的结构；</li>
-<li>可维护性：配置文件提供了创建资源对象的模板，能够重复使用；</li>
-<li>可扩展性：适合跨环境、规模化的部署。</li>
-<li>……</li>
-</ul>
-<p>当然，复杂的东西对用户就难以做到友好，我们需要熟悉它的配置文件的语法，有一定难度。下面举几个例子，让你对 yaml 配置文件有一个基本的认识。</p>
-<h3 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h3><p>下面，我们分别来看看 <code>deployment</code>、<code>pod</code>、<code>service</code> 这三种资源的说明书都长啥样。</p>
-<p>由于 K8S 对每种资源的定义非常庞杂，限于篇幅，我们只看一些必选的参数，目的是通过这几个例子，读懂 yaml 配置文件。</p>
-<h4 id="deployment"><a href="#deployment" class="headerlink" title="deployment"></a>deployment</h4><p>定义 deployment 配置文件，命名为：nginx-deployment.yaml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1   # 1.9.0 之前的版本使用 apps/v1beta2，可通过命令 kubectl api-versions 查看</span><br><span class="line">kind: Deployment     #指定创建资源的角色/类型</span><br><span class="line">metadata:      #资源的元数据/属性</span><br><span class="line">    name: nginx-deployment    #资源的名字，在同一个namespace中必须唯一</span><br><span class="line">spec:</span><br><span class="line">    replicas: 2      #副本数量2</span><br><span class="line">    selector:      #定义标签选择器</span><br><span class="line">        matchLabels:</span><br><span class="line">            app: web-server</span><br><span class="line">    template:      #这里Pod的定义</span><br><span class="line">        metadata:</span><br><span class="line">            labels:      #Pod的label</span><br><span class="line">                app: web-server</span><br><span class="line">    spec:         # 指定该资源的内容  </span><br><span class="line">        containers:  </span><br><span class="line">        - name: nginx      #容器的名字  </span><br><span class="line">          images: nginx:1.12.1  #容器的镜像地址    </span><br><span class="line">          ports:  </span><br><span class="line">          - containerPort: 80  #容器对外的端口</span><br></pre></td></tr></table></figure></p>
-<p>执行<code>kubectl create -f nginx.yaml</code>创建 deployment 资源：</p>
-<center><img src="/images/k8s/deploy-yaml.png" alt=""></center>
-
-<h4 id="pod"><a href="#pod" class="headerlink" title="pod"></a>pod</h4><p>定义 pod 配置文件，命名为 redis-pod.yaml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod  </span><br><span class="line">metadata:  </span><br><span class="line">    name: pod-redis</span><br><span class="line">    labels:</span><br><span class="line">        name: redis</span><br><span class="line">spec: </span><br><span class="line">    containers:</span><br><span class="line">    - name: pod-redis</span><br><span class="line">        images: docker.io/redis  </span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80    #容器对外的端口</span><br></pre></td></tr></table></figure>
-<p>执行<code>kubectl create -f pod-redis.yaml</code>创建 pod 资源：  </p>
-<center><img src="/images/k8s/pod-yaml.png" alt=""></center>
-
-<p>可以看到，成功创建一个 Pod，<code>ContainerCreating</code>表示 Pod 中的容器正在执行镜像的下载和安装过程，过一会儿，就显示<code>Running</code>了，表明 Pod 应用部署完成。</p>
-<h4 id="service"><a href="#service" class="headerlink" title="service"></a>service</h4><p>定义 service 配置文件，命名为 httpd-svc.yaml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1  </span><br><span class="line">kind: Service  # 指明资源类型是 service</span><br><span class="line">metadata:  </span><br><span class="line">    name: httpd-svc # service 的名字是 httpd-svc</span><br><span class="line">    labels:  </span><br><span class="line">        name: httpd-svc </span><br><span class="line">spec:  </span><br><span class="line">    ports:  # 将 service 8080 端口映射到 pod 的 80 端口，使用 TCP 协议</span><br><span class="line">    - port: 8080</span><br><span class="line">        targetPort: 80  </span><br><span class="line">        protocol: TCP  </span><br><span class="line">    selector:  </span><br><span class="line">        run: httpd # 指明哪些 label 的 pod 作为 service 的后端</span><br></pre></td></tr></table></figure>
-<p>执行<code>kubectl create -f httpd-svc.yaml</code>创建 service 资源：  </p>
-<center><img src="/images/k8s/svc-yaml.png" alt=""></center>
-
-<p>可以看到，service httpd-svc 分配到一个 Cluster-IP 10.96.0.1，我们可以通过该 IP 访问 service 所维护的后端 Pod。</p>
-<p>另外，还有一个 service kubernetes，这个是 Kubernetes API Server 的 service，Cluster 内部的各组件就是通过这个 service 来访问 API Server。 </p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>yaml 是 K8S 资源对象的说明书，每个对象拥有哪些属性都可以在 yaml 中找到详尽的说明，初学者建议多写 yaml 文件，少用命令行。</p>
-<p>以上三个例子只是对 yaml 文件做个简单说明，更详细的信息还是参考官网。</p>
-<p>OK，本文就到此为止，下文我们开始进入豌豆荚之旅。觉得不错，别忘了转发分享给你的朋友哦。</p>
-<blockquote>
-<p>参考：<br><a href="https://www.kubernetes.org.cn/1414.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/1414.html</a></p>
-</blockquote>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/07/技术/Kubernetes_笔记_05_使用产品前请先阅读说明书/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -1249,7 +877,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/05/云计算/Kubernetes_笔记_04_架构是个好东西/">
+          <a href="/2018/09/05/技术/Kubernetes_笔记_04_架构是个好东西/">
               
                   Kubernetes 笔记 04 架构是个好东西
               
@@ -1288,43 +916,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 4 篇。</p>
 <p>任何技术的诞生，都会经历从架构设计到开发测试的过程，好的技术，往往也会有一套好的架构。架构是个好东西，它能帮助我们站在高处看清楚事物的整体结构，避免过早地进入细节而迷失方向。</p>
-<p>上篇文章扫清了 K8S 的一些基本概念，今天这篇文章我们就来看看 K8S 的架构。</p>
-<p>先上图：</p>
-<center><img src="/images/k8s/architecture.png" alt=""></center>
-
-<p>图中包括两种类型的节点：Master 和 Node，每个节点上运行着多种 K8S 服务。</p>
-<h3 id="Master-节点"><a href="#Master-节点" class="headerlink" title="Master 节点"></a>Master 节点</h3><p>Master 是 K8S 集群的大脑，运行着如下 Daemon 服务：kube-apiserver、kube-controller-manager、kube-scheduler、etcd 等。</p>
-<h4 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h4><p>如果把 K8S 环境看作是一个公司，那 API Server 就是这个公司的基础平台部，是公司最为核心的技术能力输出出口。它对外提供 HTTP/HTTPS REST API，统称 K8S API，可以供各类客户端工具（CLI 或 WebUI）、K8S 其他组件，以及第三方的平台接入。对内提供了 K8S 各类资源（如 Pod、Deployment、Service等）的增删改查和监控等操作，是集群内各个功能模块之间数据交互和通信的中心枢纽。</p>
-<h4 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h4><p>Controller Manager 更像是公司的人力资源部，负责统筹公司的人员分布。它管理着 K8S 各类资源的生命周期，保证资源处于预期状态，如果现有状态和预期状态不符，它会自动化执行修正。</p>
-<p>Controller Manager 由多种 Controller 组成，包括 Replication Controller、Node Controller、ResourceQuota Controller、Namespace Controller、ServiceAccount Controller、Service Controller、Token Controller 及 Endpoint Controller 等。每种 Controller 都负责一种具体的资源管控流程，而 Controller Manager 正是这些 Controller 的核心管理者。</p>
-<h4 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h4><p>Scheduler 则像是公司各个部门的项目经理之类的角色，负责将具体的人力放到他们擅长的位置上，知人善用。具体来说，Scheduler 负责将待调度的 Pod 对象按照特定的调度策略绑定到集群中某个合适的节点上，调度策略会综合考虑集群的拓扑结构、节点的负载情况、以及应用对高可用、性能、数据亲和性的需求。</p>
-<h4 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h4><p>etcd 是一个高可用的分布式数据库，负责保存 K8S 的配置信息和各种资源的状态信息。当数据发生变化时，etcd 会及时告知集群中的其他组件。</p>
-<h4 id="kubectl"><a href="#kubectl" class="headerlink" title="kubectl"></a>kubectl</h4><p>kubectl 是 K8S 的 CLI 工具，这是使用 K8S API 建立的一套命令行工具，使用它，可以非常方便地管理 K8S 集群。</p>
-<h3 id="Node-节点"><a href="#Node-节点" class="headerlink" title="Node 节点"></a>Node 节点</h3><p>Node 是 K8S 集群的具体执行者，也运行着多种服务，如：kubelet、kube-proxy、container runtime、Pod 网络等。Node 可以看作是 Master 的代理，负责处理 Master 下发到本节点的任务，管理 Pod 和 Pod 中的容器，定期向 Master 汇报自身资源的使用情况。</p>
-<h4 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h4><p>kubelet 更像是部门中各个小组的 Leader，对外从 API Server 拿资源，对内负责小组内各种资源的管理，比如从 Master 拿到 Pod 的具体配置信息（images、Volume 等）之后，kubelet 根据这些信息创建和运行容器。</p>
-<h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><p>kube-proxy 则像穿插在公司各个部门之间的接口人，对内和内部人员沟通，对外协调部门之间的各种事宜，展示部门风采。kube-proxy 作用于 Service，通过前面学习，我们知道 Service 是对一组 Pod 的抽象，统一对外提供某种服务，当外部访问 Service 时，实际上是需要访问 Service 所管辖的 Pod 中的容器，kube-proxy 在这里就是负责将访问 Service 的数据流转发到后端的容器，如果有多个副本，kube-proxy 会实现负载均衡。</p>
-<h4 id="cAdvisor"><a href="#cAdvisor" class="headerlink" title="cAdvisor"></a>cAdvisor</h4><p>cAdvisor 对 Node 上的资源进行实时监控和性能数据采集，包括 CPU 使用情况、内存使用情况、网络吞吐量及文件系统使用情况等。cAdvisor 集成在 kubelet 中，当 kubelet 启动时会自动启动 cAdvisor，一个cAdvisor 仅对一台 Node 机器进行监控。</p>
-<h4 id="container-runtime"><a href="#container-runtime" class="headerlink" title="container runtime"></a>container runtime</h4><p>container runtime 是真正运行容器的地方，为容器提供运行环境，主流的三种 container runtime 是 lxc、runc 和 rkt，K8S 都支持它们，但常用的事 runc，原因是 runc 是 Docker 默认的 runtime。在 K8S 的容器应用中，Docker 是主流。</p>
-<p>OK，K8S 架构介绍就到此为止。</p>
-<p>最后，还是继续送书，容器网络专家倪朋飞写的《K8S 指南》电子书，如有需要后台回复“K8S”（之前回复过就不用回复了）。如需加群学习回复“加群”。</p>
-<p>下文我们开始对 K8S 的说明书一探究竟。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/05/技术/Kubernetes_笔记_04_架构是个好东西/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -1345,7 +949,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/03/云计算/Kubernetes_笔记_03_扫清概念/">
+          <a href="/2018/09/03/技术/Kubernetes_笔记_03_扫清概念/">
               
                   Kubernetes 笔记 03 扫清概念
               
@@ -1384,44 +988,19 @@
 
 <p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第三篇。</p>
 <p>每一种技术，为了描述清楚它的设计理念，都会自定义一堆概念或术语。在进入一门技术的研究之前，我们有必要扫清它的基本概念。</p>
-<h3 id="资源对象"><a href="#资源对象" class="headerlink" title="资源对象"></a>资源对象</h3><p>K8S 的操作实体，在 K8S 中，有很多的操作对象，比如容器、Pod、Deployment、Service、Node 等，我们统统称它们为资源对象。</p>
-<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>K8S 集群，是计算、存储和网络资源的集合，K8S 基于这些资源来承载容器化的应用。</p>
-<h3 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h3><p>K8S 集群的大脑，负责整个集群的管控、资源调度。可以部署在普通物理机或虚拟机上，为了实现高可用，可以部署多个 Master。</p>
-<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>K8S 集群的执行者，受 Master 指挥，负责运行和监控容器应用、管理容器的生命周期，并向 Master 定期汇报容器的状态。同样，Node 也可以部署在物理机或虚拟机之上，也可以部署多个。</p>
-<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>在 K8S 集群中，Pod 是资源调度的最小单位，一个 Pod 可以包含一个或多个容器应用，这些容器应用彼此之间存在某种强关联。Pod 内的所有容器应用共享计算、存储、网络资源。</p>
-<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>Controller 是 K8S 中负责管理 Pod 的资源对象，它定义 Pod 的部署属性，比如有几个副本，副本异常怎么处理等，如果把 Pod 副本看做是一个公司职员，那么 Controller 就像是 HR，会不断根据人员的变动来招人满足公司的发展需求。</p>
-<p>为了满足多种业务场景，K8S 提供了多种 Controller，包括 Deployment、ReplicaSet、DaemonSet、StatefulSet、Job 等。</p>
-<h4 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h4><p>Deployment 是最常用的 Controller，定义了用户的期望场景，实现了 Pod 的多副本管理，如果运行过程中有一个副本挂了（员工离职），那么 K8S 会根据 Deployment 的定义重新拉起一个副本继续工作（招一个新员工），始终保证 Pod 按照用户期望的状态运行。</p>
-<h4 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a>ReplicaSet</h4><p>ReplicaSet 和 Deployment 实现了同样的功能，确切的说是 Deployment 通过 ReplicaSet 来实现 Pod 的多副本管理。我们通常不需要直接使用 ReplicaSet。</p>
-<h4 id="DaemonSet"><a href="#DaemonSet" class="headerlink" title="DaemonSet"></a>DaemonSet</h4><p>DaemonSet 用于每个 Node 最多只运行一个副本的场景，通常用于运行 Daemon。</p>
-<h4 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h4><p>Job 用于运行结束就删除的应用，而其他 Controller 则是会长期保持运行。</p>
-<h4 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h4><p>以上 Controller 都是无状态的，也就是说副本的状态信息会改变，比如当某个 Pod 副本异常重启时，其名称会改变。StatefulSet 提供有状态的服务，能够保证 Pod 的每个副本在其生命周期中名称保持不变。这是通过持久化的存储卷来实现的。</p>
-<h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><p>Label 定义了其他资源对象所属的标签，类似于你在公司被分到 A 小组、B 小组。有了标签，就可以针对性地对每个小组进行管理。比如把某个小组搬到哪个办公区（把某个 Pod 部署到哪个 Node 上）。给指定的资源对象定义一个或多个不同的标签能够实现多维度的资源分组管理，方便进行资源分配、调度、配置、部署等管理工作。</p>
-<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p>Label 选择器，K8S 通过 Selector 来过滤筛选指定的资源对象，类似于 SQL 语句中的 where 查询条件，Label 实现了简单又通用的对象查询机制。</p>
-<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>在 K8S 中，Service 是对 Pod 对象的抽象，通常，Pod 会以多副本的形式部署，每个 Pod 都有自己的 IP，都可以对外提供服务，但 Pod 是脆弱的，也就是说，它随时都有可能被频繁地销毁和重启，IP 也会随之改变，这样，服务的访问就会出现问题。</p>
-<p>Service 就是提出来解决这个问题的，它定义了一个虚拟 IP（也叫集群 IP），这个 IP 在 Service 的整个生命周期内都不会改变。当有访问到达时，Service 会将请求导向 Pod，如果存在多个 Pod，Service 还能实现负载均衡。</p>
-<h3 id="Volume"><a href="#Volume" class="headerlink" title="Volume"></a>Volume</h3><p>K8S 的存储卷，定义了一个 Pod 中多个容器可访问的共享目录。和 Docker 的 Volume 不太一样的是，K8S 的 Volume 是以 Pod 为单位的，也就是 Volume 的生命周期和 Pod 相关，和 Pod 内的容器不相关，即使容器终止或重启，Volume 中的数据也不会丢失，只有当 Pod 被删除时，数据才会丢失。</p>
-<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>当有多个用户或租户使用同一个 K8S 集群时，如何区分它们创建的资源呢？答案就是 Namespace。</p>
-<p>Namespace 将一个物理的集群从逻辑上划分成多个虚拟的集群，每个集群就是一个 Namespace，不同 Namespace 里的资源是完全隔离的。每个用户在自己创建的 Namespace 里操作，都不会影响到其他用户。</p>
-<h3 id="Annotation"><a href="#Annotation" class="headerlink" title="Annotation"></a>Annotation</h3><p>Annotation 与 Label 类似，但和 Label 不同 的事，Annotation 不用于过滤筛选，它只是用户定义的某一种资源的附加信息，目的是方便外部查找该资源。有点类似于我们常说的别名，没有它完全可以，但有了它可以很方便查找。</p>
-<p>最后，还是继续送书，容器网络专家倪朋飞写的《K8S 指南》电子书，如有需要后台回复“K8S”（之前回复过就不用回复了）。如需加群学习回复“加群”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+        
+            <div class="readmore">
+                <a href="/2018/09/03/技术/Kubernetes_笔记_03_扫清概念/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
@@ -1511,7 +1090,7 @@
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
@@ -1549,7 +1128,7 @@
 </header>
 
     <div class="content pure">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 16px; color: #8b8b8b">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 17px; color: #858585">CPU</a> <a href="/tags/Cgroup/" style="font-size: 15px; color: #929292">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 16px; color: #8b8b8b">DPDK</a> <a href="/tags/Docker/" style="font-size: 21px; color: #696969">Docker</a> <a href="/tags/I-O/" style="font-size: 17px; color: #858585">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 20px; color: #707070">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23px; color: #5c5c5c">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 23px; color: #5c5c5c">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 16px; color: #8b8b8b">NUMA</a> <a href="/tags/Namespace/" style="font-size: 15px; color: #929292">Namespace</a> <a href="/tags/OVS/" style="font-size: 17px; color: #858585">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 15px; color: #929292">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 19px; color: #777">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 15px; color: #929292">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 15px; color: #929292">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 15px; color: #929292">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 15px; color: #929292">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21px; color: #696969">容器</a> <a href="/tags/容器网络/" style="font-size: 18px; color: #7e7e7e">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 19px; color: #777">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 15px; color: #929292">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 22px; color: #636363">网络</a> <a href="/tags/虚拟化/" style="font-size: 23px; color: #5c5c5c">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 15px; color: #929292">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 16px; color: #8b8b8b">雾计算</a>
     </div>
   </section>
 

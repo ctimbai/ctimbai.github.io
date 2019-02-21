@@ -287,8 +287,6 @@
       
         
       
-        
-      
     
     
       
@@ -300,9 +298,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/29/云计算/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/">
+          <a href="/2018/04/20/技术/各种容器网络方案对比/">
               
-                  Kubernetes 笔记 11 Pod 扩容与缩容 双十一前后的忙碌
+                  各种容器网络方案对比
               
           </a>
       </h2>
@@ -310,7 +308,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-29
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-20
       </time>
     
 
@@ -318,7 +316,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -335,34 +333,19 @@
         <blockquote>
 <p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/k8s/13.jpg" alt=""></center>
+<p>前面单主机容器网络和多主机容器网络两篇文章，咱们已经从原理上总结了多种容器网络方案，也通过这篇文章探讨了容器网络的背后原理。本文再基于一个宏观的视角，对比几种网络方案，让大家有个完整的认识。</p>
+<p>单主机网络就不多说了，因为也比较简单，我们重点对比几种多主机网络方案。</p>
+<p>对比的维度有以下几种：网络模型，IP 地址池管理（IP Address Management，IPAM），服务发现，连通与隔离，性能。</p>
+<p>网络模型指的是构成跨主机通信的网络结构和实现技术，比如是纯二层转发，还是纯三层转发；是 overlay 网络还是 underlay 网络等等。</p>
+<p>IPAM 指的是如何管理容器网络的 IP 池。当容器集群比较大，管理的主机比较多的时候，如何分配各个主机上容器的 IP 是一个比较棘手的问题。Docker 网络有个 subnet 的概念，通常一个主机分配一个 subnet，但也有多个主机共用一个 subnet 的情况，具体的网络方案有不同的考量。具体看下面的表格总结。</p>
+<p>服务发现本质上是一个分布式的 key-value 存储系统，用于跨主机通信时保存并同步各主机的网络信息，便于快速建立起各主机之间的网络连接。由于各网络方案实现上各有千秋，并不是所有的跨主机网络方案都要依据服务发现。</p>
+<p>连通与隔离指的是容器跨主机之间是否能够互相通信，以及容器与外网（外网不一定指 Internet）之间如何通信。</p>
+<p>性能具体指的是通信的时延，我们仅从各个网络方案的原理上来分析得出结论，所以这里的结论并不一定正确，因为不同的部署环境会对性能有一些影响，建议大家还是根据自己的环境动手实验验证为妙。</p>
+<p>从原理上说，underlay 网络性能要优于 overlay 网络，因为 overlay 网络存在封包和拆包操作，存在额外的 CPU 和网络开销，所以，几种方案中，macvlan、flannel host-gw、calico 的性能会优于 overlay、flannel vxlan 和 weave。但是这个也不能作为最终生产环境采用的标准，因为 overlay 网络采用 vxlan 作为隧道的话，能支持更多的二层网段，安全性也更高，所以，需要综合考虑。</p>
+<p>通过以上分析，我们可以得出以下的结论：</p>
+<center><img src="/images/docker/docker_net_com.jpg" alt=""></center>
 
-
-
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 11 篇。</p>
-<p>资源的伸缩在云计算环境中是至关重要的，云计算的动机就是企图提高资源的利用率，在用户请求高峰期的时候能够对资源进行横向扩容，反之，当用户请求回落低谷的时候，能够及时缩减资源，避免资源的浪费。</p>
-<p>这就像双十一的时候，随着用户不断地涌入，阿里后台需要不断调配更多的资源来支撑用户大量的请求，当过了双十一当天，再慢慢缩减资源的使用。</p>
-<p>Kubernetes 作为一个集群管理系统，提供了两种资源伸缩的方式：手动和自动。本文先来看手动方式。</p>
-<p>Kubernetes 的资源伸缩本质上指的是 Pod 的扩容和缩容（scale up/down），也就是增加或减少 Pod 的副本数。</p>
-<p>手动的方式是使用 <code>kubectl scale</code> 命令手动进行，或者基于 YAML 配置来实现。</p>
-<p>首先，定义一个 <code>nginx-deployment.yaml</code> 配置文件：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: web_server</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        images: nginx:1.12.1</span><br></pre></td></tr></table></figure>
-<p>其中定义了 3 个副本，执行 <code>kubectl create -f nginx-deployment.yaml</code> 创建 Pod。</p>
-<center><img src="/images/k8s/pod_scale.png" alt=""></center>
-
-
-<p>如果现在遇到高峰请求，我们急需进行扩容，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment nginx-deployment --replicas 5</span><br></pre></td></tr></table></figure></p>
-<p>将 Pod 扩增到 5 个。</p>
-<center><img src="/images/k8s/pod_scale_up.png" alt=""></center>
-
-
-<p>其中，用 <code>--replicas</code> 来指示增缩的数量，对于缩容，将 <code>--replicas</code> 设置为比当前 Pod 副本数量更小的数字即可，比如缩容到 2 个如下：</p>
-<center><img src="/images/k8s/pod_scale_down.png" alt=""></center>
-
-
-<p>可以看到，Pod 销毁会经历一个 <code>Terminating</code> 的过程，最终 3 个副本被删除，只保留了 2 个副本。</p>
-<p>以上是通过命令的形式来实现手动的扩容和缩容，我们也可以修改 YAML 配置文件中的 <code>replicas</code> 来实现，只要修改完之后执行 <code>kubectl apply</code> 即可。</p>
-<p>OK，本文到此为止，下文我们再来 Pod 伸缩的另一种方式——自动扩容和缩容。</p>
+<p>参考：<br><a href="http://www.cnblogs.com/CloudMan6/p/7587532.html" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/7587532.html</a></p>
 <p>PS：文章未经我允许，不得转载，否则后果自负。</p>
 <center>–END–</center>
 
@@ -379,9 +362,13 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
                     <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
                 
             </div>
         
@@ -400,9 +387,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/26/云计算/Kubernetes_笔记_10_Job_机器人加工厂/">
+          <a href="/2018/04/18/技术/那么多容器网络的解决方案，其背后的原理到底是什么？/">
               
-                  Kubernetes 笔记 10 Job 机器人加工厂
+                  那么多容器网络的解决方案，其背后的原理到底是什么？
               
           </a>
       </h2>
@@ -410,7 +397,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-26
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-18
       </time>
     
 
@@ -418,7 +405,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -435,84 +422,36 @@
         <blockquote>
 <p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/k8s/12.jpg" alt=""></center>
+<p>知其然而不知其所以然，不知也。老古人说得多好，学知识不懂得知识背后的原理，等于白学。</p>
+<p>通过前面两篇文章，我们知道了容器的单主机网络和多主机网络，对于这么多网络方案，我们看到对 Docker 的整体网络结构好像没有改动，都是水平扩展的，那 Docker 网络究竟是怎么集成这么多网络方案而不改变自身原有的结构呢？本文就来一探究竟。</p>
+<h3 id="1-Docker-的总体框架"><a href="#1-Docker-的总体框架" class="headerlink" title="1 Docker 的总体框架"></a>1 Docker 的总体框架</h3><hr>
+<p>要回答这个问题，得从 Docker 的总体框架说起。</p>
+<center><img src="/images/docker/docker_netarch.jpg" alt=""></center>
 
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 10 篇。</p>
-<p>通常，我们在执行任务时，会启用多个服务，有些任务需要长时间运行，全天 24 小时不中断，所以一般会启用 Daemon 类的 服务；而有些任务则只需要短暂执行，任务执行完，服务就没有存在的必要了。</p>
-<p>容器提供服务运行的环境，根据任务持续运行的时间，将容器分为两类：服务类容器和工作类容器。</p>
-<p>服务类容器需要一直运行来提供持续性的服务，而工作类容器则是运行一次性的任务，任务完成后便会退出。</p>
-<p>前面学习的 Deployment、ReplicaSet 和 DaemonSet 都用于管理服务类容器，而工作类容器则由本文要讲得 Job 来管理。</p>
-<p>Job 多用于执行一次性的任务，批处理任务等，Job 就像是现代化机械加工厂的机器人，当有任务来的时候，便会启动，按照预先设定好的程序执行任务，直至任务执行完，便会进入休眠状态。</p>
-<p>进一步，Job 根据任务的类型和执行的动作又分为以下几类：   </p>
-<ul>
-<li>单 Job 单任务：只启动一个 Job 来完成任务，同时 Job 只启用一个 Pod ，适用于简单的任务。</li>
-<li>多 Job 多任务：启动多个 Job 来处理批量任务，每个任务对应一个 Job，Pod 的数量可以自定义。</li>
-<li>单 Job 多任务：采用一个任务队列来存放任务，启动一个 Job 作为消费者来处理这些任务，Job 会启动多个 Pod，Pod 的数量可以自定义。</li>
-<li>定时 Job：也叫 CronJob，启动一个 Job 来定时执行任务，类似 Linux 的 Crontab 程序。</li>
-</ul>
-<p>上述 Job 的分类需要注意两点：</p>
-<p>1）Job 执行失败的重启策略；Job 执行的是一次性的任务，但也不保证一定能执行成功，如果执行失败，应该怎么处理？这个是由前面所讲的 Pod 重启策略来决定的。在 Job Controller 中，只允许定义两种策略：  </p>
-<ul>
-<li>Never：Pod 执行失败，不会重启该 Pod，但会根据 Job 定义的期望数重新创建 Pod。</li>
-<li>OnFailure：Pod 执行失败，则会尝试重启该 Pod。</li>
-</ul>
-<p>两种策略尝试的次数由 <code>spec.backoffLimits</code> 来限制，默认是 6 次（K8S 1.8.0 新加的特性）。</p>
-<p>2）批量任务的多次并行处理的限制；对于批量任务，通常是一个 Pod 对应一个任务，但有时为了加快任务的处理，会启动多个 Pod 来并行处理单个任务。可以通过下面两个参数来设置并行度：</p>
-<ul>
-<li><code>spec.completions</code>：总的启动 Pod 数，只有当所有 Pod 执行成功结束，任务才结束。</li>
-<li><code>spec.parallelism</code>：每个任务对应的 Pod 的并行数，当有一个 Pod 执行成功结束，该任务就执行结束。</li>
-</ul>
-<p>下面通过几个例子来实践一下上面的几种 Job 类别。</p>
-<h3 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h3><h4 id="单-Job-单-Pod-执行一次性任务"><a href="#单-Job-单-Pod-执行一次性任务" class="headerlink" title="单 Job 单 Pod 执行一次性任务"></a>单 Job 单 Pod 执行一次性任务</h4><p>首先，定义 Job 的 yaml 配置文件 myjob.yaml：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: myjob</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: myjob</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: hello</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;echo&quot;, &quot;hello, I&apos;m CloudDeveloper, Welcome&quot;]</span><br><span class="line">      restartPolicy: Never</span><br></pre></td></tr></table></figure>
-<p>执行 <code>kubectl create -f myjob.yaml</code> 创建 job 对象：</p>
-<center><img src="/images/k8s/job-yaml.png" alt=""></center>
+<p>容器和虚拟机一样，都是虚拟化的产品，都包括计算虚拟化，存储虚拟化和 IO 虚拟化。容器作为轻量级的进程，不像虚拟机那般复杂，这三块分别靠三个 Driver 来完成的，execdriver 负责计算虚拟化，networkdriver 负责网络虚拟化，graphdriver 负责存储虚拟化。由此可见，Docker 靠 Driver 这种设计思想来支撑起它的基础平台，再往深了挖，它的每个子模块都随处可见这种设计思想，就网络这个子模块来看，也是如此。</p>
+<h3 id="2-Docker-的网络模型"><a href="#2-Docker-的网络模型" class="headerlink" title="2 Docker 的网络模型"></a>2 Docker 的网络模型</h3><hr>
+<h4 id="docker-engine-libcontainer"><a href="#docker-engine-libcontainer" class="headerlink" title="docker engine + libcontainer"></a>docker engine + libcontainer</h4><hr>
+<p>期初的 Docker 网络子模块的代码是分散在 docker daemon 和 libcontainer 中的，libcontainer 是一个独立的容器管理包，execdriver 和 networkdriver 都是通过 libcontainer 来实现对容器的具体操作。</p>
+<p>随着业务场景越来越复杂，这种内嵌的方式很难针对不同的网络场景进行扩展。后来，Docker 收购了一个做多主机网络解决方案的公司 SocketPlane，然后让那帮人专门来解决这个问题。这就是接下来要介绍的 libnetwork。</p>
+<h4 id="libnetwork-amp-amp-CNM"><a href="#libnetwork-amp-amp-CNM" class="headerlink" title="libnetwork &amp;&amp; CNM"></a>libnetwork &amp;&amp; CNM</h4><hr>
+<p>libnetwork 起初的做法很简单，就是将 docker engine 和 libcontainer 中网络相关的代码抽出来，合并成一个单独的库，做成网络抽象层，并对外提供 API。Docker 的愿景就是希望 libnetwork 能够做像 libcontainer 那样，成为一个多平台的容器网络基础包。</p>
+<p>后来受一个 GitHub issue ( <a href="https://github.com/moby/moby/issues/9983" target="_blank" rel="noopener">https://github.com/moby/moby/issues/9983</a>) 的启发，libnetwork 引入容器网络模型（Container Network Model，CNM），该模型进一步对 Docker 的网络结构进行了细分，提出了三个概念：network、sandbox 和 endpoint。</p>
+<h5 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h5><p>network 是一个抽象的概念，你可以把它理解成一个网络的插件，或者是网络的 Driver，比如说单主机网络的 Driver 就有 none、host、bridge，joined container 这四种，多主机网络就有 overlay、macvlan、flannel 这些。network 可以独立出去做，只需调用 Docker 对外提供的 API 就可以作为插件集成到 Docker 网络中使用。</p>
+<h5 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a><strong>sandbox</strong></h5><p>sandbox 实现了容器内部的网络栈，它定义容器的虚拟网卡，路由表和 DNS 等配置，其实就是一个标准的 linux network namespace 实现。</p>
+<h5 id="endpoint"><a href="#endpoint" class="headerlink" title="endpoint"></a><strong>endpoint</strong></h5><p>network 实现了一个第三方的网络栈，sandbox 则实现了容器内部的网络栈，那这两者怎么联系起来呢？答案就是通过 endpoint，endpoint 实现了 veth pair，一个 endpoint 就表示一对 veth pair，一端挂在容器中，另一端挂在 network 中。</p>
+<center><img src="/images/docker/cnm.jpg" alt=""></center>
 
+<p>network、sandbox 和 endpoint 三者之间的关系：<br>一个 network 可以包含多个 endpoint，自然也就包含多个 sandbox。<br>一个 sandbox 可以包含多个 endpoint，可以属于多个 network。<br>一个 endpoint 只可以属于一个 network，并且只属于一个 sandbox。</p>
+<p>如上图显示三个容器，每个容器一个 sandbox，除了第二个容器有两个 endpoint 分别接入 network1 和 network2 之外，其余 sandbox 都只有一个 endpoint 分别接入不同的 network。</p>
+<p>到此，我们就可以解答文章开篇提到的问题，“不同的网络方案如何集成到 Docker 网络模型中而不改变原有结构？”</p>
+<p>答案就是基于 libnetwork CNM，将各个网络模型以插件或 Driver 的形式集成到 Docker 网络中来，与 docker daemon 协同工作，实现容器网络。Docker 原生的 Driver 包括单主机的 none、bridge、joined container 和 多主机的 overlay、macvlan，第三方 Driver 就包括多主机的 flannel、weave、calico 等。</p>
+<center><img src="/images/docker/libnetwork.png" alt=""></center>
 
-<p>可以看到期望创建的 Job 数为 1，成功执行的 Job 数也为 1，这表明该 Job 已经执行完任务退出了。这个 Job 执行的任务就是创建一个 Pod，Pod 中创建一个 busybox 容器，并进入容器输出一段字符串：<strong>“hello, I’m CloudDeveloper, Welcome”</strong>。</p>
-<p>查看一下 Pod 的状态：   </p>
-<center><img src="/images/k8s/job-pod.png" alt=""></center>
-
-
-<p>可以看到，该 Pod 的状态为 <code>Completed</code>，表示它已经执行完任务并成功退出了。那怎么看该任务的执行结果呢？可以执行 <code>kubectl logs myjob</code> 调出该 Pod 的历史执行信息进行查看：</p>
-<center><img src="/images/k8s/job-logs.png" alt=""></center>
-
-
-<p>看到历史输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello, I&apos;m CloudDeveloper, Welcome</span><br></pre></td></tr></table></figure>
-<p>以上是执行成功的情况，如果执行失败，会根据 <code>restartPolicy</code> 进行重启，重启的方式上面也说了。大家可以自己实践下。</p>
-<h4 id="多-Job-多-Pod-执行批量任务"><a href="#多-Job-多-Pod-执行批量任务" class="headerlink" title="多 Job 多 Pod 执行批量任务"></a>多 Job 多 Pod 执行批量任务</h4><p>首先，定义 Job 的 yaml 模板文件 job.yaml.txt，然后再根据这个模板文件创建多个 Job yaml 文件。模板文件如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: work-item-$ITEM</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: job</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: c</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;echo work item $ITEM &amp;&amp; sleep 2&quot;]</span><br><span class="line">      restartPolicy: Never</span><br></pre></td></tr></table></figure>
-<p>其中，<code>$ITEM</code> 作为各个 Job 项的标识。接着，使用以下脚本，根据 Job 模板创建三个 Job 配置文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">for i in app book phone</span><br><span class="line">do</span><br><span class="line">  cat myjob_tmp.yaml | sed &quot;s/\$ITEM/$i/g&quot; &gt; ./jobs/job-$i.yaml</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<p>最后，创建三个 Job 对象，如下：</p>
-<center><img src="/images/k8s/job-multi.png" alt=""></center>
-
-
-<h4 id="单-Job-多-Pod-执行批量任务"><a href="#单-Job-多-Pod-执行批量任务" class="headerlink" title="单 Job 多 Pod 执行批量任务"></a>单 Job 多 Pod 执行批量任务</h4><p>这种方式是用一个队列来存放任务，然后启动一个 Job 来执行任务，Job 可以根据需求启动多个 Pod 来承载任务的执行。定义下面的配置文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1</span><br><span class="line">kind: Job</span><br><span class="line">metadata:</span><br><span class="line">  name: myjob</span><br><span class="line">spec:</span><br><span class="line">  completions: 6</span><br><span class="line">  parallelism: 2</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: myjob</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: hello</span><br><span class="line">        images: busybox</span><br><span class="line">        command: [&quot;echo&quot;, &quot;hello CloudDeveloper&quot;]</span><br><span class="line">      restartPolicy: OnFailure</span><br></pre></td></tr></table></figure>
-<p>这里用到了上面说的两个参数：<code>completions</code> 和 <code>parallelism</code>，表示每次并行运行两个 Pod，直到总共 6 个 Pod 成功运行完成。如下：</p>
-<center><img src="/images/k8s/job-para.png" alt=""></center>
-
-
-<p>可以看到 DESIRED 和 SUCCESSFUL 最终均为 6，符合预期，实际上也有 6 个 Pod 成功运行并退出，呈 <code>Completed</code> 状态。</p>
-<p>随便查看其中一个 Pod 的历史执行情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># kubectl logs myjob-5lfnp</span><br><span class="line">hello CloudDeveloper</span><br></pre></td></tr></table></figure>
-<h4 id="定时任务-CronJob"><a href="#定时任务-CronJob" class="headerlink" title="定时任务 CronJob"></a>定时任务 CronJob</h4><p>定义一个 CronJob 配置文件，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: batch/v1beta1</span><br><span class="line">kind: CronJob</span><br><span class="line">metadata:</span><br><span class="line">  name: hello</span><br><span class="line">spec:</span><br><span class="line">  schedule: &quot;*/1 * * * *&quot;</span><br><span class="line">  jobTemplate:</span><br><span class="line">    spec:</span><br><span class="line">      template:</span><br><span class="line">        spec:</span><br><span class="line">          containers:</span><br><span class="line">          - name: hello</span><br><span class="line">            images: busybox</span><br><span class="line">            command: [&quot;echo&quot;, &quot;Hello CloudDeveloper&quot;]</span><br><span class="line">          restartPolicy: OnFailure</span><br></pre></td></tr></table></figure>
-<p>kind 类型为 CronJob，<code>spec.schedule</code> 表示定时调度，指定什么时候运行 Job，格式与 Linux 的 Crontab 命令是一样的，这里 <code>*/1 * * * *</code> 的含义是每一分钟启动一次。</p>
-<p>创建 CronJob 对象，通过 <code>kubectl get cronjob</code> 查看 CronJob 的状态：  </p>
-<center><img src="/images/k8s/cronjob-get.png" alt=""></center>
-
-
-<p>过一段时间再查看 Pod 的状态：</p>
-<center><img src="/images/k8s/cronjob.png" alt=""></center>
-
-
-<p>可以看到，此时产生了 3 个 Pod，3 个 Jobs，这是每隔一分钟就会启动一个 Job。执行 <code>kubectl logs</code> 查看其中一个的历史执行情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># kubectl logs hello-1536764760-lm5kt</span><br><span class="line">Hello CloudDeveloper</span><br></pre></td></tr></table></figure>
-<p>到此，本文就结束了。我们从理论结合实践，梳理了 Job 的几种类型，下文我们开始看一种有状态的 Controller——StatefulSet。</p>
-<p>同样，需要学习资料的后台回复“K8S” 和 “K8S2”，想加群学习回复“加群”。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><hr>
+<ol>
+<li>libnetwork 基于 CNM 模型将 Docker 网络结构从原生方案中抽离出来，增强了网络扩展性，以至于现在各种网络方案层出不穷，都可以轻松集成到 Docker 中。</li>
+<li>network，sandbox，endpoint 三个概念。</li>
+</ol>
 <p>PS：文章未经我允许，不得转载，否则后果自负。</p>
 <center>–END–</center>
 
@@ -529,9 +468,17 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
                     <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/libnetwork/"><i class="fas fa-hashtag fa-fw"></i>libnetwork</a>
+                
+                    <a href="/tags/CNM/"><i class="fas fa-hashtag fa-fw"></i>CNM</a>
                 
             </div>
         
@@ -550,9 +497,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/19/云计算/Kubernetes_笔记_09_DaemonSet_我是一只看门狗/">
+          <a href="/2018/04/16/技术/容器网络之多主机网络/">
               
-                  Kubernetes 笔记 09 DaemonSet 我是一只看门狗
+                  容器网络之多主机网络
               
           </a>
       </h2>
@@ -560,7 +507,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-19
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-16
       </time>
     
 
@@ -568,7 +515,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -585,41 +532,277 @@
         <blockquote>
 <p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/k8s/11.jpg" alt=""></center>
+<p>上篇文章介绍了容器网络的单主机网络，本文将进一步介绍多主机网络，也就是跨主机的网络。总结下来，多主机网络解决方案包括但不限于以下几种：overlay、macvlan、flannel、weave、cacico 等，下面将分别一一介绍这几种网络，</p>
+<p>PS：本文仅从原理上对几种网络进行简单的对比总结，不涉及太多的细节。</p>
+<h3 id="1-overlay"><a href="#1-overlay" class="headerlink" title="1 overlay"></a>1 overlay</h3><hr>
+<p>俗称隧道网络，它是基于 VxLAN 协议来将二层数据包封装到 UDP 中进行传输的，目的是扩展二层网段，因为 VLAN 使用 12bit 标记 VLAN ID，最多支持 4094 个 VLAN，这对于大型云网络会成为瓶颈，而 VxLAN ID 使用 24bit 来标记，支持多达 16777216 个二层网段，所以 VxLAN 是扩展了 VLAN，也叫做大二层网络。</p>
+<p>overlay 网络需要一个全局的“上帝”来记录它网络中的信息，比如主机地址，子网等，这个上帝在 Docker 中是由服务发现协议来完成的，服务发现本质上是一个 key-value 数据库，要使用它，首先需要向它告知（注册）一些必要的信息（如网络中需要通信的主机），然后它就会自动去收集、同步网络的信息，同时，还会维护一个 IP 地址池，分配给主机中的容器使用。Docker 中比较有名的服务发现有 Consul、Etcd 和 ZooKeeper。overlay 网络常用 Consul。</p>
+<center><img src="/images/docker/overlay.jpg" alt=""></center>
 
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 9 篇。</p>
-<p>和上文中的 Deployment 一样，DaemonSet 也是一种副本管理机制，和 Deployment 可以在每个 Node 上运行好几个 Pod 副本不同的是，DaemonSet 始终保证每个 Node 最多只会运行一个副本，就像它的名称一样，作为一只看门狗（Daemon）守护在主人家里。</p>
-<p>那么，哪些应用适合用 DaemonSet 的方式来部署呢？</p>
-<p>主要有以下几类：</p>
+<p>创建 overlay 网络会创建一个 Linux bridge br0，br0 会创建两个接口，一个 veth2 作为与容器的虚拟网卡相连的 veth pair，另一个 vxlan1 负责与其他 host 建立 VxLAN 隧道，跨主机的容器就通过这个隧道来进行通信。</p>
+<p>为了保证 overlay 网络中的容器与外网互通，Docker 会创建另一个 Linux bridge docker_gwbridge，同样，该 bridge 也存在一对 veth pair，要与外围通信的容器可以通过这对 veth pair 到达 docker_gwbridge，进而通过主机 NAT 访问外网。</p>
+<h3 id="2-macvlan"><a href="#2-macvlan" class="headerlink" title="2 macvlan"></a>2 macvlan</h3><hr>
+<p>macvlan 就如它的名字一样，是一种网卡虚拟化技术，它能够将一个物理网卡虚拟出多个接口，每个接口都可以配置 MAC 地址，同样每个接口也可以配自己的 IP，每个接口就像交换机的端口一样，可以为它划分 VLAN。</p>
+<p>macvlan 的做法其实就是将这些虚拟出来的接口与 Docker 容器直连来达到通信的目的。一个 macvlan 网络对应一个接口，不同的 macvlan 网络分配不同的子网，因此，相同的 macvlan 之间可以互相通信，不同的 macvlan 网络之间在二层上不能通信，需要借助三层的路由器才能完成通信，如下，显示的就是两个不同的 macvlan 网络之间的通信流程。</p>
+<center><img src="/images/docker/macvlan.jpg" alt=""></center>
+
+<p>我们用一个 Linux 主机，通过配置其路由表和 iptables，将其配成一个路由器（当然是虚拟的），就可以完成不同 macvlan 网络之间的数据交换，当然用物理路由器也是没毛病的。</p>
+<h3 id="3-flannel"><a href="#3-flannel" class="headerlink" title="3 flannel"></a>3 flannel</h3><hr>
+<p>flannel 网络也需要借助一个全局的上帝来同步网络信息，一般使用的是 etcd。</p>
+<p>flannel 网络不会创建新的 bridge，而是用默认的 docker0，但创建 flannel 网络会在主机上创建一个虚拟网卡，挂在 docker0 上，用于跨主机通信。</p>
+<center><img src="/images/docker/flannel.jpg" alt=""></center>
+
+<p>组件方式让 flannel 多了几分灵活性，它可以使用二层的 VxLAN 隧道来封装数据包完成跨主机通信，也可以使用纯三层的方案来通信，比如 host-gw，只需修改一个配置文件就可以完成转化。</p>
+<h3 id="4-weave"><a href="#4-weave" class="headerlink" title="4 weave"></a>4 weave</h3><hr>
+<p>weave 网络没有借助服务发现协议，也没有 macvlan 那样的虚拟化技术，只需要在不同主机上启动 weave 组件就可以完成通信。</p>
+<p>创建 weave 网络会创建两个网桥，一个是 Linux bridge weave，一个是 datapath，也就是 OVS，weave 负责将容器加入 weave 网络中，OVS 负责将跨主机通信的数据包封装成 VxLAN 包进行隧道传输。</p>
+<center><img src="/images/docker/weave.jpg" alt=""></center>
+
+<p>同样，weave 网络也不支持与外网通信，Docker 提供 docker0 来满足这个需求。</p>
+<p>weave 网络通过组件化的方式使得网络分层比较清晰，两个网桥的分工也比较明确，一个用于跨主机通信，相当于一个路由器，一个负责将本地网络加入 weave 网络。</p>
+<h3 id="5-calico"><a href="#5-calico" class="headerlink" title="5 calico"></a>5 calico</h3><hr>
+<p>calico 是一个纯三层的网络，它没有创建任何的网桥，它之所以能完成跨主机的通信，是因为它记住 etcd 将网络中各网段的路由信息写进了主机中，然后创建的一对的 veth pair，一块留在容器的 network namespace 中，一块成了主机中的虚拟网卡，加入到主机路由表中，从而打通不同主机中的容器通信。</p>
+<center><img src="/images/docker/calico.jpg" alt=""></center>
+
+<p>calico 相较其他几个网络方案最大优点是它提供 policy 机制，用户可以根据自己的需求自定义 policy，一个 policy 可能对应一条 ACL，用于控制进出容器的数据包，比如我们建立了多个 calico 网络，想控制其中几个网络可以互通，其余不能互通，就可以修改 policy 的配置文件来满足要求，这种方式大大增加了网络连通和隔离的灵活性。</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><hr>
+<p>1、除了以上的几种方案，跨主机容器网络方案还有很多，比如：Romana，Contiv 等，本文就不作过多展开了，大家感兴趣可以查阅相关资料了解。</p>
+<p>2、跨主机的容器网络通常要为不同主机的容器维护一个 IP 池，所以大多方案需要借助第三方的服务发现方案。</p>
+<p>3、跨主机容器网络按传输方式可以分为纯二层网络，隧道网络（大二层网络），以及纯三层网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/overlay/"><i class="fas fa-hashtag fa-fw"></i>overlay</a>
+                
+                    <a href="/tags/macvlan/"><i class="fas fa-hashtag fa-fw"></i>macvlan</a>
+                
+                    <a href="/tags/flannel/"><i class="fas fa-hashtag fa-fw"></i>flannel</a>
+                
+                    <a href="/tags/weave/"><i class="fas fa-hashtag fa-fw"></i>weave</a>
+                
+                    <a href="/tags/cacico/"><i class="fas fa-hashtag fa-fw"></i>cacico</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/06/技术/Docker_容器网络之单主机网络/">
+              
+                  Docker 容器网络之单主机网络
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-06
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>当容器逐步向容器集群，容器云技术演进的时候，一个不得不面对的问题就是各个容器的管理问题，有些容器需要交互，有些容器需要隔离，如何保证这些操作能够顺利地进行，这个时候，很多容器管理和编排的平台就应运而生了。首先，当然是 Docker 社区自己开发的 Swarm+Machine+Compose 的集群管理套件，然后还有 Twitter 主推 Apache 的 Mesos，最有名的应该为 Google 开源的 Kubernetes。</p>
+<p>这些平台综合了容器集群资源管理，服务发现和扩容缩融等问题，是一个集大成的解决方案，但其实这些问题本质上都离不开网络，资源在各容器之间调度需要网络，服务发现需要网络，所以，可以说网络是容器集群环境下最基础的一环。</p>
+<p>Docker 容器网络根据容器的部署位置，可以分为单主机网络（host）和多主机网络（multi-host），本文先看 Docker host 网络。</p>
+<p>Docker host 网络分为 none，host，joined container 和 bridge 网络。</p>
+<p>none 网络模式下，Docker 容器拥有自己的 network namespace，但是并不为容器进行任何的网络配置，也就是说容器除了 network namespace 本身自带的 localback 网卡外什么都没有，包括网卡、IP、路由等信息。用户如何要使用 none 网络，就需要自己添加特定的网卡，并配置 IP、路由等信息，但一般不会这么干，none 网络很好地做到了隔离，一般是用来跑那些对安全性要求极高且不需要联网的应用。</p>
+<p>比如某个容器的唯一用途是生成随机密码，就可以放到 none 网络中避免密码被窃取。</p>
+<p>想要使 Docker 使用 none 网络，只需要在创建容器的时候附带 –network = none 即可。</p>
+<p>host 网络，顾名思义就是 Docker 容器使用宿主机的网络，相当于和 host 共用了同一个 network namespace，Docker 容器使用 host 的网卡、IP 和路由等功能对外通信。</p>
+<p>虽然这种模式下 Docker 没有创建独立的 network namespace，但其他 namespace 仍然是隔离的，如文件系统、进程列表等。host 网络最大的好处就是使得 Docker 容器对外通信变得简单，直接使用 host 的 IP 进行通信即可，但缺点也很明显，就是降低了隔离性，同时还会存在和其他容器对网络资源的竞争与冲突的问题。</p>
+<p>同样要使用 host 网络，只需创建容器时附带 –network = host 即可。</p>
+<center><img src="/images/docker/net_host.png" alt=""></center>
+
+<p>joined container 网络和 host 网络不同的是，它是和其他的 container 共享一个 network namespace，一个 network namespace 可以被一个或者多个 Docker 容器共享。在这种模式下，两个容器之间可以通过 localback 回环网卡通信，增加了容器间通信的便利性。</p>
+<p>同样可以在创建容器时，使用参数 –network = container:another_container_name 来和另外容器共享网络。</p>
+<center><img src="/images/docker/net_con.png" alt=""></center>
+
+<p>bridge 网络是最常用的网络模式，它兼顾了安全性和功能的完备性，但其与外部通信要通过 NAT 转换，在复杂的网络场景下会存在诸多不便。</p>
+<p>bridge 网络在创建的时候通过 –network = bridge 指定，Docker daemon 会为创建的容器自动创建一个 Docker 网桥——docker0（也可以人为指定名称 –driver bridge my_net），这个 docker0 就用来联结 Docker 容器和 host 的桥梁。</p>
+<p>然后，Docker daemon 会创建一对虚拟网卡 veth pair，一块网卡留在宿主机的 root network namespace 中，并绑定到 docker0 上，另一块放在新创建的 network namespace 中，命名为 eth0，并为其配置 IP 和路由，将其网关设为 docker0，如下，这样整个容器的 bridge 网络通信环境就建立起来了，其他容器的建立方式也是如此，最终各容器之间就通过 docker0 这个桥梁互联互通了。</p>
+<center><img src="/images/docker/net_bridge.jpg" alt=""></center>
+
+<p>下文将讨论更为复杂的 multi-host 网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/03/28/技术/Docker_基础技术之_Linux_cgroups_详解/">
+              
+                  Docker 基础技术之 Linux cgroups 详解
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-28
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>前面两篇文章我们总结了 Docker 背后使用的资源隔离技术 Linux namespace，本篇将讨论另外一个技术——资源限额，这是由 Linux cgroups 来实现的。</p>
+<blockquote>
+<p>cgroups 是 Linux 内核提供的一种机制，这种机制可以根据需求把一系列任务及子任务整合（或分隔）到按资源划分等级的不同组内，从而为系统资源管理提供一个统一的框架。（来自 《Docker 容器与容器云》）</p>
+</blockquote>
+<p>通俗来说，cgroups 可以限制和记录任务组（进程组或线程组）使用的物理资源（包括 CPU、内存、IO 等）。</p>
+<p>为了方便用户（程序员）操作，cgroups 以一个伪文件系统的方式实现，并对外提供 API，用户对文件系统的操作就是对 cgroups 的操作。</p>
+<p>从实现上来，cgroups 实际上是给每个执行任务挂了一个钩子，当任务执行过程中涉及到对资源的分配使用时，就会触发钩子上的函数对相应的资源进行检测，从而对资源进行限制和优先级分配。</p>
+<h3 id="cgroups-的作用"><a href="#cgroups-的作用" class="headerlink" title="cgroups 的作用"></a>cgroups 的作用</h3><hr>
+<p>总结下来，cgroups 提供以下四个功能：</p>
+<p><strong>资源限制：</strong> cgroups 可以对任务使用的资源总额进行限制，如设定应用运行时使用内存的上限，一旦超过这个配额就发出 OOM（Out of Memory）提示。</p>
+<p><strong>优先级分配：</strong> 通过分配的 CPU 时间片数量和磁盘 IO 带宽大小，实际上就相当于控制了任务运行的优先级。</p>
+<p><strong>资源统计：</strong> cgroups 可以统计系统的资源使用，如 CPU 使用时长、内存用量等，这个功能非常适用于计费。</p>
+<p><strong>任务控制：</strong> cgroups 可以对任务执行挂起、恢复等操作。</p>
+<h3 id="cgroups-的子系统"><a href="#cgroups-的子系统" class="headerlink" title="cgroups 的子系统"></a>cgroups 的子系统</h3><hr>
+<p>cgroups 在设计时根据不同的资源类别分为不同的子系统，一个子系统本质上是一个资源控制器，比如 CPU 资源对应 CPU 子系统，负责控制 CPU 时间片的分配，内存对应内存子系统，负责限制内存的使用量。进一步，一个子系统或多个子系统可以组成一个 cgroup，cgroups 中的资源控制都是以 cgroup 为单位来实现，一个任务（或进程或线程）可以加入某个 cgroup，也可以从一个 cgroup 移动到另一个 cgroup，但这里有一些限制，在此就不再赘述了，详细查阅相关资料了解。</p>
+<p>对于我们来说，最关键的是知道怎么用，下面就针对 CPU、内存和 IO 资源来看 Docker 是如何使用的？</p>
+<p>对于 CPU，Docker 使用参数 -c 或 –cpu-shares 来设置一个容器使用的 CPU 权重，权重的大小也影响了 CPU 使用的优先级。</p>
+<p>如下，启动两个容器，并分配不同的 CPU 权重，最终 CPU 使用率情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name &quot;container_A&quot; -c 1024 ubuntu</span><br><span class="line">docker run --name &quot;container_B&quot; -c 512 ubuntu</span><br></pre></td></tr></table></figure></p>
+<center><img src="/images/docker/cgroup_cpu.png" alt=""></center>
+
+<p>当只有一个容器时，即使指定较少的 CPU 权重，它也会占满整个 CPU，说明这个权重只是相对权重，如下将上面的 “container_A” 停止，“container_B” 就分配到全部可用的 CPU。</p>
+<center><img src="/images/docker/cgroup_cpu1.png" alt=""></center>
+
+<p>对于内存，Docker 使用 -m（设置内存的限额）和 –memory-swap（设置内存和 swap 的限额）来控制容器内存的使用量，如下，给容器限制 200M 的内存和 100M 的 swap，然后给容器内的一个工作线程分配 280M 的内存，因为 280M 在容许的 300M 范围内，没有问题。其内存分配过程是不断分配又释放，如下：</p>
+<center><img src="/images/docker/cgroup_mem.jpg" alt=""></center>
+
+<p>如果让工作线程使用内存超过 300M，则出现内存超限的错误，容器退出，如下：</p>
+<center><img src="/images/docker/cgroup_mem1.jpg" alt=""></center>
+
+<p>对于 IO 资源，其使用方式与 CPU 一样，使用 –blkio-weight 来设置其使用权重，IO 衡量的两个指标是 bps（byte per second，每秒读写的数据量） 和 iops（io per second， 每秒 IO 的次数）,实际使用，一般使用这两个指标来衡量 IO 读写的带宽，几种使用参数如下：</p>
 <ul>
-<li>监控类的，比如 Prometheus，collectd，New Relic agent，Ganglia gmond 等。</li>
-<li>系统管理类的，比如 kube-proxy, kube-flannel 等。</li>
-<li>日志收集类的，比如 fluentd，logstash 等。</li>
-<li>数据存储类的，比如 glusterd, ceph 等。</li>
-<li>……</li>
+<li>–device-read-bps，限制读某个设备的 bps。</li>
+<li>–device-write-bps，限制写某个设备的 bps。</li>
+<li>–device-read-iops，限制读某个设备的 iops。</li>
+<li>–device-write-iops，限制写某个设备的 iops。</li>
 </ul>
-<p>其中，系统管理类的应用主要是 K8S 自身的一些系统组件，我们可以通过 <code>kubectl get daemonset --namespace=kube-system</code> 查看到：  </p>
-<center><img src="/images/k8s/daemon-sys.png" alt=""></center>
+<p>假如限制容器对其文件系统 /dev/sda 的 bps 写速率为 30MB/s，则在容器中用 dd 测试其写磁盘的速率如下，可见小于 30MB/s。</p>
+<center><img src="/images/docker/cgroup_dev.png" alt=""></center>
 
+<p>如果是正常情况下，我的机器可以达到 56.7MB/s，一般都是超 1G 的。</p>
+<center><img src="/images/docker/cgroup_dev1.png" alt=""></center>
 
-<p>DaemonSet <code>kube-proxy</code> 和 <code>kube-flannel-ds</code> 有 3 个副本，分别负责在每个节点上运行 kube-proxy 和 flannel 组件。</p>
-<p>kube-proxy 前面的文章讲过，它有负载均衡的功能，主要将外部对 Service 的访问导向后端的 Pod 上。显然，一个 Node 运行一个负载均衡器足矣。</p>
-<p>我们可以通过 <code>kubectl edit daemonset kube-proxy --namespace=kube-system</code> 来查看 kube-proxy 的 yaml 配置文件。</p>
-<center><img src="/images/k8s/kube-proxy-dae.png" alt=""></center>
+<p>上面几个资源使用限制的例子，本质上都是调用了 Linux kernel 的 cgroups 机制来实现的，每个容器创建后，Linux 会为每个容器创建一个 cgroup 目录，以容器的 ID 命名，目录在 /sys/fs/cgroup/ 中，针对上面的 CPU 资源限制的例子，我们可以在  /sys/fs/cgroup/cpu/docker 中看到相关信息，如下：</p>
+<center><img src="/images/docker/cgroup_info.jpg" alt=""></center>
 
-
-<p>可以看到它的 kind 是 DaemonSet。</p>
-<p>接着再来看 kube-flannel-ds，这是一个网络插件组件，主要用于构建 K8S 的集群网络，这里大家不懂可以跳过，不影响本文的理解，后面在讲到 K8S 网络的时候会重点讲这个网络方案。</p>
-<p>这里我们只需要知道，各个 Pod 间的网络连通就是 flannel 来实现的。</p>
-<p>这是一个第三方的插件，我们可以直接下载它的 yaml 文件进行安装，执行下面的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure>
-<p>得到 kube-flannel.yml 文件：</p>
-<center><img src="/images/k8s/kube-flannel-dae.png" alt=""></center>
-
-
-<p>这里只列出了一部分内容，kind 类型是 DaemonSet。</p>
-<p>其实 DaemonSet 配置文件的语法和结构和 Deployment 几乎完全一样，不同就在于将 kind 设为 DaemonSet。</p>
-<p>OK，DaemonSet 的探讨就到这里，下文我们继续讨论另外一种 Controller：Job。</p>
+<p>其中，cpu.shares 中保存的就是限制的数值，其他还有很多项，感兴趣可以动手实验看看。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>cgroups 的作用，cgroups 的实现，cgroups 的子系统机制，CPU、内存和 IO 的使用方式，以及对应 Linux 的 cgroups 文件目录。</p>
 <p>PS：文章未经我允许，不得转载，否则后果自负。</p>
 <center>–END–</center>
 
@@ -636,9 +819,13 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
                     <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/Cgroup/"><i class="fas fa-hashtag fa-fw"></i>Cgroup</a>
                 
             </div>
         
@@ -657,9 +844,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/16/云计算/Kubernetes_笔记_08_Deployment_副本管理_重新招一个员工来填坑/">
+          <a href="/2018/03/13/技术/Docker_基础技术之_Linux_namespace_源码分析/">
               
-                  Kubernetes 笔记 08 Deployment 副本管理 重新招一个员工来填坑
+                  Docker 基础技术之 Linux namespace 源码分析
               
           </a>
       </h2>
@@ -667,7 +854,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-16
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-13
       </time>
     
 
@@ -675,7 +862,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -692,52 +879,49 @@
         <blockquote>
 <p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/k8s/10.png" alt=""></center>
+<p>上篇我们从进程 clone 的角度，结合代码简单分析了 Linux 提供的 6 种 namespace，本篇从源码上进一步分析 Linux namespace，让你对 Docker namespace 的隔离机制有更深的认识。我用的是 Linux-4.1.19 的版本，由于 namespace 模块更新都比较少，所以，只要 3.0 以上的版本都是差不多的。</p>
+<h3 id="从内核进程描述符-task-struct-开始切入"><a href="#从内核进程描述符-task-struct-开始切入" class="headerlink" title="从内核进程描述符 task_struct 开始切入"></a>从内核进程描述符 task_struct 开始切入</h3><hr>
+<p>由于 Linux namespace 是用来做进程资源隔离的，所以在进程描述符中，一定有 namespace 所对应的信息，我们可以从这里开始切入代码。</p>
+<p>首先找到描述进程信息 task_struct，找到指向 namespace 的结构 struct *nsproxy（sched.h）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct task_struct &#123;</span><br><span class="line">......</span><br><span class="line">/* namespaces */</span><br><span class="line">struct nsproxy *nsproxy;</span><br><span class="line">......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中 nsproxy 结构体定义在 nsproxy.h 中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* A structure to contain pointers to all per-process</span><br><span class="line">* namespaces - fs (mount), uts, network, sysvipc, etc.</span><br><span class="line">*</span><br><span class="line">* &apos;count&apos; is the number of tasks holding a reference.</span><br><span class="line">* The count for each namespace, then, will be the number</span><br><span class="line">* of nsproxies pointing to it, not the number of tasks.</span><br><span class="line">*</span><br><span class="line">* The nsproxy is shared by tasks which share all namespaces.</span><br><span class="line">* As soon as a single namespace is cloned or unshared, the</span><br><span class="line">* nsproxy is copied.</span><br><span class="line">*/</span><br><span class="line">struct nsproxy &#123;</span><br><span class="line">    atomic_t count;</span><br><span class="line">    struct uts_namespace *uts_ns;</span><br><span class="line">    struct ipc_namespace *ipc_ns;</span><br><span class="line">    struct mnt_namespace *mnt_ns;</span><br><span class="line">    struct pid_namespace *pid_ns;</span><br><span class="line">    struct net        *net_ns;</span><br><span class="line">&#125;;</span><br><span class="line">extern struct nsproxy init_nsproxy;</span><br></pre></td></tr></table></figure></p>
+<p>这个结构是被所有 namespace 所共享的，只要一个 namespace 被 clone 了，nsproxy 也会被 clone。注意到，由于 user namespace 是和其他 namespace 耦合在一起的，所以没出现在上述结构中。</p>
+<p>同时，nsproxy.h 中还定义了一些对 namespace 的操作，包括 copy_namespaces 等。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int copy_namespaces(unsigned long flags, struct task_struct *tsk);</span><br><span class="line">void exit_task_namespaces(struct task_struct *tsk);</span><br><span class="line">void switch_task_namespaces(struct task_struct *tsk, struct nsproxy *new);</span><br><span class="line">void free_nsproxy(struct nsproxy *ns);</span><br><span class="line">int unshare_nsproxy_namespaces(unsigned long, struct nsproxy **,</span><br><span class="line">struct fs_struct *);</span><br></pre></td></tr></table></figure></p>
+<p>task_struct，nsproxy，几种 namespace 之间的关系如下所示：</p>
+<center><img src="/images/docker/ns_rela.jpg" alt=""></center>
 
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 8 篇。</p>
-<p>Deployment 是 K8S v1.2 引入的概念，与之一起引入还有 ReplicaSet。这两个概念是等同的，准确说是 Deployment 内部调用 ReplicaSet 来实现。</p>
-<p>之前这个概念是由 Replication Controller 来实现的，但由于和 K8S 代码中的模块重名，所以就改成 Deployment + ReplicaSet 的组合。</p>
-<p>Deployment 实现了 Pod 的副本管理，使得应用的表现形态和用户期望的状态保持一致。比如用户期望应用部署为 3 副本，如果在运行过程中有一个副本挂了，那么 Deployment 会自动拉起一个副本。</p>
-<p>Deployment 对于应用的编排、自动扩容和缩容、升级回滚等功能都是至关重要的。</p>
-<p>下面我们通过一个例子来看看 Deployment 是如何工作的。</p>
-<p>定义一个 <code>nginx.yaml</code> 文件（对 yaml 文件不熟悉的可以查阅这篇文章）：   </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1   </span><br><span class="line">kind: Deployment 	</span><br><span class="line">metadata: 	 </span><br><span class="line">  name: nginx-deployment	</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2 	 </span><br><span class="line">  template: 	 </span><br><span class="line">    metadata:</span><br><span class="line">      labels: 	 </span><br><span class="line">        app: web-server</span><br><span class="line">    spec:		 </span><br><span class="line">      containers:  </span><br><span class="line">      - name: nginx 	 </span><br><span class="line">        images: nginx:1.12.1     </span><br><span class="line">        ports:  </span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
-<p>这个文件定义了一个 nginx 容器应用，两个 Pod 副本。也就是每个 Pod 中会跑一个 nginx 应用。</p>
-<p>执行<code>kubectl create -f nginx.yaml</code>创建 Deployment 对象，在执行 <code>kubectl get deploy</code> 查看创建的 Deployment。</p>
-<center><img src="/images/k8s/deploy-yaml.png" alt=""></center>
-
-
-<p>可以看到，其中两个参数 <code>desired</code>（期待副本数）和 <code>current</code>（当前副本数）都为 2，保持一致，我们再执行 <code>kubectl get pod -o wide</code> 查看当前 Pod 的情况：</p>
-<center><img src="/images/k8s/deploy-pod.png" alt=""></center>
-
-
-<p>可以看到，创建了两个 Pod 自动调度到了 Node1 和 Node2 上。这说明每个 Pod 副本是由 Deployment 统一创建并维护的。</p>
-<p>为了一探究竟，我们继续深挖 Deployment。</p>
-<p>执行 <code>kubectl describe deployment nginx-deployment</code> 查看该 Deployment 的详细信息。</p>
-<center><img src="/images/k8s/deploy-replica.png" alt=""></center>
-
-
-<p>图中圈住的地方告诉我们，这里创建了一个 ReplicaSet，也就是说 Deployment 内部是调用 ReplicaSet 来完成 Pod 副本的创建的。是否是这样，我们继续验证。</p>
-<p>执行 <code>kubeclt get replicaset</code> 显示创建的 ReplicaSet 对象：</p>
-<center><img src="/images/k8s/deploy-get-replica.png" alt=""></center>
+<h3 id="各个-namespace-的初始化"><a href="#各个-namespace-的初始化" class="headerlink" title="各个 namespace 的初始化"></a>各个 namespace 的初始化</h3><hr>
+<p>在各个 namespace 结构定义下都有个 init 函数，nsproxy 也有个 init_nsproxy 函数，init_nsproxy 在  task 初始化的时候会被初始化，附带的，init_nsproxy 中定义了各个 namespace 的 init 函数，如下：<br>在 init_task 函数中（init_task.h）:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">*  INIT_TASK is used to set up the first task table, touch at</span><br><span class="line">* your own risk!. Base=0, limit=0x1fffff (=2MB)</span><br><span class="line">*/</span><br><span class="line">#define INIT_TASK(tsk)  \</span><br><span class="line">&#123;</span><br><span class="line">......</span><br><span class="line">.nsproxy  = &amp;init_nsproxy,        </span><br><span class="line">......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>继续跟进 init_nsproxy，在 nsproxy.c 中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">struct nsproxy init_nsproxy = &#123;</span><br><span class="line">.count      = ATOMIC_INIT(1),</span><br><span class="line">.uts_ns      = &amp;init_uts_ns,</span><br><span class="line">#if defined(CONFIG_POSIX_MQUEUE) || defined(CONFIG_SYSVIPC)</span><br><span class="line">.ipc_ns      = &amp;init_ipc_ns,</span><br><span class="line">#endif</span><br><span class="line">.mnt_ns      = NULL,</span><br><span class="line">.pid_ns_for_children  = &amp;init_pid_ns,</span><br><span class="line">#ifdef CONFIG_NET</span><br><span class="line">.net_ns      = &amp;init_net,</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>可见，init_nsproxy 中，对 uts, ipc, pid, net 都进行了初始化，但 mount 却没有。</p>
+<h3 id="创建新的-namespace"><a href="#创建新的-namespace" class="headerlink" title="创建新的 namespace"></a>创建新的 namespace</h3><hr>
+<p>初始化完之后，下面看看如何创建一个新的 namespace，通过前面的文章，我们知道是通过 clone 函数来完成的，在 Linux kernel 中，fork/vfork() 对 clone 进行了封装，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">#ifdef __ARCH_WANT_SYS_FORK</span><br><span class="line">SYSCALL_DEFINE0(fork)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_MMU</span><br><span class="line">    return do_fork(SIGCHLD, 0, 0, NULL, NULL);</span><br><span class="line">#else</span><br><span class="line">    /* can not support in nommu mode */</span><br><span class="line">    return -EINVAL;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#ifdef __ARCH_WANT_SYS_VFORK</span><br><span class="line">SYSCALL_DEFINE0(vfork)</span><br><span class="line">&#123;</span><br><span class="line">    return do_fork(CLONE_VFORK | CLONE_VM | SIGCHLD, 0, 0, NULL, NULL);</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#ifdef __ARCH_WANT_SYS_CLONE</span><br><span class="line">#ifdef CONFIG_CLONE_BACKWARDS</span><br><span class="line">SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,</span><br><span class="line">    int __user *, parent_tidptr,</span><br><span class="line">    int, tls_val,</span><br><span class="line">    int __user *, child_tidptr)</span><br><span class="line">#elif defined(CONFIG_CLONE_BACKWARDS2)</span><br><span class="line">SYSCALL_DEFINE5(clone, unsigned long, newsp, unsigned long, clone_flags,</span><br><span class="line">    int __user *, parent_tidptr,</span><br><span class="line">    int __user *, child_tidptr,</span><br><span class="line">    int, tls_val)</span><br><span class="line">#elif defined(CONFIG_CLONE_BACKWARDS3)</span><br><span class="line">SYSCALL_DEFINE6(clone, unsigned long, clone_flags, unsigned long, newsp,</span><br><span class="line">    int, stack_size,</span><br><span class="line">    int __user *, parent_tidptr,</span><br><span class="line">    int __user *, child_tidptr,</span><br><span class="line">    int, tls_val)</span><br><span class="line">#else</span><br><span class="line">SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,</span><br><span class="line">    int __user *, parent_tidptr,</span><br><span class="line">    int __user *, child_tidptr,</span><br><span class="line">    int, tls_val)</span><br><span class="line">#endif</span><br><span class="line">&#123;</span><br><span class="line">    return do_fork(clone_flags, newsp, 0, parent_tidptr, child_tidptr);</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，无论是 fork() 还是 vfork()，最终都会调用到 do_fork() 函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">*  Ok, this is the main fork-routine.</span><br><span class="line">*</span><br><span class="line">* It copies the process, and if successful kick-starts</span><br><span class="line">* it and waits for it to finish using the VM if required.</span><br><span class="line">*/</span><br><span class="line">long do_fork(unsigned long clone_flags,</span><br><span class="line">unsigned long stack_start,</span><br><span class="line">unsigned long stack_size,</span><br><span class="line">int __user *parent_tidptr,</span><br><span class="line">int __user *child_tidptr)</span><br><span class="line">&#123;</span><br><span class="line">// 创建进程描述符指针</span><br><span class="line">    struct task_struct *p;</span><br><span class="line">    int trace = 0;</span><br><span class="line">    long nr;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* Determine whether and which event to report to ptracer.  When</span><br><span class="line">* called from kernel_thread or CLONE_UNTRACED is explicitly</span><br><span class="line">* requested, no event is reported; otherwise, report if the event</span><br><span class="line">* for the type of forking is enabled.</span><br><span class="line">*/</span><br><span class="line">if (!(clone_flags &amp; CLONE_UNTRACED)) &#123;</span><br><span class="line">    if (clone_flags &amp; CLONE_VFORK)</span><br><span class="line">        trace = PTRACE_EVENT_VFORK;</span><br><span class="line">    else if ((clone_flags &amp; CSIGNAL) != SIGCHLD)</span><br><span class="line">        trace = PTRACE_EVENT_CLONE;</span><br><span class="line">    else</span><br><span class="line">        trace = PTRACE_EVENT_FORK;</span><br><span class="line"></span><br><span class="line">    if (likely(!ptrace_event_enabled(current, trace)))</span><br><span class="line">        trace = 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 复制进程描述符，返回值是 task_struct</span><br><span class="line">p = copy_process(clone_flags, stack_start, stack_size,</span><br><span class="line">child_tidptr, NULL, trace);</span><br><span class="line">/*</span><br><span class="line">* Do this prior waking up the new thread - the thread pointer</span><br><span class="line">* might get invalid after that point, if the thread exits quickly.</span><br><span class="line">*/</span><br><span class="line">if (!IS_ERR(p)) &#123;</span><br><span class="line">    struct completion vfork;</span><br><span class="line">    struct pid *pid;</span><br><span class="line"></span><br><span class="line">    trace_sched_process_fork(current, p);</span><br><span class="line"></span><br><span class="line">    // 得到新进程描述符的 pid</span><br><span class="line">    pid = get_task_pid(p, PIDTYPE_PID);</span><br><span class="line">    nr = pid_vnr(pid);</span><br><span class="line"></span><br><span class="line">    if (clone_flags &amp; CLONE_PARENT_SETTID)</span><br><span class="line">    put_user(nr, parent_tidptr);</span><br><span class="line"></span><br><span class="line">    // 调用 vfork() 方法，完成相关的初始化工作  </span><br><span class="line">    if (clone_flags &amp; CLONE_VFORK) &#123;</span><br><span class="line">    p-&gt;vfork_done = &amp;vfork;</span><br><span class="line">    init_completion(&amp;vfork);</span><br><span class="line">    get_task_struct(p);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 将新进程加入到调度器中，为其分配 CPU，准备执行</span><br><span class="line">    wake_up_new_task(p);</span><br><span class="line"></span><br><span class="line">    // fork() 完成，子进程开始运行，并让 ptrace 跟踪</span><br><span class="line">    /* forking complete and child started to run, tell ptracer */</span><br><span class="line">    if (unlikely(trace))</span><br><span class="line">    ptrace_event_pid(trace, pid);</span><br><span class="line"></span><br><span class="line">    // 如果是 vfork()，将父进程加入等待队列，等待子进程完成</span><br><span class="line">    if (clone_flags &amp; CLONE_VFORK) &#123;</span><br><span class="line">    if (!wait_for_vfork_done(p, &amp;vfork))</span><br><span class="line">    ptrace_event_pid(PTRACE_EVENT_VFORK_DONE, pid);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    put_pid(pid);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    nr = PTR_ERR(p);</span><br><span class="line">&#125;</span><br><span class="line">    return nr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>do_fork() 首先调用 copy_process 将父进程信息复制给子进程，然后调用 vfork() 完成相关的初始化工作，接着调用 wake_up_new_task() 将进程加入调度器中，为之分配 CPU。最后，等待子进程退出。</p>
+<p>copy_process():<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br></pre></td><td class="code"><pre><span class="line">static struct task_struct *copy_process(unsigned long clone_flags,</span><br><span class="line">    unsigned long stack_start,</span><br><span class="line">    unsigned long stack_size,</span><br><span class="line">    int __user *child_tidptr,</span><br><span class="line">    struct pid *pid,</span><br><span class="line">    int trace)</span><br><span class="line">&#123;</span><br><span class="line">int retval;</span><br><span class="line">// 创建进程描述符指针</span><br><span class="line">struct task_struct *p;</span><br><span class="line"></span><br><span class="line">// 检查 clone flags 的合法性，比如 CLONE_NEWNS 与 CLONE_FS 是互斥的</span><br><span class="line">if ((clone_flags &amp; (CLONE_NEWNS|CLONE_FS)) == (CLONE_NEWNS|CLONE_FS))</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">if ((clone_flags &amp; (CLONE_NEWUSER|CLONE_FS)) == (CLONE_NEWUSER|CLONE_FS))</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* Thread groups must share signals as well, and detached threads</span><br><span class="line">* can only be started up within the thread group.</span><br><span class="line">*/</span><br><span class="line">if ((clone_flags &amp; CLONE_THREAD) &amp;&amp; !(clone_flags &amp; CLONE_SIGHAND))</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* Shared signal handlers imply shared VM. By way of the above,</span><br><span class="line">* thread groups also imply shared VM. Blocking this case allows</span><br><span class="line">* for various simplifications in other code.</span><br><span class="line">*/</span><br><span class="line">if ((clone_flags &amp; CLONE_SIGHAND) &amp;&amp; !(clone_flags &amp; CLONE_VM))</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* Siblings of global init remain as zombies on exit since they are</span><br><span class="line">* not reaped by their parent (swapper). To solve this and to avoid</span><br><span class="line">* multi-rooted process trees, prevent global and container-inits</span><br><span class="line">* from creating siblings.</span><br><span class="line">*/</span><br><span class="line">// 比如CLONE_PARENT时得检查当前signal flags是否为SIGNAL_UNKILLABLE，防止kill init进程。</span><br><span class="line">if ((clone_flags &amp; CLONE_PARENT) &amp;&amp;</span><br><span class="line">current-&gt;signal-&gt;flags &amp; SIGNAL_UNKILLABLE)</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* If the new process will be in a different pid or user namespace</span><br><span class="line">* do not allow it to share a thread group or signal handlers or</span><br><span class="line">* parent with the forking task.</span><br><span class="line">*/</span><br><span class="line">if (clone_flags &amp; CLONE_SIGHAND) &#123;</span><br><span class="line">if ((clone_flags &amp; (CLONE_NEWUSER | CLONE_NEWPID)) ||</span><br><span class="line">(task_active_pid_ns(current) !=</span><br><span class="line">current-&gt;nsproxy-&gt;pid_ns_for_children))</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">retval = security_task_create(clone_flags);</span><br><span class="line">if (retval)</span><br><span class="line">goto fork_out;</span><br><span class="line"></span><br><span class="line">retval = -ENOMEM;</span><br><span class="line">// 复制当前的 task_struct</span><br><span class="line">p = dup_task_struct(current);</span><br><span class="line">if (!p)</span><br><span class="line">goto fork_out;</span><br><span class="line"></span><br><span class="line">ftrace_graph_init_task(p);</span><br><span class="line"></span><br><span class="line">rt_mutex_init_task(p);</span><br><span class="line"></span><br><span class="line">#ifdef CONFIG_PROVE_LOCKING</span><br><span class="line">DEBUG_LOCKS_WARN_ON(!p-&gt;hardirqs_enabled);</span><br><span class="line">DEBUG_LOCKS_WARN_ON(!p-&gt;softirqs_enabled);</span><br><span class="line">#endif</span><br><span class="line">retval = -EAGAIN;</span><br><span class="line"></span><br><span class="line">// 检查进程是否超过限制，由 OS 定义</span><br><span class="line">if (atomic_read(&amp;p-&gt;real_cred-&gt;user-&gt;processes) &gt;=</span><br><span class="line">task_rlimit(p, RLIMIT_NPROC)) &#123;</span><br><span class="line">if (p-&gt;real_cred-&gt;user != INIT_USER &amp;&amp;</span><br><span class="line">!capable(CAP_SYS_RESOURCE) &amp;&amp; !capable(CAP_SYS_ADMIN))</span><br><span class="line">goto bad_fork_free;</span><br><span class="line">&#125;</span><br><span class="line">current-&gt;flags &amp;= ~PF_NPROC_EXCEEDED;</span><br><span class="line"></span><br><span class="line">retval = copy_creds(p, clone_flags);</span><br><span class="line">if (retval &lt; 0)</span><br><span class="line">goto bad_fork_free;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* If multiple threads are within copy_process(), then this check</span><br><span class="line">* triggers too late. This doesn&apos;t hurt, the check is only there</span><br><span class="line">* to stop root fork bombs.</span><br><span class="line">*/</span><br><span class="line">retval = -EAGAIN;</span><br><span class="line">// 检查进程数是否超过 max_threads，由内存大小定义</span><br><span class="line">if (nr_threads &gt;= max_threads)</span><br><span class="line">goto bad_fork_cleanup_count;</span><br><span class="line"></span><br><span class="line">// ......</span><br><span class="line"></span><br><span class="line">// 初始化 io 计数器</span><br><span class="line">task_io_accounting_init(&amp;p-&gt;ioac);</span><br><span class="line">acct_clear_integrals(p);</span><br><span class="line"></span><br><span class="line">// 初始化 CPU 定时器</span><br><span class="line">posix_cpu_timers_init(p);</span><br><span class="line"></span><br><span class="line">// ......</span><br><span class="line"></span><br><span class="line">// 初始化进程数据结构，并为进程分配 CPU，进程状态设置为 TASK_RUNNING</span><br><span class="line">/* Perform scheduler related setup. Assign this task to a CPU. */</span><br><span class="line">retval = sched_fork(clone_flags, p);</span><br><span class="line"></span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_policy;</span><br><span class="line"></span><br><span class="line">retval = perf_event_init_task(p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_policy;</span><br><span class="line">retval = audit_alloc(p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_perf;</span><br><span class="line">/* copy all the process information */</span><br><span class="line">// 复制所有进程信息，包括文件系统，信号处理函数、信号、内存管理等</span><br><span class="line">shm_init_task(p);</span><br><span class="line">retval = copy_semundo(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_audit;</span><br><span class="line">retval = copy_files(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_semundo;</span><br><span class="line">retval = copy_fs(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_files;</span><br><span class="line">retval = copy_sighand(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_fs;</span><br><span class="line">retval = copy_signal(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_sighand;</span><br><span class="line">retval = copy_mm(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_signal;</span><br><span class="line">// !!! 复制 namespace</span><br><span class="line">retval = copy_namespaces(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_mm;</span><br><span class="line">retval = copy_io(clone_flags, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_namespaces;</span><br><span class="line">// 初始化子进程内核栈</span><br><span class="line">retval = copy_thread(clone_flags, stack_start, stack_size, p);</span><br><span class="line">if (retval)</span><br><span class="line">goto bad_fork_cleanup_io;</span><br><span class="line">// 为新进程分配新的 pid</span><br><span class="line">if (pid != &amp;init_struct_pid) &#123;</span><br><span class="line">pid = alloc_pid(p-&gt;nsproxy-&gt;pid_ns_for_children);</span><br><span class="line">if (IS_ERR(pid)) &#123;</span><br><span class="line">retval = PTR_ERR(pid);</span><br><span class="line">goto bad_fork_cleanup_io;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ......</span><br><span class="line"></span><br><span class="line">// 返回新进程 p</span><br><span class="line">return p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>copy_process 主要分为三步：首先调用 dup_task_struct() 复制当前的进程描述符信息 task_struct，为新进程分配新的堆栈，第二步调用 sched_fork() 初始化进程数据结构，为其分配 CPU，把进程状态设置为 TASK_RUNNING，最后一步就是调用 copy_namespaces() 复制 namesapces。我们重点关注最后一步 copy_namespaces()：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* called from clone.  This now handles copy for nsproxy and all</span><br><span class="line">* namespaces therein.</span><br><span class="line">*/</span><br><span class="line">int copy_namespaces(unsigned long flags, struct task_struct *tsk)</span><br><span class="line">&#123;</span><br><span class="line">struct nsproxy *old_ns = tsk-&gt;nsproxy;</span><br><span class="line">struct user_namespace *user_ns = task_cred_xxx(tsk, user_ns);</span><br><span class="line">struct nsproxy *new_ns;</span><br><span class="line"></span><br><span class="line">if (likely(!(flags &amp; (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |</span><br><span class="line">CLONE_NEWPID | CLONE_NEWNET)))) &#123;</span><br><span class="line">get_nsproxy(old_ns);</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (!ns_capable(user_ns, CAP_SYS_ADMIN))</span><br><span class="line">return -EPERM;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* CLONE_NEWIPC must detach from the undolist: after switching</span><br><span class="line">* to a new ipc namespace, the semaphore arrays from the old</span><br><span class="line">* namespace are unreachable.  In clone parlance, CLONE_SYSVSEM</span><br><span class="line">* means share undolist with parent, so we must forbid using</span><br><span class="line">* it along with CLONE_NEWIPC.</span><br><span class="line">*/</span><br><span class="line">if ((flags &amp; (CLONE_NEWIPC | CLONE_SYSVSEM)) ==</span><br><span class="line">(CLONE_NEWIPC | CLONE_SYSVSEM)) </span><br><span class="line">return -EINVAL;</span><br><span class="line"></span><br><span class="line">new_ns = create_new_namespaces(flags, tsk, user_ns, tsk-&gt;fs);</span><br><span class="line">if (IS_ERR(new_ns))</span><br><span class="line">return  PTR_ERR(new_ns);</span><br><span class="line"></span><br><span class="line">tsk-&gt;nsproxy = new_ns;</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可见，copy_namespace() 主要基于“旧的” namespace 创建“新的” namespace，核心函数在于 create_new_namespaces：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* Create new nsproxy and all of its the associated namespaces.</span><br><span class="line">* Return the newly created nsproxy.  Do not attach this to the task,</span><br><span class="line">* leave it to the caller to do proper locking and attach it to task.</span><br><span class="line">*/</span><br><span class="line">static struct nsproxy *create_new_namespaces(unsigned long flags,</span><br><span class="line">struct task_struct *tsk, struct user_namespace *user_ns,</span><br><span class="line">struct fs_struct *new_fs)</span><br><span class="line">&#123;</span><br><span class="line">struct nsproxy *new_nsp;</span><br><span class="line">int err;</span><br><span class="line"></span><br><span class="line">// 创建新的 nsproxy</span><br><span class="line">new_nsp = create_nsproxy();</span><br><span class="line">if (!new_nsp)</span><br><span class="line">return ERR_PTR(-ENOMEM);</span><br><span class="line"></span><br><span class="line">//创建 mnt namespace</span><br><span class="line">new_nsp-&gt;mnt_ns = copy_mnt_ns(flags, tsk-&gt;nsproxy-&gt;mnt_ns, user_ns, new_fs);</span><br><span class="line">if (IS_ERR(new_nsp-&gt;mnt_ns)) &#123;</span><br><span class="line">err = PTR_ERR(new_nsp-&gt;mnt_ns);</span><br><span class="line">goto out_ns;</span><br><span class="line">&#125;</span><br><span class="line">//创建 uts namespace</span><br><span class="line">new_nsp-&gt;uts_ns = copy_utsname(flags, user_ns, tsk-&gt;nsproxy-&gt;uts_ns);</span><br><span class="line">if (IS_ERR(new_nsp-&gt;uts_ns)) &#123;</span><br><span class="line">err = PTR_ERR(new_nsp-&gt;uts_ns);</span><br><span class="line">goto out_uts;</span><br><span class="line">&#125;</span><br><span class="line">//创建 ipc namespace</span><br><span class="line">new_nsp-&gt;ipc_ns = copy_ipcs(flags, user_ns, tsk-&gt;nsproxy-&gt;ipc_ns);</span><br><span class="line">if (IS_ERR(new_nsp-&gt;ipc_ns)) &#123;</span><br><span class="line">err = PTR_ERR(new_nsp-&gt;ipc_ns);</span><br><span class="line">goto out_ipc;</span><br><span class="line">&#125;</span><br><span class="line">//创建 pid namespace</span><br><span class="line">new_nsp-&gt;pid_ns_for_children =</span><br><span class="line">copy_pid_ns(flags, user_ns, tsk-&gt;nsproxy-&gt;pid_ns_for_children);</span><br><span class="line">if (IS_ERR(new_nsp-&gt;pid_ns_for_children)) &#123;</span><br><span class="line">err = PTR_ERR(new_nsp-&gt;pid_ns_for_children);</span><br><span class="line">goto out_pid;</span><br><span class="line">&#125;</span><br><span class="line">//创建 network namespace</span><br><span class="line">new_nsp-&gt;net_ns = copy_net_ns(flags, user_ns, tsk-&gt;nsproxy-&gt;net_ns);</span><br><span class="line">if (IS_ERR(new_nsp-&gt;net_ns)) &#123;</span><br><span class="line">err = PTR_ERR(new_nsp-&gt;net_ns);</span><br><span class="line">goto out_net;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return new_nsp;</span><br><span class="line">// 出错处理</span><br><span class="line">out_net:</span><br><span class="line">if (new_nsp-&gt;pid_ns_for_children)</span><br><span class="line">put_pid_ns(new_nsp-&gt;pid_ns_for_children);</span><br><span class="line">out_pid:</span><br><span class="line">if (new_nsp-&gt;ipc_ns)</span><br><span class="line">put_ipc_ns(new_nsp-&gt;ipc_ns);</span><br><span class="line">out_ipc:</span><br><span class="line">if (new_nsp-&gt;uts_ns)</span><br><span class="line">put_uts_ns(new_nsp-&gt;uts_ns);</span><br><span class="line">out_uts:</span><br><span class="line">if (new_nsp-&gt;mnt_ns)</span><br><span class="line">put_mnt_ns(new_nsp-&gt;mnt_ns);</span><br><span class="line">out_ns:</span><br><span class="line">kmem_cache_free(nsproxy_cachep, new_nsp);</span><br><span class="line">return ERR_PTR(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在create_new_namespaces()中，分别调用 create_nsproxy(), create_utsname(), create_ipcs(), create_pid_ns(), create_net_ns(), create_mnt_ns() 来创建 nsproxy 结构，uts，ipcs，pid，mnt，net。</p>
+<p>具体的函数我们就不再分析，基本到此为止，我们从子进程创建，到子进程相关的信息的初始化，包括文件系统，CPU，内存管理等，再到各个 namespace 的创建，都走了一遍，下面附上 namespace 创建的代码流程图。</p>
+<center><img src="/images/docker/ns_call.jpg" alt=""></center>
 
 
-<p>可以看到这里的 ReplicaSet 名称和上面 Deployment 信息里显示的是一样的，同样，执行 <code>kubectl describe replicaset xxx</code> 显示该 ReplicaSet 的详细信息。</p>
-<center><img src="/images/k8s/deploy-replica-events.png" alt=""></center>
-
-
-<p>图中，有两处地方值得注意。一处是 <code>Controlled By</code>，表明 ReplicaSet 是由谁创建并控制的，显然这里显示是 Deployment。第二处是 <code>Events</code>，Events 记录了 K8S 中每一种对象的日志信息，这里的信息有助于排错查问题。我们可以看到这里记录了两个 Pod 副本的创建，Pod 的名称和我们在上面执行 <code>kubectl get pod</code> 看到的结果是一样的。</p>
-<p>继续执行 <code>kubectl describe pod xxx</code> 查看其中一个 Pod 的详细信息：</p>
-<center><img src="/images/k8s/deploy-pod-des.png" alt=""></center>
-
-<p>可以看到这个 Pod 是由 ReplicaSet 创建的。</p>
-<p>到此，我们不难得出下面这幅图：</p>
-<center><img src="/images/k8s/deploy-pod1.png" alt=""></center>
-
-
-<p>用户通过 kubeclt 创建 Deployment，Deployment 又创建 ReplicaSet，最终由 ReplicaSet 创建 Pod。</p>
-<p>从命名上我们也可以看出，子对象的名字 = 父对象的名字 + 随机字符串。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文我们从实践上剖析了 Deployment 创建 Pod，实际上经过 ReplicaSet 进行创建。Deployment 最主要是对 Pod 进行副本管理，这样可以进行很多自动化管理的复杂操作，后面我们逐步从实践上去剖析 Pod 的各种操作。</p>
+<p>mnt namespace:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">mnt namespace:</span><br><span class="line">struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,</span><br><span class="line">struct user_namespace *user_ns, struct fs_struct *new_fs)</span><br><span class="line">&#123;</span><br><span class="line">struct mnt_namespace *new_ns;</span><br><span class="line">struct vfsmount *rootmnt = NULL, *pwdmnt = NULL;</span><br><span class="line">struct mount *p, *q;</span><br><span class="line">struct mount *old;</span><br><span class="line">struct mount *new;</span><br><span class="line">int copy_flags;</span><br><span class="line"></span><br><span class="line">BUG_ON(!ns);</span><br><span class="line"></span><br><span class="line">if (likely(!(flags &amp; CLONE_NEWNS))) &#123;</span><br><span class="line">get_mnt_ns(ns);</span><br><span class="line">return ns;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">old = ns-&gt;root;</span><br><span class="line">// 分配新的 mnt namespace</span><br><span class="line">new_ns = alloc_mnt_ns(user_ns);</span><br><span class="line">if (IS_ERR(new_ns))</span><br><span class="line">return new_ns;</span><br><span class="line"></span><br><span class="line">namespace_lock();</span><br><span class="line">/* First pass: copy the tree topology */</span><br><span class="line">// 首先 copy root 路径</span><br><span class="line">copy_flags = CL_COPY_UNBINDABLE | CL_EXPIRE;</span><br><span class="line">if (user_ns != ns-&gt;user_ns)</span><br><span class="line">copy_flags |= CL_SHARED_TO_SLAVE | CL_UNPRIVILEGED;</span><br><span class="line">new = copy_tree(old, old-&gt;mnt.mnt_root, copy_flags);</span><br><span class="line">if (IS_ERR(new)) &#123;</span><br><span class="line">namespace_unlock();</span><br><span class="line">free_mnt_ns(new_ns);</span><br><span class="line">return ERR_CAST(new);</span><br><span class="line">&#125;</span><br><span class="line">new_ns-&gt;root = new;</span><br><span class="line">list_add_tail(&amp;new_ns-&gt;list, &amp;new-&gt;mnt_list);</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">* Second pass: switch the tsk-&gt;fs-&gt;* elements and mark new vfsmounts</span><br><span class="line">* as belonging to new namespace.  We have already acquired a private</span><br><span class="line">* fs_struct, so tsk-&gt;fs-&gt;lock is not needed.</span><br><span class="line">*/</span><br><span class="line">// 为新进程设置 fs 信息</span><br><span class="line">p = old;</span><br><span class="line">q = new;</span><br><span class="line">while (p) &#123;</span><br><span class="line">q-&gt;mnt_ns = new_ns;</span><br><span class="line">if (new_fs) &#123;</span><br><span class="line">if (&amp;p-&gt;mnt == new_fs-&gt;root.mnt) &#123;</span><br><span class="line">new_fs-&gt;root.mnt = mntget(&amp;q-&gt;mnt);</span><br><span class="line">rootmnt = &amp;p-&gt;mnt;</span><br><span class="line">&#125;</span><br><span class="line">if (&amp;p-&gt;mnt == new_fs-&gt;pwd.mnt) &#123;</span><br><span class="line">new_fs-&gt;pwd.mnt = mntget(&amp;q-&gt;mnt);</span><br><span class="line">pwdmnt = &amp;p-&gt;mnt;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">p = next_mnt(p, old);</span><br><span class="line">q = next_mnt(q, new);</span><br><span class="line">if (!q)</span><br><span class="line">break;</span><br><span class="line">while (p-&gt;mnt.mnt_root != q-&gt;mnt.mnt_root)</span><br><span class="line">p = next_mnt(p, old);</span><br><span class="line">&#125;</span><br><span class="line">namespace_unlock();</span><br><span class="line"></span><br><span class="line">if (rootmnt)</span><br><span class="line">mntput(rootmnt);</span><br><span class="line">if (pwdmnt)</span><br><span class="line">mntput(pwdmnt);</span><br><span class="line"></span><br><span class="line">return new_ns;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，mount namespace 在新建时会新建一个新的 namespace，然后将父进程的 namespace 拷贝过来，并将 mount-&gt;mnt_ns 指向新的 namespace。接着设置进程的 root 路径以及当前路径到新的 namespace，然后为新进程设置新的 vfs 等。从这里就可以看出，在子进程中进行 mount 操作不会影响到父进程中的 mount 信息。</p>
+<p>uts namespace:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static inline struct uts_namespace *copy_utsname(unsigned long flags,</span><br><span class="line">struct user_namespace *user_ns, struct uts_namespace *old_ns)</span><br><span class="line">&#123;</span><br><span class="line">if (flags &amp; CLONE_NEWUTS)</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line"></span><br><span class="line">return old_ns;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>uts namespace 直接返回父进程 namespace 信息。</p>
+<p>ipc namespace:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct ipc_namespace *copy_ipcs(unsigned long flags,</span><br><span class="line">struct user_namespace *user_ns, struct ipc_namespace *ns)</span><br><span class="line">&#123;</span><br><span class="line">if (!(flags &amp; CLONE_NEWIPC))</span><br><span class="line">return get_ipc_ns(ns);</span><br><span class="line">return create_ipc_ns(user_ns, ns);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ipc namespace 如果是设置了参数 CLONE_NEWIPC，则直接返回父进程的 namespace，否则返回新创建的 namespace。</p>
+<p>pid namespace:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static inline struct pid_namespace *copy_pid_ns(unsigned long flags,</span><br><span class="line">struct user_namespace *user_ns, struct pid_namespace *ns)</span><br><span class="line">&#123;</span><br><span class="line">if (flags &amp; CLONE_NEWPID)</span><br><span class="line">ns = ERR_PTR(-EINVAL);</span><br><span class="line">return ns;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>pid namespace 直接返回父进程的 namespace。</p>
+<p>net namespace</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static inline struct net *copy_net_ns(unsigned long flags,</span><br><span class="line">struct user_namespace *user_ns, struct net *old_net)</span><br><span class="line">&#123;</span><br><span class="line">if (flags &amp; CLONE_NEWNET)</span><br><span class="line">return ERR_PTR(-EINVAL);</span><br><span class="line">return old_net;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>net namespace 也是直接返回父进程的 namespace。</p>
+<p>OK，不知不觉写了这么多，但回头去看，这更像是代码走读，分析深度不够，更详细的大家可以参照源码，源码结构还是比较清晰的。</p>
 <p>PS：文章未经我允许，不得转载，否则后果自负。</p>
 <center>–END–</center>
 
@@ -754,9 +938,13 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
                     <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/Namespace/"><i class="fas fa-hashtag fa-fw"></i>Namespace</a>
                 
             </div>
         
@@ -775,9 +963,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/09/13/云计算/历史上那些具有跨时代意义的云计算创业公司/">
+          <a href="/2018/03/08/技术/Docker_基础技术之_Linux_namespace_详解/">
               
-                  历史上那些具有跨时代意义的云计算创业公司
+                  Docker 基础技术之 Linux namespace 详解
               
           </a>
       </h2>
@@ -785,7 +973,376 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-13
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-08
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>Docker 是“新瓶装旧酒”的产物，依赖于 Linux 内核技术 chroot 、namespace 和 cgroup。本篇先来看 namespace 技术。</p>
+<p>Docker 和虚拟机技术一样，从操作系统级上实现了资源的隔离，它本质上是宿主机上的进程（容器进程），所以资源隔离主要就是指进程资源的隔离。实现资源隔离的核心技术就是 Linux namespace。这技术和很多语言的命名空间的设计思想是一致的（如 C++ 的 namespace）。</p>
+<p>隔离意味着可以抽象出多个轻量级的内核（容器进程），这些进程可以充分利用宿主机的资源，宿主机有的资源容器进程都可以享有，但彼此之间是隔离的，同样，不同容器进程之间使用资源也是隔离的，这样，彼此之间进行相同的操作，都不会互相干扰，安全性得到保障。</p>
+<p>为了支持这些特性，Linux namespace 实现了 6 项资源隔离，基本上涵盖了一个小型操作系统的运行要素，包括主机名、用户权限、文件系统、网络、进程号、进程间通信。</p>
+<center><img src="/images/docker/docker_ns.png" alt=""></center>
+
+<p>这 6 项资源隔离分别对应 6 种系统调用，通过传入上表中的参数，调用 clone() 函数来完成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int clone(int (*child_func)(void *), void *child_stack, int flags, void *arg);</span><br></pre></td></tr></table></figure></p>
+<p>clone() 函数相信大家都不陌生了，它是 fork() 函数更通用的实现方式，通过调用 clone()，并传入需要隔离资源对应的参数，就可以建立一个容器了（隔离什么我们自己控制）。</p>
+<p>一个容器进程也可以再 clone() 出一个容器进程，这是容器的嵌套。</p>
+<center><img src="/images/docker/docker_clone.jpg" alt=""></center>
+
+<p>如果想要查看当前进程下有哪些 namespace 隔离，可以查看文件 /proc/[pid]/ns （注：该方法仅限于 3.8 版本以后的内核）。</p>
+<center><img src="/images/docker/docker_shell.jpg" alt=""></center>
+
+<p>可以看到，每一项 namespace 都附带一个编号，这是唯一标识 namespace 的，如果两个进程指向的 namespace 编号相同，则表示它们同在该 namespace 下。同时也注意到，多了一个 cgroup，这个 namespace 是 4.6 版本的内核才支持的。Docker 目前对它的支持普及度还不高。所以我们暂时先不考虑它。</p>
+<p>下面通过简单的代码来实现 6 种 namespace 的隔离效果，让大家有个直观的印象。</p>
+<h3 id="UTS-namespace"><a href="#UTS-namespace" class="headerlink" title="UTS namespace"></a>UTS namespace</h3><hr>
+<p>UTS namespace 提供了主机名和域名的隔离，这样每个容器就拥有独立的主机名和域名了，在网络上就可以被视为一个独立的节点，在容器中对 hostname 的命名不会对宿主机造成任何影响。</p>
+<p>首先，先看总体的代码骨架：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#define _GNU_SOURCE</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;sched.h&gt;</span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#define STACK_SIZE (1024 * 1024)</span><br><span class="line"></span><br><span class="line">static char container_stack[STACK_SIZE];</span><br><span class="line">char* const container_args[] = &#123;</span><br><span class="line">    &quot;/bin/bash&quot;,</span><br><span class="line">    NULL</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 容器进程运行的程序主函数</span><br><span class="line">int container_main(void *args)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;在容器进程中！\n&quot;);</span><br><span class="line">    execv(container_args[0], container_args); // 执行/bin/bash   return 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int args, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;程序开始\n&quot;);</span><br><span class="line">    // clone 容器进程</span><br><span class="line">    int container_pid = clone(container_main, container_stack + STACK_SIZE, SIGCHLD, NULL);</span><br><span class="line">    // 等待容器进程结束</span><br><span class="line">    waitpid(container_pid, NULL, 0);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该程序骨架调用 clone() 函数实现了子进程的创建工作，并定义子进程的执行函数，clone() 第二个参数指定了子进程运行的栈空间大小，第三个参数即为创建不同 namespace 隔离的关键。</p>
+<p>对于 UTS namespace，传入 CLONE_NEWUTS，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int container_pid = clone(container_main, container_stack + STACK_SIZE, SIGCHLD | CLONE_NEWUTS, NULL);</span><br></pre></td></tr></table></figure></p>
+<p>为了能够看出容器内和容器外主机名的变化，我们子进程执行函数中加入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sethostname(&quot;container&quot;, 9);</span><br></pre></td></tr></table></figure></p>
+<p>最终运行可以看到效果如下：</p>
+<center><img src="/images/docker/docker_show.png" alt=""></center>
+
+<h3 id="IPC-namespace"><a href="#IPC-namespace" class="headerlink" title="IPC namespace"></a>IPC namespace</h3><hr>
+<p>IPC namespace 实现了进程间通信的隔离，包括常见的几种进程间通信机制，如信号量，消息队列和共享内存。我们知道，要完成 IPC，需要申请一个全局唯一的标识符，即 IPC 标识符，所以 IPC 资源隔离主要完成的就是隔离 IPC 标识符。</p>
+<p>同样，代码修改仅需要加入参数 CLONE_NEWIPC 即可，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int container_pid = clone(container_main, container_stack + STACK_SIZE, SIGCHLD | CLONE_NEWUTS | CLONE_NEWIPC, NULL);</span><br></pre></td></tr></table></figure></p>
+<p>为了看出变化，首先在宿主机上建立一个消息队列：</p>
+<center><img src="/images/docker/ns_ipc.png" alt=""></center>
+
+<p>然后运行程序，进入容器查看 IPC，没有找到原先建立的 IPC 标识，达到了 IPC 隔离。</p>
+<center><img src="/images/docker/ns_ipc1.png" alt=""></center>
+
+<h3 id="PID-namespace"><a href="#PID-namespace" class="headerlink" title="PID namespace"></a>PID namespace</h3><hr>
+<p>PID namespace 完成的是进程号的隔离，同样在 clone() 中加入 CLONE_NEWPID 参数，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int container_pid = clone(container_main, container_stack + STACK_SIZE, SIGCHLD | CLONE_NEWUTS | CLONE_NEWIPC | CLONE_NEWPID, NULL);</span><br></pre></td></tr></table></figure></p>
+<p>效果如下，echo $$ 输出 shell 的 PID 号，发生了变化。</p>
+<center><img src="/images/docker/ns_pid.png" alt=""></center>
+
+<p>但是对于 ps/top 之类命令却没有改变：</p>
+<center><img src="/images/docker/ns_pid1.jpg" alt=""></center>
+
+<p>原因是 ps/top 之类的命令底层调用的是文件系统的 /proc 文件内容，由于 /proc 文件系统（procfs）还没有挂载到一个与原 /proc 不同的位置，自然在容器中显示的就是宿主机的进程。</p>
+<p>我们可以通过在容器中重新挂载 /proc 即可实现隔离，如下：</p>
+<center><img src="/images/docker/ns_proc.png" alt=""></center>
+
+<p>这种方式会破坏 root namespace 中的文件系统，当退出容器时，如果 ps 会出现错误，只有再重新挂载一次 /proc 才能恢复。</p>
+<center><img src="/images/docker/ns_proc1.jpg" alt=""></center>
+
+<p>一劳永逸地解决这个问题最好的方法就是用接下来介绍的 mount namespace。</p>
+<h3 id="mount-namespace"><a href="#mount-namespace" class="headerlink" title="mount namespace"></a>mount namespace</h3><hr>
+<p>mount namespace 通过隔离文件系统的挂载点来达到对文件系统的隔离。我们依然在代码中加入 CLONE_NEWNS 参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int container_pid = clone(container_main, container_stack + STACK_SIZE, SIGCHLD | CLONE_NEWUTS | CLONE_NEWIPC | CLONE_NEWPID | CLONE_NEWNS, NULL);</span><br></pre></td></tr></table></figure></p>
+<p>我验证的效果，当退出容器时，还是会有 mount 错误，这没道理，经多方查阅，没有找到问题的根源（有谁知道，可以留言指出）。</p>
+<center><img src="/images/docker/ns_mount.jpg" alt=""></center>
+
+<h3 id="Network-namespace"><a href="#Network-namespace" class="headerlink" title="Network namespace"></a>Network namespace</h3><hr>
+<p>Network namespace 实现了网络资源的隔离，包括网络设备、IPv4 和 IPv6 协议栈，IP 路由表，防火墙，/proc/net 目录，/sys/class/net 目录，套接字等。</p>
+<p>Network namespace 不同于其他 namespace 可以独立工作，要使得容器进程和宿主机或其他容器进程之间通信，需要某种“桥梁机制”来连接彼此（并没有真正的隔离），这是通过创建 veth pair （虚拟网络设备对，有两端，类似于管道，数据从一端传入能从另一端收到，反之亦然）来实现的。当建立 Network namespace 后，内核会首先建立一个 docker0 网桥，功能类似于 Bridge，用于建立各容器之间和宿主机之间的通信，具体就是分别将 veth pair 的两端分别绑定到 docker0 和新建的 namespace 中。</p>
+<center><img src="/images/docker/docker_net.jpg" alt=""></center>
+
+<p>和其他 namespace 一样，Network namespace 的创建也是加入 CLONE_NEWNET 参数即可。我们可以简单验证下 IP 地址的情况，如下，IP 被隔离了。</p>
+<center><img src="/images/docker/ns_net.jpg" alt=""></center>
+
+<h3 id="User-namespace"><a href="#User-namespace" class="headerlink" title="User namespace"></a>User namespace</h3><hr>
+<p>User namespace 主要隔离了安全相关的标识符和属性，包括用户 ID、用户组 ID、root 目录、key 以及特殊权限。简单说，就是一个普通用户的进程通过 clone() 之后在新的 user namespace 中可以拥有不同的用户和用户组，比如可能是超级用户。</p>
+<p>同样，可以加入 CLONE_NEWUSER 参数来创建一个 User namespace。然后再子进程执行函数中加入 getuid() 和 getpid() 得到 namespace 内部的 User ID，效果如下：</p>
+<center><img src="/images/docker/ns_user.png" alt=""></center>
+
+<p>可以看到，容器内部看到的 UID 和 GID 和外部不同了，默认显示为 65534。这是因为容器找不到其真正的 UID ，所以设置上了最大的UID（其设置定义在/proc/sys/kernel/overflowuid）。另外就是用户变为了 nobody，不再是 root，达到了隔离。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>以上就是对 6 种 namespace 从代码上简单直观地演示其实现，当然，真正的实现比这个要复杂得多，然后这 6 种 namespace 实际上也没有完全隔离 Linux 的资源，比如 SElinux、cgroup 以及 /sys 等目录下的资源没有隔离。目前，Docker 在很多方面已经做的很好，但相比虚拟机，仍然有许多安全性问题急需解决。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/Cgroup/"><i class="fas fa-hashtag fa-fw"></i>Cgroup</a>
+                
+                    <a href="/tags/Namespace/"><i class="fas fa-hashtag fa-fw"></i>Namespace</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/03/02/技术/容器生态系统/">
+              
+                  容器生态系统
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-02
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>说起生态，不禁让人想起贾跃亭的乐视，想当初我多次被它的生态布局给震撼到，一度相信它将要超越百度，坐拥互联网三大江山的宝座，但没过时日，各种劲爆的新闻就把它推到了风口浪尖上，现在想想也是让人唏嘘，但不管怎么说，愿它好吧，毕竟这种敢想敢做的精神还是值得敬佩的。</p>
+<p>回到技术这个领域，不得不说，技术更新迭代的速度快得让人应接不暇，就容器技术这个领域来说，从 Docker 面世短短的 2-3 年时间里，就衍生出多种与之相关的技术框架，由此形成了一个小小的生态系统。</p>
+<center><img src="/images/docker/docker_st.jpg" alt=""></center>
+
+<p>一谈到容器，大家都会想到 Docker，本文也主要从 Docker 角度来讲容器生态系统。</p>
+<h3 id="1-容器基础技术"><a href="#1-容器基础技术" class="headerlink" title="1 容器基础技术"></a>1 容器基础技术</h3><hr>
+<p>Docker 的本质是利用 Linux 内核的 namespace 和 cgroups 机制，构建出一个隔离的进程（容器进程）。所以，容器的基础技术主要涉及到 Linux 内核的 namespace 和 cgroups 技术。</p>
+<h3 id="2-容器核心技术"><a href="#2-容器核心技术" class="headerlink" title="2 容器核心技术"></a>2 容器核心技术</h3><hr>
+<p>容器核心技术保证容器能够在主机上运行起来，包括容器规范、容器 runtime、容器管理工具、容器定义工具、Registry 和容器 OS。</p>
+<center><img src="/images/docker/docker_core.jpg" alt=""></center>
+
+<p>容器规范旨在将多种容器（如 OpenVZ，rkt，Docker 等）融合在一起，解决各种兼容问题，为此还专门成立了一个叫 OCI（Open Container Initiative）的组织来专门制定相关的容器规范。</p>
+<p>容器 runtime 是容器真正运行的地方，一般需要依赖内核，也有运行在专门制定的容器 OS 上，关于容器 OS，下面会做介绍。lxc 、runc 和 rkt 是目前三种主流的 runtime。</p>
+<blockquote>
+<p>lxc 是 Linux 上老牌的容器 runtime。Docker 最初也是用 lxc 作为 runtime。<br>runc 是 Docker 自己开发的容器 runtime，符合 oci 规范，也是现在 Docker 的默认 runtime。<br>rkt 是 CoreOS 开发的容器 runtime，符合 oci 规范，因而能够运行 Docker 的容器。</p>
+</blockquote>
+<blockquote>
+<p>容器管理工具是对外提供给用户的 CLI 接口，方便用户管理容器，对内与 runtime 交互。对应于不同的 runtime，分别有三种不同的管理工具：lxd、docker engine 和 rkt cli。</p>
+</blockquote>
+<p>容器定义工具允许用户定义容器的内容和属性，如容器需要什么镜像，装载什么应用等。常用有三种工具：docker images、Dockerfile 和 ACL（App Container Image）。</p>
+<blockquote>
+<p>docker images 是容器镜像，runtime 依据 docker images 创建容器。dockerfile 是包含若干命令的文本文件，可以通过这些命令创建出 docker images。ACI 与 docker images 类似，只不过它是由 CoreOS 开发的 rkt 容器的 images 格式。</p>
+</blockquote>
+<p>Registry 是存放容器镜像的仓库，包括 Docker Registry、Docker Hub 和 Quay.io，以及国内的 DaoCloud.io。企业可以用 Docker Registry 构建私有的 Registry。</p>
+<p>容器 OS 不同于 runtime，是专门制定出来运行容器的操作系统，与常规 OS 相比，容器 OS 通常体积更小，启动更快。因为是为容器定制的 OS，通常它们运行容器的效率会更高。目前已经存在不少容器 OS，CoreOS、atomic 和 ubuntu core 是其中的杰出代表。</p>
+<h3 id="3-容器平台技术"><a href="#3-容器平台技术" class="headerlink" title="3 容器平台技术"></a>3 容器平台技术</h3><hr>
+<p>随着容器部署的增多，容器也逐步过渡到容器云，容器平台技术就是让容器作为集群在分布式的环境中运行，包括了容器编排引擎、容器管理平台和基于容器的 PaaS。</p>
+<center><img src="/images/docker/docker_plat.jpg" alt=""></center>
+
+<p>容器编排引擎就是管理、调度容器在集群中运行，以保障资源的合理利用。有名的三大编排引擎为 docker swarm、kubernetes 和 mesos。其中，kubernetes 这两年脱颖而出，成为其中的佼佼者。</p>
+<p>容器管理平台是在编排引擎之上更为通用的一个平台，它抽象了编排引擎的底层实现细节，能够支持多种编排引擎，提供友好的接口给用户，极大方便了管理。Rancher 和 ContainerShip 是容器管理平台的典型代表。</p>
+<p>基于容器的 PaaS 基于容器的 PaaS 为微服务应用开发人员和公司提供了开发、部署和管理应用的平台，使用户不必关心底层基础设施而专注于应用的开发。Deis、Flynn 和 Dokku 都是开源容器 PaaS 的代表。</p>
+<h3 id="4-容器支持技术"><a href="#4-容器支持技术" class="headerlink" title="4 容器支持技术"></a>4 容器支持技术</h3><hr>
+<p>容器的出现又重新让一些古老的技术焕发第二春，如监控、网络、数据管理、日志等技术，由于容器技术的不同，需要制定相应的符合容器规范的技术框架，由此有了容器支持技术，用于支持容器提供更丰富能力的基础设施。</p>
+<center><img src="/images/docker/docker_zc.jpg" alt=""></center>
+
+<p>其中包括容器网络、服务发现、监控、数据管理、日志管理和安全性。</p>
+<p>容器网络主要用于解决容器与容器之间，容器与其他实体之间的连通性和隔离性。包括 Docker 原生的网络解决方案 docker network，以及第三方的网络解决方案，如  flannel、weave 和 calico。</p>
+<p>服务发现保证容器使用过程中资源动态变化的感知性，如当负载增加时，集群会自动创建新的容器；负载减小，多余的容器会被销毁。容器也会根据 host 的资源使用情况在不同 host 中迁移，容器的 IP 和端口也会随之发生变化。在这种动态环境下，就需要有一种机制来感知这种变化，服务发现就是做这样的工作。etcd、consul 和 zookeeper 是服务发现的典型解决方案。</p>
+<p>监控室保证容器健康运行，且让用户实时了解应用运行状态的工具，除了 Docker 原生的监控工具 docker ps/top/stats 之外，也有第三方的监控方案，如 sysdig、cAdvisor/Heapster 和 Weave Scope 。</p>
+<p>数据管理保证容器在不同的 host 之间迁移时数据的动态迁移。有名的方案是 Flocker。</p>
+<p>日志管理为问题排查和事件管理提供了重要依据。docker logs 是 Docker 原生的日志工具。而 logspout 对日志提供了路由功能，它可以收集不同容器的日志并转发给其他工具进行后处理。</p>
+<p>容器安全性保证容器的安全，不被攻击，OpenSCAP 能够对容器镜像进行扫描，发现潜在的漏洞。</p>
+<p>PS：本文借鉴了知名云计算博主 CloudMan 的博文：<br><a href="http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢</a> CloudMan 呈现这么好的内容。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/02/28/技术/容器进化史/">
+              
+                  容器进化史
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-28
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>和虚拟机一样，容器技术也是一种资源隔离的虚拟化技术。我们追溯它的历史，会发现它的技术雏形早已有之。</p>
+<h3 id="1-容器简史"><a href="#1-容器简史" class="headerlink" title="1 容器简史"></a>1 容器简史</h3><hr>
+<p>容器概念始于 1979 年提出的 UNIX chroot，它是一个 UNIX 操作系统的系统调用，将一个进程及其子进程的根目录改变到文件系统中的一个新位置，让这些进程只能访问到这个新的位置，从而达到了进程隔离的目的。</p>
+<center><img src="/imagesss/docker/docker_his.jpg" alt=""></center>
+
+<p>2000 年的时候 FreeBSD 开发了一个类似于 chroot 的容器技术 Jails，这是最早期，也是功能最多的容器技术。Jails 英译过来是监狱的意思，这个“监狱”（用沙盒更为准确）包含了文件系统、用户、网络、进程等的隔离。</p>
+<p>2001 Linux 也发布自己的容器技术 Linux VServer，2004 Solaris 也发布了 Solaris Containers，两者都将资源进行划分，形成一个个 zones，又叫做虚拟服务器。</p>
+<p>2005 年推出 OpenVZ，它通过对 Linux 内核进行补丁来提供虚拟化的支持，每个 OpenVZ 容器完整支持了文件系统、用户及用户组、进程、网络、设备和 IPC 对象的隔离。</p>
+<p>2007 年 Google 实现了 Control Groups( cgroups )，并加入到 Linux 内核中，这是划时代的，为后期容器的资源配额提供了技术保障。</p>
+<p>2008 年基于 cgroups 和 linux namespace 推出了第一个最为完善的 Linux 容器 LXC。</p>
+<p>2013 年推出到现在为止最为流行和使用最广泛的容器 Docker，相比其他早期的容器技术，Docker 引入了一整套容器管理的生态系统，包括分层的镜像模型，容器注册库，友好的 Rest API 等。</p>
+<p>2014 年 CoreOS 也推出了一个类似于 Docker 的容器 Rocket，CoreOS 是一个更加轻量级的 Linux 操作系统，在安全性上比 Docker 更严格。</p>
+<p>2016 年微软也在 Windows 上提供了容器的支持，Docker 可以以原生方式运行在 Windows 上，而不是需要使用 Linux 虚拟机。</p>
+<p>基本上到这个时间节点，容器技术就已经很成熟了，再往后就是容器云的发展，由此也衍生出多种容器云的平台管理技术，其中以 kubernetes 最为出众，有了这样一些细粒度的容器集群管理技术，也为微服务的发展奠定了基石。因此，对于未来来说，应用的微服务化是一个较大的趋势。</p>
+<h3 id="2-为什么需要容器"><a href="#2-为什么需要容器" class="headerlink" title="2 为什么需要容器"></a>2 为什么需要容器</h3><hr>
+<p>其一，这是技术演进的一种创新结果，其二，这是人们追求高效生产活动的一种工具。</p>
+<p>随着软件开发的发展，相比于早期的集中式应用部署方式，现在的应用基本都是采用分布式的部署方式，一个应用可能包含多种服务或多个模块，因此多种服务可能部署在多种环境中，如虚拟服务器、公有云、私有云等，由于多种服务之间存在一些依赖关系，所以可能存在应用在运行过程中的动态迁移问题，那这时如何保证不同服务在不同环境中都能平滑的适配，不需要根据环境的不同而去进行相应的定制，就显得尤为重要。</p>
+<center><img src="/imagesss/docker/docker_con.jpg" alt=""></center>
+
+<p>就像货物的运输问题一样，如何将不同的货物放在不同的运输机器上，减少因货物的不同而频繁进行货物的装载和卸载，浪费大量的人力物力。</p>
+<p>为此人们发明了集装箱，将货物根据尺寸形状等的不同，用不同规格的集装箱装载，然后再放到运输机上运输，由于集装箱密封，只有货物到达目的地才需拆封，在运输过程能够在不同运输机上平滑过渡，避免了资源的浪费。</p>
+<center><img src="/imagesss/docker/docker_con1.jpg" alt=""></center>
+
+<p>因此集装箱被誉为是运输业与世界贸易最重要的发明。</p>
+<p>Docker 容器的思想就是采用集装箱思想，为应用提供了一个基于容器的标准化运输系统。Docker 可以将任何应用及其依赖打包成一个轻量级、可移植、自包含的容器。容器可以运行在几乎所有的操作系统上。这样容器就可以跑在任何环境中，因此才有了那句话：</p>
+<blockquote>
+<p>Build Once, Run Anywhere</p>
+</blockquote>
+<p>这种集装箱的思想我们也能从 Docker 的 Logo 中看出来，这不就是一堆集装箱吗？</p>
+<center><img src="/imagesss/docker/docker.jpg" alt=""></center>
+
+
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagesss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/12/10/技术/2017_年除了人工智能，这门技术也在茁壮生长/">
+              
+                  2017 年除了人工智能，这门技术也在茁壮生长
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-10
       </time>
     
 
@@ -808,48 +1365,41 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/cloud/8.jpg" alt=""></center>
+<p>没错，这个标题就是个标题党，目的就是为了让你点进来看看。</p>
+<p>2017 年是人工智能元年，我们也能看到各大互联网公司对于人工智能的大布局。但人工智能再怎么牛逼，别忘了它的底层基础设施是什么，没错，就是云计算，少了云计算的底层支撑，人工智能也只能活在书本里。虽然说云计算经过这么多年的沉淀，技术总体上来说已经比较成熟，但有一门技术仍然呈现欣欣向荣之势，未来发展仍有无限可能。</p>
+<p>它就是以 docker 为首的容器技术。</p>
+<p>不知道大家关注最近这两天的 KubeCon 2017 北美峰会没有，会上提得最多的也是容器技术，其中最大的新闻莫过于 OpenStack 基金会发布了最新开源容器项目 Kata Containers。看到这个消息，我的第一反应是「为啥最近容器圈的动作这么多」。</p>
+<p>我们把时间拉回到 11 月底的中国开源年会上，当时阿里正式开源了自家自研容器项目 Pouch。再把时间拉到差不多两个月前（10月17日）的 DockerCon EU 2017 大会上，彼时 docker 官方宣布全面支持 kubernates。类似这样大大小小的动作，在 2017 年还发生了很多，这一切的动作都在说明容器的重要性，未来的可期待指数可以说不亚于人工智能。</p>
+<p>下面简单介绍下 Kata 和阿里的 Pouch 到底是个怎样的角色，我也仅限于网络上各种资讯的了解，信息传达难免会有失误，如果大家觉得有问题可以留言指出。</p>
+<h3 id="Kata-Containers-是什么"><a href="#Kata-Containers-是什么" class="headerlink" title="Kata Containers 是什么"></a>Kata Containers 是什么</h3><hr>
+<p>Kata 官方宣称这是同时兼具容器的速度和虚拟机安全的全新容器解决方案，旨在将虚拟机的安全优势与容器的速度和可管理性统一起来，其建立在 Intel 的 Clear Containers 技术和 Hyper 的 runV 虚拟机管理程序运行时基础之上。</p>
+<center><img src="/images/cloud/kata.jpg" alt=""></center>
 
+<p>Kata 的特点是什么？总体来讲，Kata 解决的是容器的安全问题。众所周知，当前容器技术旨在实现在一个虚拟机之上运行多个用户的、多个应用的容器实例，不同实例之间共享同一个虚拟机操作系统内核并采用 Namespaces 来隔离，但这种方式很难保证各实例彼此之间的完全隔离，存在安全隐患。</p>
+<p>Kata 的解决方案是意图为每个容器实例提供一个专属的、高度轻量化的虚拟机操作系统内核来解决这个问题。让某一个用户的、一个应用的一个或多个容器实例单独跑在这个专属的虚拟机内核之上，这样不同用户、不同应用之间都是使用独占的虚拟机，不会共享同一个操作系统内核，这样就确保了安全性。</p>
+<center><img src="/images/cloud/kata_hyper.png" alt=""></center>
 
-<p>这里所说的不是像 Google、VMware、Cisco、Intel 等等这些巨头公司，而是在巨头的夹缝中冉冉升起的那些新星。由于知识面有限，列举不尽完全，大家可以留言说说你心目中还有哪些值得铭记的公司。</p>
-<h3 id="Rackspace"><a href="#Rackspace" class="headerlink" title="Rackspace"></a>Rackspace</h3><hr>
-<p>Rackspace 理应不算新星了，但说到“跨时代意义”，它是绝对的名副其实。原因就在于它和 NASA（美国国家航空航天局）合作开发了 OpenStack——一个让云计算产业进入井喷时代的项目。OpenStack 一经开源，短短两年时间就力压群雄成为开源社区仅次于 Linux 的全球第二大开源项目。</p>
-<center><img src="/images/cloud/rackspace.jpg" alt=""></center>
+<p>另外还有一点值得注意的是，Kata 的设计初衷强调了能够无缝、便捷的与 OpenStack 和 Kubernetes 集成的能力，这为 OpenStack 、Kubernetes 和 Container 更好的融合铺平了道路。</p>
+<center><img src="/images/cloud/kata_arch.jpg" alt=""></center>
 
-<p>可以说是 OpenStack 拯救了 Rackspace。Rackspace 于 1998 成立，是最早期的一批云计算提供商，OpenStack 出来之前，一直不温不火，2010 年 OpenStack 出来之后，名声大震，一步跃居为全球仅次于 Amazon 和 VMware 的三大云计算中心之一。</p>
-<p>如今 OpenStack 已经更新到 Rocky 版本，在众多竞争者和效仿者的围追堵截之下，依然很强势，这和它优秀的架构是分不开的。我很好奇它更新到 Z 版本之后会发生什么？</p>
-<h3 id="dotCloud"><a href="#dotCloud" class="headerlink" title="dotCloud"></a>dotCloud</h3><hr>
-<p>OpenStack 带动了 IaaS 的发展，在这个节骨眼上，人们开始意识到，只有 IaaS 已经无法满足用户变态的需求了。</p>
-<p>时间也落在 2010 年，这个时候几个大胡子年轻人在旧金山成立了一家做 PaaS 的公司，起名 dotCloud，开始杀入 PaaS 领域。</p>
-<center><img src="/images/cloud/dotcloud.png" alt=""></center>
+<p>更详细的内容可以访问：</p>
+<p><a href="http://www/katacontainers.io/" target="_blank" rel="noopener">http://www/katacontainers.io/</a><br><a href="https://github.com/hyperhq/runv" target="_blank" rel="noopener">https://github.com/hyperhq/runv</a></p>
+<h3 id="Pouch-是什么"><a href="#Pouch-是什么" class="headerlink" title="Pouch 是什么"></a>Pouch 是什么</h3><hr>
+<p>相比 Kata，阿里的 Pouch 就没那么新鲜了，只不过是换了个马甲而已。</p>
+<p>为什么这么说，因为 Pouch 并不是全新的容器解决方案，而是已经在阿里内部经过千锤百炼的老牌容器技术 t4。2011 年，Linux 内核的 namespace、cgroup 等技术开始成熟，LXC 等容器运行时技术也在同期诞生，阿里作为一家技术公司，在当时便基于 LXC 自研了自己的容器技术 t4，并以产品的形式给内部提供服务。</p>
+<p>t4 就是 Pouch 的前身，从时间节点上看，t4 面世比 docker 要早两年，但 t4 有很多问题没有解决，譬如说没有镜像机制。2013 年，docker 横空出世，其带有镜像创新的容器技术，似一阵飓风，所到之处，国内外无不叫好，阿里也不例外，便在现有技术体系结构的基础上融入了 docker 的镜像技术，慢慢打磨，演变成今天的 Pouch。</p>
+<p>Pouch 针对自身的业务场景对镜像的下载和分发进行了创新。由于阿里的业务体量庞大，集群规模数以万计，这就会存在一个问题就是镜像的下载和分发效率会很低，所以针对此，阿里在 Pouch 中集成了一个镜像分发工具蜻蜓（Dragonfly），蜻蜓基于智能 P2P 技术的文件分发系统，解决了大规模文件分发场景下分发耗时、成功率低、带宽浪费等难题。</p>
+<center><img src="/images/cloud/pouch.jpg" alt=""></center>
 
-<p>年轻一辈都意识到了商机，大佬们（Google、Microsoft、Amazon 等）能不意识到吗？于是大佬们也纷纷涉足 PaaS 领域，最终 dotCloud 寡不敌众，不得不缴械投降。</p>
-<p>dotCloud 的工程师于心不甘啊，辛辛苦苦画下的大饼就这样被割分完了。但也没办法，谁让人家是大佬呢。</p>
-<p>鉴于工程师们血液里都流淌着一股热爱分享的劲儿，他们决定将 dotCloud 的核心技术开源给世人。</p>
-<p>谁能想到，无心插柳柳成荫。这门技术瞬间风靡全球，开启了又一个新的时代。</p>
-<p>这门技术就是 Docker。</p>
-<center><img src="/images/cloud/docker.jpg" alt=""></center>
+<p>Pouch 的架构主要考虑到两个方面，一方面是如何对接容器编排系统，另一方面是如何加强容器运行时，第一点让 Pouch 有了对外可扩展的能力，譬如可以原生支持 Kubernetes 等编排系统。第二点可以增加 Pouch 对虚拟机和容器的统一管理，让其适应更多的业务场景。</p>
+<center><img src="/images/cloud/pouch_arch.jpg" alt=""></center>
 
-<p>dotCloud 又火了，但为了纪念这个神圣的时刻，dotCloud 改名为 Docker Inc，全身心投入 Docker 的研发中。至于原来的 PaaS 业务，Docker 将其卖给了德国人的 cloudControl。但好景不长，cloudControl 于 2016 年就关闭了。</p>
-<p>如今，Docker 技术依然可圈可点，虽然很多人在 Kubernetes 出来之后，叫衰 Docker，但我却不以为然。</p>
-<h3 id="Nicira"><a href="#Nicira" class="headerlink" title="Nicira"></a>Nicira</h3><hr>
-<p>2007 年，斯坦福大学的 Nick McKeown 教授和他的天才学生 Martin Casado 博士根据他们的研究成果创办了 Nicira。这是 SDN 网络的鼻祖公司，Nick 教授和 Martin 博士也因此被人们称为 SDN 之父。</p>
-<p>Nicira 公司做了很多牛逼的事：发明了世界上第一个 SDN 控制器 NOX，第一个分布式交换机 Open vSwitch 及其配套协议 OpenFlow 协议，领导研发 OpenStack 网络驱动模块 Quantum/Neutron，开源了业界第一个与硬件无关，支持多种 X86 虚拟化平台的分布式网络虚拟化架构（DVNI），等等等等。</p>
-<p>Nicira 当时那套 SDN 的解决方案，放在今天来说都是很超前的东西。很快，Nicira 就被 VMware 和 Cisco 这些巨头盯上了。巨头们看上的不仅是 Nicira 的技术，更是 Nicira 那帮工程师天才般的智慧和对技术敏锐的洞察力。</p>
-<p>巨头们开始了疯狂的收购战，最终 VMware 以 12.6 亿美元拔得头筹。Martin 博士也带领他的一般众将归入了 VMware 的麾下。</p>
-<center><img src="/images/cloud/nicira.jpg" alt=""></center>
-
-<p>至此，Nicira 的舞台也算退出了。Open vSwitch 如今仍然占据 SDN 数据面的头把交椅。</p>
-<h3 id="Palo-Alto-Networks"><a href="#Palo-Alto-Networks" class="headerlink" title="Palo Alto Networks"></a>Palo Alto Networks</h3><hr>
-<p>2005 年，以色列的一个天才少年 Nir Zuk 在一间简陋的办公室里，一手创办了 PAN，这就是当下极富盛名的下一代防火墙的初创者（很多公司都宣称自己的防火墙是下一代防火墙，众说纷坛，其实争论这个没多大意义，人家 PAN 都还没说话呢）。</p>
-<center><img src="/images/cloud/palo.jpg" alt=""></center>
-
-<p>回看 Nir 的一生，也是颇具传奇，经历像极了乔布斯，但没乔布斯那么惨是被老东家赶出的，Nir 是因为老东家小气不肯给他资源做项目而无奈出走。谁能想到，PAN 能在短时间之内就超越了老东家。</p>
-<blockquote>
-<p>小公司要在大公司的夹缝中生长，需要天时地利人和，以及运气，就像 Docker，上帝为你关上一扇门，就会为你打开一扇窗。</p>
-</blockquote>
+<p>更详细的内容可以访问：</p>
+<p><a href="https://github.com/alibaba/pouch" target="_blank" rel="noopener">https://github.com/alibaba/pouch</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>从几种举动中，我们可以看出，未来容器发展具有两大重要方向，分别是容器编排技术和容器的安全加强。这些都是在寻求一种更好的、更有效率的方式来为上层的业务提供更可靠、更安全的支撑。</p>
 <p>PS：文章未经我允许，不得转载，否则后果自负。</p>
 <center>–END–</center>
 
@@ -866,563 +1416,13 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/OpenStack/"><i class="fas fa-hashtag fa-fw"></i>OpenStack</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/09/11/云计算/Kubernetes_笔记_07_豌豆荚之旅（二）/">
-              
-                  Kubernetes 笔记 07 豌豆荚之旅（二）
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-11
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/k8s/9.jpg" alt=""></center>
-
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学习 K8S，这是系列第 7 篇。</p>
-<p>上篇我们简单学习了 Pod 的基础知识，本篇开始讲述一些 Pod 的高阶知识（本文只做理论的简单阐述，后面会针对每个点进行实践）。</p>
-<h3 id="Pod-的生命周期管理"><a href="#Pod-的生命周期管理" class="headerlink" title="Pod 的生命周期管理"></a>Pod 的生命周期管理</h3><p>豌豆荚自诞生之日起，便注定要经历生老病死的一生。Pod 是由容器组成的，Pod 生命周期实际上是由容器的生命周期决定的。</p>
-<p>在整个生命周期过程中，Pod 会被定义为各种状态，如下：</p>
-<center><img src="/images/k8s/pod_lifetime.png" alt=""></center>
-
-
-<p>这些状态包括正常状态和异常状态，当出现异常状态时，K8S 的监控机制会检测到这种异常，并执行相应的异常处理。</p>
-<h3 id="Pod-的监控机制"><a href="#Pod-的监控机制" class="headerlink" title="Pod 的监控机制"></a>Pod 的监控机制</h3><p>Pod 的监控主要是监控 Pod 内容器的健康状况，并进行相关的异常处理和容错管理。</p>
-<p>当监控到某个容器异常退出或健康检查失败时，Pod 会执行重启策略，使得 Pod 内的容器健康运转。</p>
-<p>如下记录了 Pod 的重启策略和健康检查机制：</p>
-<center><img src="/images/k8s/pod_jk.png" alt=""></center>
-
-
-<h3 id="Pod-的调度管理"><a href="#Pod-的调度管理" class="headerlink" title="Pod 的调度管理"></a>Pod 的调度管理</h3><p>K8S Master 上的 Scheduler 服务负责实现 Pod 的调度管理，Pod  是静态的，只有真正被调度到具体的节点上才能发挥它的作用。K8S 根据不同的应用场景，定义了多种不同的调度策略。这些策略可以是根据算法自动完成的，也可以是人为指定的。具体可以看下面这张导图：</p>
-<center><img src="/images/k8s/pod_scheduler.png" alt=""></center>
-
-
-<p>笼统来看，有时候为了权衡应用场景和集群资源的需求，需要对 Pod 进行扩容和缩容，这同样属于 Pod 调度管理的范畴。</p>
-<h3 id="Pod-的存储管理"><a href="#Pod-的存储管理" class="headerlink" title="Pod 的存储管理"></a>Pod 的存储管理</h3><p>Pod 和容器的数据存储使用 Volume，K8S Volume 和 Docker 的 Volume 是一样的原理，都是文件系统上的一个目录，只不过在 K8S 中实现了更多的 backend driver。包括 emptyDir、hostPath、GCE Persistent Disk、NFS、Ceph 等。</p>
-<center><img src="/images/k8s/pod_volume.png" alt=""></center>
-
-
-<p>Volume 提供了对各种 driver 的抽象，容器在使用 Volume 读写数据的时候不需要关心底层具体存储方式的实现，对它来说，所有类型的 Volume 都是一个目录。</p>
-<p>当 Volume 被挂载到 Pod 中时，这个 Pod 中的容器都会共享这个 Volume，当其中的容器销毁时，Volume 中的数据也不会丢失，当 Pod 销毁时，根据不同的 driver 实现，数据也可以保存下来。</p>
-<p>Volume 提高了 Pod 内数据的持久化管理，延长了 Pod 和容器的生命周期。</p>
-<h3 id="Pod-的网络管理"><a href="#Pod-的网络管理" class="headerlink" title="Pod 的网络管理"></a>Pod 的网络管理</h3><p>在 K8S 中，定义了多种资源对象，很多对象本身就是一个通信的实体，比如容器、Pod、Service、Node。</p>
-<p>K8S 维护这多种对象之间的通信关系，比如：Pod 内容器之间的通信、Pod 与容器之间的通信、Pod 之间的通信、Pod 与 Service 之间的通信，以及外部的访问。</p>
-<p>这些通信机制的建立离不开 K8S 建立的完善的网络模型。K8S 使用了 CNI（容器网络规范）来标准化、归一化网络模型。</p>
-<p>第三方的厂商或开发者可以根据自身网络需求，遵从 CNI 的规范，实现各种网络方案，并以插件的形式提供给 K8S 使用。目前比较知名的网络方案有：flannel、calico、weave、canal 等。</p>
-<center><img src="/images/k8s/pod_net.png" alt=""></center>
-
-
-<p>这些网络方案各有千秋、虽然实现方式各有区别，但殊途同归，最终都是满足 K8S 中各种实体间的通信需求。</p>
-<p>OK，本文就到这里，我们通过两篇文章大致梳理了豌豆荚从出生到死亡要面临的多种人生的关卡。跨过去了，就成熟了，希望我们都能跨过自己人生的关卡。</p>
-<p>下文我们开始进入实践的部分。</p>
-<p>为了给大家更多的福利，这个系列的每一篇文章我都会送一些电子书，可能有重的，也有一些新书，之前送了《K8S 指南》和《容器与容器云》，这次送一本新书《》，大家有需要的后台回复“K8S2”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
                 
                     <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
                 
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/Kata/"><i class="fas fa-hashtag fa-fw"></i>Kata</a>
                 
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/09/09/云计算/Kubernetes_笔记_06_豌豆荚之旅（一）/">
-              
-                  Kubernetes 笔记 06 豌豆荚之旅（一）
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-09
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/k8s/8.jpg" alt=""></center>
-
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学习 K8S，这是系列第 6 篇。</p>
-<p>Pod 中文译为豌豆荚，很形象，豌豆荚里面包裹的多颗小豌豆就是容器，小豌豆和亲密无间的老伙计壳荚子自出生之日起就得面对各种各样的人生大事：  </p>
-<ul>
-<li>容器、Pod、Node 之间的关系</li>
-<li>Pod 的生命周期管理</li>
-<li>Pod 的调度管理</li>
-<li>Pod 的监控</li>
-<li>Pod 的升级与回滚</li>
-<li>Pod 的扩容与缩容</li>
-<li>Pod 的存储管理</li>
-<li>Pod 的网络管理</li>
-<li>……</li>
-</ul>
-<h3 id="为什么需要-Pod？"><a href="#为什么需要-Pod？" class="headerlink" title="为什么需要 Pod？"></a>为什么需要 Pod？</h3><p>我们假设没有 Pod，应用部署的最小单元就是容器，会有什么问题？首先，应用调度粒度太细，不便于管理。想象一下淘宝网站运行着海量应用，每个应用又拆分成多个服务，每个服务部署在一个容器里，一个集群管理系统要管理庞大的容器集群，既要顾忌不同应用之间的隔离性，又要考虑相同应用之间的关联性，这在管理上将会是灾难性的难题。</p>
-<p>其次，资源利用率低。有很多应用之间存在某种强关联关系，它们需要彼此能共享对方的资源，双方的交互需要快捷有效，如果把它们部署到单独的容器中，资源利用和通信将成为最主要的系统瓶颈。</p>
-<p>Pod 的提出改变了这种局面，它将强关联的应用整合在一起，作为一个整体对外提供服务，既简化了管理的难度，又提高了资源的利用率。</p>
-<p>那哪些应用是强关联，适合放到一个 Pod 中呢？举个例子，比如下面这个 Pod 包含两个容器，一个 File Puller，一个是 Web Server。</p>
-<center><img src="/images/k8s/pod.png" alt=""></center>
-
-<p>File Puller 会定期从外部的 Content Manager 中拉取最新的文件，将其存放在 Volume 中。然后 Web Server 从 Volume 中读取文件，来响应 Consumer 的请求。</p>
-<p>这两个容器通过 Volume 来共享实时的数据，协作处理一个 Consumer 的请求，把它们放到同一个 Pod 中就是合适的。</p>
-<p>如果有应用和任何应用之间都不存在联系，那么它们就单独部署在一个 Pod 中，称为<code>one-container-per-pod</code>。即便只有一个容器，K8S 管理的也是 Pod 而不是直接管理容器。</p>
-<p>综上，Pod 在设计的时候，主要动机有以下两点：</p>
-<ol>
-<li>方便管理</li>
-</ol>
-<p>Pod 提供了比容器更高一层的抽象，K8S以 Pod 为最小单元进行应用的部署、调度、扩展、共享资源和管理周期。</p>
-<ol start="2">
-<li>资源共享和通信</li>
-</ol>
-<p>Pod 内的所有容器共享同一个网络空间，它们之间可以通过 <code>localhost</code> 相互通信。同样，所有容器共享 Volume，一个容器挂载一个 Volume，其余容器都可以访问这个 Volume。</p>
-<h3 id="容器、Pod、Node-之间的关系"><a href="#容器、Pod、Node-之间的关系" class="headerlink" title="容器、Pod、Node 之间的关系"></a>容器、Pod、Node 之间的关系</h3><p>容器是 Pod 的一个属性，定义了应用的类型及共享的资源。每个容器会分配一个 Port，Pod 内的容器通过 localhost:Port 的形式来通信。</p>
-<p>一个 Pod 包含一个或多个容器，每个 Pod 会分配一个唯一的 IP 地址，Pod 内的多个容器共享这个 IP 地址，每个容器的 Port 加上 Pod IP 共同组成一个 <code>Endpoint</code>，共同对外提供服务。</p>
-<p>在部署应用的时候，Pod 会被 Master 作为一个整体调度到一个 Node 上。如果开启多副本管理，则多个 Pod 会根据调度策略调度到不同的 Node 上。如果 Node 宕机，则该 Node 上的所有 Pod 会被自动调度到其他 Node 上。</p>
-<p>下面是容器、Pod、Node 三者之间的关系图：  </p>
-<center><img src="/images/k8s/pod_docker_node.png" alt=""></center>
-
-
-<h3 id="Pod-根容器"><a href="#Pod-根容器" class="headerlink" title="Pod 根容器"></a>Pod 根容器</h3><p>Pod 中有一个特殊的容器，叫 Pod 的根容器——Pause 容器，这是一个很小的容器，镜像大小大概为 200KB。</p>
-<center><img src="/images/k8s/pod_pause.png" alt=""></center>
-
-
-<p>Pause 容器存在的意义是: <strong>维护 Pod 的状态信息</strong>。</p>
-<p>由于 Pod 是作为一个整体进行调度，我们难以对这个整体的信息进行简单的判断和有效地进行行动。</p>
-<p>想象一下，假如 Pod 内一个容器死亡了，是算整体死亡呢还是 N/M 死亡率，如果 Pod 内所有容器都死亡了，那是不是该 Pod 也就死亡了，如果加入新的容器或原有容器故障恢复呢，如何让新成员快速融入环境？</p>
-<p>理论上，虽然 Pod 是由一组容器组成的，但 Pod 和容器是彼此独立的，也就是容器的故障不应该影响 Pod 的存在，Pod 有相应的手段来保证容器的健康状况。</p>
-<p>引入与业务无关的，并且不易死亡的 Pause 容器就可以很好的解决这个问题，Pause 容器的状态就代表了 Pod 的状态，只要 Pause 不死，那么不管应用容器发生什么变化，Pod 的状态信息都不会改变。</p>
-<p>这样，Pod 内的多个应用容器共享 Pause 容器的 IP 和 Volume，当加入新的容器或者原有的容器因故障重启后就可以根据 Pause 保存的状态快速学习到当前 Pod 的状态。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文简单学习了 Pod 的初级知识，包括 Pod 的设计动机，容器、Pod 和 Node 之间的关系，以及 Pod 的守护者——Pause 容器。</p>
-<p>容器的 Port + Pod IP = Endpoint，构成一个 Pod 的通信实体，Pod 中的容器共享网络和存储，这些共享信息是由 Pause 容器来维护的。</p>
-<p>下文继续豌豆荚之旅的第二个部分，学习 Pod 的管理哲学。</p>
-<p>为了给大家更多的福利，这个系列的每一篇文章我都会送一些电子书，可能有重的，也有一些新书，之前送了《K8S 指南》和《容器与容器云》，这次送一本由 K8S 中文社区主编的《K8S 中文手册》，大家有需要的后台回复“K8S2”</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/09/07/云计算/Kubernetes_笔记_05_使用产品前请先阅读说明书/">
-              
-                  Kubernetes 笔记 05 使用产品前请先阅读说明书
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-07
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/k8s/7.png" alt=""></center>
-
-<hr>
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 5 篇。</p>
-<p>生活中，随处可见，几乎每一款产品都会附带一份说明书，说明书可以记录产品的使用方法，也可以记录产品的配方。有了说明书，我们完全可以窥探一款产品的全貌。</p>
-<p>在 K8S 中，<code>yaml</code> 配置文件就是 K8S 资源对象的说明书，定义了对象包含的元素及采取的动作，每种对象都可以通过 yaml 配置文件来创建。</p>
-<center><img src="/images/k8s/yaml.jpg" alt=""></center>
-
-
-
-<h3 id="yaml-是什么"><a href="#yaml-是什么" class="headerlink" title="yaml 是什么"></a>yaml 是什么</h3><p>yaml 是一种用来写配置文件的语言，没错，它是一门语言。如果你用过 json，那么对它就不会陌生，yaml 又被称为是 json 的超集，使用起来比 json 更方便。</p>
-<p>结构上它有两种可选的类型：Lists 和 Maps。</p>
-<p>List 用 -（破折号） 来定义每一项，Map 则是一个 key:value 的键值对来表示。如下是一个 json 文件到 yaml 文件的转换：  </p>
-<p>json:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;apiVersion&quot;: &quot;v1&quot;,</span><br><span class="line">    &quot;kind&quot;: &quot;Pod&quot;,</span><br><span class="line">    &quot;metadata&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;xx&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    &quot;spec&quot;: &#123;</span><br><span class="line">        &quot;containers&quot;: [&#123;</span><br><span class="line">            &quot;name&quot;: &quot;front-end&quot;,</span><br><span class="line">            &quot;images&quot;: &quot;nginx&quot;,</span><br><span class="line">            &quot;ports&quot;: [&#123;</span><br><span class="line">                &quot;containerPort&quot;: &quot;80&quot;</span><br><span class="line">            &#125;]</span><br><span class="line">        &#125;, &#123;</span><br><span class="line">            &quot;name&quot;: &quot;flaskapp-demo&quot;,</span><br><span class="line">            &quot;images&quot;: &quot;jcdemo/flaskapp&quot;,</span><br><span class="line">            &quot;ports&quot;: [&#123;</span><br><span class="line">                &quot;containerPort&quot;: &quot;5000&quot;</span><br><span class="line">            &#125;]</span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>yaml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">    name: xx</span><br><span class="line">spec:</span><br><span class="line">    containers:</span><br><span class="line">        - name: front-end</span><br><span class="line">        images: nginx</span><br><span class="line">        ports:</span><br><span class="line">            - containerPort: 80</span><br><span class="line">    - name: flaskapp-demo</span><br><span class="line">        images: jcdemo/flaskapp</span><br><span class="line">        ports: 8080</span><br></pre></td></tr></table></figure></p>
-<p>这个文件简单地定义了一个 Pod 对象，包含两个容器，我们可以很清晰地看到两者是如何转换的。</p>
-<h3 id="K8S-创建资源的两种方式"><a href="#K8S-创建资源的两种方式" class="headerlink" title="K8S 创建资源的两种方式"></a>K8S 创建资源的两种方式</h3><p>在 K8S 中，有两种创建资源的方式：kubectl 命令和 yaml 配置文件。</p>
-<p>两种方式各有各的好处。命令行的方式最为简单，一条命令就万事大吉，但缺点也很明显，你并不知道这条命令背后到底做了哪些事，配置文件就提供了一种让你知其然更知其所以然的方式。总的来说，它有以下好处：   </p>
-<ul>
-<li>完整性：配置文件描述了一个资源的完整状态，可以很清楚地知道一个资源的创建背后究竟做了哪些事；</li>
-<li>灵活性：配置文件可以创建比命令行更复杂的结构；</li>
-<li>可维护性：配置文件提供了创建资源对象的模板，能够重复使用；</li>
-<li>可扩展性：适合跨环境、规模化的部署。</li>
-<li>……</li>
-</ul>
-<p>当然，复杂的东西对用户就难以做到友好，我们需要熟悉它的配置文件的语法，有一定难度。下面举几个例子，让你对 yaml 配置文件有一个基本的认识。</p>
-<h3 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h3><p>下面，我们分别来看看 <code>deployment</code>、<code>pod</code>、<code>service</code> 这三种资源的说明书都长啥样。</p>
-<p>由于 K8S 对每种资源的定义非常庞杂，限于篇幅，我们只看一些必选的参数，目的是通过这几个例子，读懂 yaml 配置文件。</p>
-<h4 id="deployment"><a href="#deployment" class="headerlink" title="deployment"></a>deployment</h4><p>定义 deployment 配置文件，命名为：nginx-deployment.yaml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1   # 1.9.0 之前的版本使用 apps/v1beta2，可通过命令 kubectl api-versions 查看</span><br><span class="line">kind: Deployment     #指定创建资源的角色/类型</span><br><span class="line">metadata:      #资源的元数据/属性</span><br><span class="line">    name: nginx-deployment    #资源的名字，在同一个namespace中必须唯一</span><br><span class="line">spec:</span><br><span class="line">    replicas: 2      #副本数量2</span><br><span class="line">    selector:      #定义标签选择器</span><br><span class="line">        matchLabels:</span><br><span class="line">            app: web-server</span><br><span class="line">    template:      #这里Pod的定义</span><br><span class="line">        metadata:</span><br><span class="line">            labels:      #Pod的label</span><br><span class="line">                app: web-server</span><br><span class="line">    spec:         # 指定该资源的内容  </span><br><span class="line">        containers:  </span><br><span class="line">        - name: nginx      #容器的名字  </span><br><span class="line">          images: nginx:1.12.1  #容器的镜像地址    </span><br><span class="line">          ports:  </span><br><span class="line">          - containerPort: 80  #容器对外的端口</span><br></pre></td></tr></table></figure></p>
-<p>执行<code>kubectl create -f nginx.yaml</code>创建 deployment 资源：</p>
-<center><img src="/images/k8s/deploy-yaml.png" alt=""></center>
-
-<h4 id="pod"><a href="#pod" class="headerlink" title="pod"></a>pod</h4><p>定义 pod 配置文件，命名为 redis-pod.yaml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod  </span><br><span class="line">metadata:  </span><br><span class="line">    name: pod-redis</span><br><span class="line">    labels:</span><br><span class="line">        name: redis</span><br><span class="line">spec: </span><br><span class="line">    containers:</span><br><span class="line">    - name: pod-redis</span><br><span class="line">        images: docker.io/redis  </span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80    #容器对外的端口</span><br></pre></td></tr></table></figure>
-<p>执行<code>kubectl create -f pod-redis.yaml</code>创建 pod 资源：  </p>
-<center><img src="/images/k8s/pod-yaml.png" alt=""></center>
-
-<p>可以看到，成功创建一个 Pod，<code>ContainerCreating</code>表示 Pod 中的容器正在执行镜像的下载和安装过程，过一会儿，就显示<code>Running</code>了，表明 Pod 应用部署完成。</p>
-<h4 id="service"><a href="#service" class="headerlink" title="service"></a>service</h4><p>定义 service 配置文件，命名为 httpd-svc.yaml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1  </span><br><span class="line">kind: Service  # 指明资源类型是 service</span><br><span class="line">metadata:  </span><br><span class="line">    name: httpd-svc # service 的名字是 httpd-svc</span><br><span class="line">    labels:  </span><br><span class="line">        name: httpd-svc </span><br><span class="line">spec:  </span><br><span class="line">    ports:  # 将 service 8080 端口映射到 pod 的 80 端口，使用 TCP 协议</span><br><span class="line">    - port: 8080</span><br><span class="line">        targetPort: 80  </span><br><span class="line">        protocol: TCP  </span><br><span class="line">    selector:  </span><br><span class="line">        run: httpd # 指明哪些 label 的 pod 作为 service 的后端</span><br></pre></td></tr></table></figure>
-<p>执行<code>kubectl create -f httpd-svc.yaml</code>创建 service 资源：  </p>
-<center><img src="/images/k8s/svc-yaml.png" alt=""></center>
-
-<p>可以看到，service httpd-svc 分配到一个 Cluster-IP 10.96.0.1，我们可以通过该 IP 访问 service 所维护的后端 Pod。</p>
-<p>另外，还有一个 service kubernetes，这个是 Kubernetes API Server 的 service，Cluster 内部的各组件就是通过这个 service 来访问 API Server。 </p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>yaml 是 K8S 资源对象的说明书，每个对象拥有哪些属性都可以在 yaml 中找到详尽的说明，初学者建议多写 yaml 文件，少用命令行。</p>
-<p>以上三个例子只是对 yaml 文件做个简单说明，更详细的信息还是参考官网。</p>
-<p>OK，本文就到此为止，下文我们开始进入豌豆荚之旅。觉得不错，别忘了转发分享给你的朋友哦。</p>
-<blockquote>
-<p>参考：<br><a href="https://www.kubernetes.org.cn/1414.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/1414.html</a></p>
-</blockquote>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/09/05/云计算/Kubernetes_笔记_04_架构是个好东西/">
-              
-                  Kubernetes 笔记 04 架构是个好东西
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-05
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/k8s/6.jpg" alt=""></center>
-
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第 4 篇。</p>
-<p>任何技术的诞生，都会经历从架构设计到开发测试的过程，好的技术，往往也会有一套好的架构。架构是个好东西，它能帮助我们站在高处看清楚事物的整体结构，避免过早地进入细节而迷失方向。</p>
-<p>上篇文章扫清了 K8S 的一些基本概念，今天这篇文章我们就来看看 K8S 的架构。</p>
-<p>先上图：</p>
-<center><img src="/images/k8s/architecture.png" alt=""></center>
-
-<p>图中包括两种类型的节点：Master 和 Node，每个节点上运行着多种 K8S 服务。</p>
-<h3 id="Master-节点"><a href="#Master-节点" class="headerlink" title="Master 节点"></a>Master 节点</h3><p>Master 是 K8S 集群的大脑，运行着如下 Daemon 服务：kube-apiserver、kube-controller-manager、kube-scheduler、etcd 等。</p>
-<h4 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h4><p>如果把 K8S 环境看作是一个公司，那 API Server 就是这个公司的基础平台部，是公司最为核心的技术能力输出出口。它对外提供 HTTP/HTTPS REST API，统称 K8S API，可以供各类客户端工具（CLI 或 WebUI）、K8S 其他组件，以及第三方的平台接入。对内提供了 K8S 各类资源（如 Pod、Deployment、Service等）的增删改查和监控等操作，是集群内各个功能模块之间数据交互和通信的中心枢纽。</p>
-<h4 id="Controller-Manager"><a href="#Controller-Manager" class="headerlink" title="Controller Manager"></a>Controller Manager</h4><p>Controller Manager 更像是公司的人力资源部，负责统筹公司的人员分布。它管理着 K8S 各类资源的生命周期，保证资源处于预期状态，如果现有状态和预期状态不符，它会自动化执行修正。</p>
-<p>Controller Manager 由多种 Controller 组成，包括 Replication Controller、Node Controller、ResourceQuota Controller、Namespace Controller、ServiceAccount Controller、Service Controller、Token Controller 及 Endpoint Controller 等。每种 Controller 都负责一种具体的资源管控流程，而 Controller Manager 正是这些 Controller 的核心管理者。</p>
-<h4 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h4><p>Scheduler 则像是公司各个部门的项目经理之类的角色，负责将具体的人力放到他们擅长的位置上，知人善用。具体来说，Scheduler 负责将待调度的 Pod 对象按照特定的调度策略绑定到集群中某个合适的节点上，调度策略会综合考虑集群的拓扑结构、节点的负载情况、以及应用对高可用、性能、数据亲和性的需求。</p>
-<h4 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h4><p>etcd 是一个高可用的分布式数据库，负责保存 K8S 的配置信息和各种资源的状态信息。当数据发生变化时，etcd 会及时告知集群中的其他组件。</p>
-<h4 id="kubectl"><a href="#kubectl" class="headerlink" title="kubectl"></a>kubectl</h4><p>kubectl 是 K8S 的 CLI 工具，这是使用 K8S API 建立的一套命令行工具，使用它，可以非常方便地管理 K8S 集群。</p>
-<h3 id="Node-节点"><a href="#Node-节点" class="headerlink" title="Node 节点"></a>Node 节点</h3><p>Node 是 K8S 集群的具体执行者，也运行着多种服务，如：kubelet、kube-proxy、container runtime、Pod 网络等。Node 可以看作是 Master 的代理，负责处理 Master 下发到本节点的任务，管理 Pod 和 Pod 中的容器，定期向 Master 汇报自身资源的使用情况。</p>
-<h4 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h4><p>kubelet 更像是部门中各个小组的 Leader，对外从 API Server 拿资源，对内负责小组内各种资源的管理，比如从 Master 拿到 Pod 的具体配置信息（images、Volume 等）之后，kubelet 根据这些信息创建和运行容器。</p>
-<h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><p>kube-proxy 则像穿插在公司各个部门之间的接口人，对内和内部人员沟通，对外协调部门之间的各种事宜，展示部门风采。kube-proxy 作用于 Service，通过前面学习，我们知道 Service 是对一组 Pod 的抽象，统一对外提供某种服务，当外部访问 Service 时，实际上是需要访问 Service 所管辖的 Pod 中的容器，kube-proxy 在这里就是负责将访问 Service 的数据流转发到后端的容器，如果有多个副本，kube-proxy 会实现负载均衡。</p>
-<h4 id="cAdvisor"><a href="#cAdvisor" class="headerlink" title="cAdvisor"></a>cAdvisor</h4><p>cAdvisor 对 Node 上的资源进行实时监控和性能数据采集，包括 CPU 使用情况、内存使用情况、网络吞吐量及文件系统使用情况等。cAdvisor 集成在 kubelet 中，当 kubelet 启动时会自动启动 cAdvisor，一个cAdvisor 仅对一台 Node 机器进行监控。</p>
-<h4 id="container-runtime"><a href="#container-runtime" class="headerlink" title="container runtime"></a>container runtime</h4><p>container runtime 是真正运行容器的地方，为容器提供运行环境，主流的三种 container runtime 是 lxc、runc 和 rkt，K8S 都支持它们，但常用的事 runc，原因是 runc 是 Docker 默认的 runtime。在 K8S 的容器应用中，Docker 是主流。</p>
-<p>OK，K8S 架构介绍就到此为止。</p>
-<p>最后，还是继续送书，容器网络专家倪朋飞写的《K8S 指南》电子书，如有需要后台回复“K8S”（之前回复过就不用回复了）。如需加群学习回复“加群”。</p>
-<p>下文我们开始对 K8S 的说明书一探究竟。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/09/03/云计算/Kubernetes_笔记_03_扫清概念/">
-              
-                  Kubernetes 笔记 03 扫清概念
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-03
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/k8s/5.jpg" alt=""></center>
-
-<p>Hi，大家好，我是 CloudDeveloper，欢迎大家和我一起学 K8S，这是系列第三篇。</p>
-<p>每一种技术，为了描述清楚它的设计理念，都会自定义一堆概念或术语。在进入一门技术的研究之前，我们有必要扫清它的基本概念。</p>
-<h3 id="资源对象"><a href="#资源对象" class="headerlink" title="资源对象"></a>资源对象</h3><p>K8S 的操作实体，在 K8S 中，有很多的操作对象，比如容器、Pod、Deployment、Service、Node 等，我们统统称它们为资源对象。</p>
-<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>K8S 集群，是计算、存储和网络资源的集合，K8S 基于这些资源来承载容器化的应用。</p>
-<h3 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h3><p>K8S 集群的大脑，负责整个集群的管控、资源调度。可以部署在普通物理机或虚拟机上，为了实现高可用，可以部署多个 Master。</p>
-<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>K8S 集群的执行者，受 Master 指挥，负责运行和监控容器应用、管理容器的生命周期，并向 Master 定期汇报容器的状态。同样，Node 也可以部署在物理机或虚拟机之上，也可以部署多个。</p>
-<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>在 K8S 集群中，Pod 是资源调度的最小单位，一个 Pod 可以包含一个或多个容器应用，这些容器应用彼此之间存在某种强关联。Pod 内的所有容器应用共享计算、存储、网络资源。</p>
-<h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><p>Controller 是 K8S 中负责管理 Pod 的资源对象，它定义 Pod 的部署属性，比如有几个副本，副本异常怎么处理等，如果把 Pod 副本看做是一个公司职员，那么 Controller 就像是 HR，会不断根据人员的变动来招人满足公司的发展需求。</p>
-<p>为了满足多种业务场景，K8S 提供了多种 Controller，包括 Deployment、ReplicaSet、DaemonSet、StatefulSet、Job 等。</p>
-<h4 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h4><p>Deployment 是最常用的 Controller，定义了用户的期望场景，实现了 Pod 的多副本管理，如果运行过程中有一个副本挂了（员工离职），那么 K8S 会根据 Deployment 的定义重新拉起一个副本继续工作（招一个新员工），始终保证 Pod 按照用户期望的状态运行。</p>
-<h4 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a>ReplicaSet</h4><p>ReplicaSet 和 Deployment 实现了同样的功能，确切的说是 Deployment 通过 ReplicaSet 来实现 Pod 的多副本管理。我们通常不需要直接使用 ReplicaSet。</p>
-<h4 id="DaemonSet"><a href="#DaemonSet" class="headerlink" title="DaemonSet"></a>DaemonSet</h4><p>DaemonSet 用于每个 Node 最多只运行一个副本的场景，通常用于运行 Daemon。</p>
-<h4 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h4><p>Job 用于运行结束就删除的应用，而其他 Controller 则是会长期保持运行。</p>
-<h4 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h4><p>以上 Controller 都是无状态的，也就是说副本的状态信息会改变，比如当某个 Pod 副本异常重启时，其名称会改变。StatefulSet 提供有状态的服务，能够保证 Pod 的每个副本在其生命周期中名称保持不变。这是通过持久化的存储卷来实现的。</p>
-<h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><p>Label 定义了其他资源对象所属的标签，类似于你在公司被分到 A 小组、B 小组。有了标签，就可以针对性地对每个小组进行管理。比如把某个小组搬到哪个办公区（把某个 Pod 部署到哪个 Node 上）。给指定的资源对象定义一个或多个不同的标签能够实现多维度的资源分组管理，方便进行资源分配、调度、配置、部署等管理工作。</p>
-<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p>Label 选择器，K8S 通过 Selector 来过滤筛选指定的资源对象，类似于 SQL 语句中的 where 查询条件，Label 实现了简单又通用的对象查询机制。</p>
-<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>在 K8S 中，Service 是对 Pod 对象的抽象，通常，Pod 会以多副本的形式部署，每个 Pod 都有自己的 IP，都可以对外提供服务，但 Pod 是脆弱的，也就是说，它随时都有可能被频繁地销毁和重启，IP 也会随之改变，这样，服务的访问就会出现问题。</p>
-<p>Service 就是提出来解决这个问题的，它定义了一个虚拟 IP（也叫集群 IP），这个 IP 在 Service 的整个生命周期内都不会改变。当有访问到达时，Service 会将请求导向 Pod，如果存在多个 Pod，Service 还能实现负载均衡。</p>
-<h3 id="Volume"><a href="#Volume" class="headerlink" title="Volume"></a>Volume</h3><p>K8S 的存储卷，定义了一个 Pod 中多个容器可访问的共享目录。和 Docker 的 Volume 不太一样的是，K8S 的 Volume 是以 Pod 为单位的，也就是 Volume 的生命周期和 Pod 相关，和 Pod 内的容器不相关，即使容器终止或重启，Volume 中的数据也不会丢失，只有当 Pod 被删除时，数据才会丢失。</p>
-<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>当有多个用户或租户使用同一个 K8S 集群时，如何区分它们创建的资源呢？答案就是 Namespace。</p>
-<p>Namespace 将一个物理的集群从逻辑上划分成多个虚拟的集群，每个集群就是一个 Namespace，不同 Namespace 里的资源是完全隔离的。每个用户在自己创建的 Namespace 里操作，都不会影响到其他用户。</p>
-<h3 id="Annotation"><a href="#Annotation" class="headerlink" title="Annotation"></a>Annotation</h3><p>Annotation 与 Label 类似，但和 Label 不同 的事，Annotation 不用于过滤筛选，它只是用户定义的某一种资源的附加信息，目的是方便外部查找该资源。有点类似于我们常说的别名，没有它完全可以，但有了它可以很方便查找。</p>
-<p>最后，还是继续送书，容器网络专家倪朋飞写的《K8S 指南》电子书，如有需要后台回复“K8S”（之前回复过就不用回复了）。如需加群学习回复“加群”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                    <a href="/tags/Pouch/"><i class="fas fa-hashtag fa-fw"></i>Pouch</a>
                 
             </div>
         
@@ -1433,25 +1433,6 @@
       
     
 </section>
-
-
-    <br>
-    <div class="prev-next">
-        <div class="prev-next">
-            
-            <p class="current">
-                1 / 3
-            </p>
-            
-                <a class="next" rel="next" href="/tags/Docker/page/2/">
-                    <section class="post next">
-                        &nbsp;下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i>
-                    </section>
-                </a>
-            
-
-        </div>
-    </div>
 
 
 
@@ -1527,7 +1508,7 @@
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(1)</div></a></li>
+          <li><a class="flat-box" title="/categories/Diary/" href="/categories/Diary/"><div class="name">Diary</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
@@ -1565,7 +1546,7 @@
 </header>
 
     <div class="content pure">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Docker/" style="font-size: 23.09px; color: #5b5b5b">Docker</a> <a href="/tags/Games/" style="font-size: 14px; color: #999">Games</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 22.18px; color: #616161">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 22.18px; color: #616161">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/PS3/" style="font-size: 14px; color: #999">PS3</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.36px; color: #6e6e6e">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 21.27px; color: #686868">网络</a> <a href="/tags/虚拟化/" style="font-size: 22.18px; color: #616161">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 16px; color: #8b8b8b">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 17px; color: #858585">CPU</a> <a href="/tags/Cgroup/" style="font-size: 15px; color: #929292">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 16px; color: #8b8b8b">DPDK</a> <a href="/tags/Docker/" style="font-size: 21px; color: #696969">Docker</a> <a href="/tags/I-O/" style="font-size: 17px; color: #858585">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 20px; color: #707070">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23px; color: #5c5c5c">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 23px; color: #5c5c5c">Linux</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 16px; color: #8b8b8b">NUMA</a> <a href="/tags/Namespace/" style="font-size: 15px; color: #929292">Namespace</a> <a href="/tags/OVS/" style="font-size: 17px; color: #858585">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 15px; color: #929292">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Qemu/" style="font-size: 19px; color: #777">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 15px; color: #929292">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 15px; color: #929292">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 15px; color: #929292">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 15px; color: #929292">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21px; color: #696969">容器</a> <a href="/tags/容器网络/" style="font-size: 18px; color: #7e7e7e">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 19px; color: #777">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 15px; color: #929292">技能图谱</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/网络/" style="font-size: 22px; color: #636363">网络</a> <a href="/tags/虚拟化/" style="font-size: 23px; color: #5c5c5c">虚拟化</a> <a href="/tags/边缘计算/" style="font-size: 15px; color: #929292">边缘计算</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 16px; color: #8b8b8b">雾计算</a>
     </div>
   </section>
 
