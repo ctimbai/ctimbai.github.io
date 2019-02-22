@@ -121,7 +121,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -393,7 +393,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1060,7 +1060,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1093,7 +1093,7 @@
       
       <categories>
           
-          <category> 雾计算 </category>
+          <category> 02 雾计算 </category>
           
       </categories>
       
@@ -1122,7 +1122,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1157,7 +1157,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1273,7 +1273,7 @@
       
       <categories>
           
-          <category> 雾计算 </category>
+          <category> 02 雾计算 </category>
           
       </categories>
       
@@ -1372,7 +1372,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1407,7 +1407,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1440,7 +1440,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1477,7 +1477,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1510,7 +1510,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1541,7 +1541,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1572,7 +1572,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1603,7 +1603,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1632,7 +1632,7 @@
       
       <categories>
           
-          <category> 虚拟化 </category>
+          <category> 03 虚拟化 </category>
           
       </categories>
       
@@ -1659,7 +1659,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1686,7 +1686,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1711,7 +1711,7 @@
       
       <categories>
           
-          <category> 云计算 </category>
+          <category> 01 云计算 </category>
           
       </categories>
       
@@ -1774,9 +1774,9 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -1851,11 +1851,11 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
             
             <tag> 罗胖 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -1969,7 +1969,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -1994,7 +1994,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2089,9 +2089,9 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -2153,7 +2153,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2180,7 +2180,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2224,7 +2224,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2268,7 +2268,7 @@
       
       <categories>
           
-          <category> 算法结构 </category>
+          <category> 04 算法 </category>
           
       </categories>
       
@@ -2277,7 +2277,7 @@
             
             <tag> 数据结构 </tag>
             
-            <tag> Algorithm </tag>
+            <tag> 算法 </tag>
             
         </tags>
       
@@ -2295,7 +2295,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2322,7 +2322,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       
@@ -2359,6 +2359,31 @@
     
     
     <entry>
+      <title>JabRef、Pycharm显示乱码的解决方法（大同小异）</title>
+      <link href="/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/"/>
+      <url>/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<p><strong>JabRef：</strong>一款和CTex配套使用的文献管理软件，就像Endnote和Word配套一样，在写Abstract或review时，其默认只能输入英文，输入中文则乱码，解决办法：<br>first set Options||Preferences||General&gt;&gt;Default Encoding as UTF8<br>then set Options||Preferences||Appearance&gt;&gt;Set table font as simsun (or any other Chinese fonts) </p><p>效果非常好。如果还有问题，可将Entry Preview里改为<font face="simsun">  </font></p><p><strong>Pycharm：</strong>一款方便调试，并集成了多个库的Python IDE，个人感觉非常好用，如C\C++的VS和Codeblock，java的eclipse，安装默认不支持中文编码，在注释的时候出现乱码，解决办法：<br>File-settings-file and code templates-python script中改成：<br># -<em>- coding: utf-8 -</em>-<br>然后File-settings-file encoding改成UTF-8编码  </p><p>设置字体大小，行号<br>File-&gt;Settings-&gt;Editor-&gt;Colors &amp; Font -&gt; Font</p><p>File-&gt;Settings-&gt;Editor-&gt;Apperance -&gt; 选上Show line numbers</p><p>总结：一般这种编码乱码问题，都是由于编码不支持造成的，找到相关地方进行修改就可以了，一般都会在Setting里面。关于中英文编码问题，详见这篇文章，写得非常nice。<br><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="noopener">字符编码</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 05 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 乱码 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>让自己快乐的九种途径</title>
       <link href="/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/"/>
       <url>/2014/09/23/%E7%94%9F%E6%B4%BB/%E8%AE%A9%E8%87%AA%E5%B7%B1%E5%BF%AB%E4%B9%90%E7%9A%84%E4%B9%9D%E7%A7%8D%E9%80%94%E5%BE%84/</url>
@@ -2378,31 +2403,6 @@
     
     
     <entry>
-      <title>JabRef、Pycharm显示乱码的解决方法（大同小异）</title>
-      <link href="/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/"/>
-      <url>/2014/09/23/%E6%8A%80%E6%9C%AF/%E5%87%A0%E4%B8%AA%E6%96%87%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B9%B1%E7%A0%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%A7%E5%90%8C%E5%B0%8F%E5%BC%82%EF%BC%89/</url>
-      
-        <content type="html"><![CDATA[<p><strong>JabRef：</strong>一款和CTex配套使用的文献管理软件，就像Endnote和Word配套一样，在写Abstract或review时，其默认只能输入英文，输入中文则乱码，解决办法：<br>first set Options||Preferences||General&gt;&gt;Default Encoding as UTF8<br>then set Options||Preferences||Appearance&gt;&gt;Set table font as simsun (or any other Chinese fonts) </p><p>效果非常好。如果还有问题，可将Entry Preview里改为<font face="simsun">  </font></p><p><strong>Pycharm：</strong>一款方便调试，并集成了多个库的Python IDE，个人感觉非常好用，如C\C++的VS和Codeblock，java的eclipse，安装默认不支持中文编码，在注释的时候出现乱码，解决办法：<br>File-settings-file and code templates-python script中改成：<br># -<em>- coding: utf-8 -</em>-<br>然后File-settings-file encoding改成UTF-8编码  </p><p>设置字体大小，行号<br>File-&gt;Settings-&gt;Editor-&gt;Colors &amp; Font -&gt; Font</p><p>File-&gt;Settings-&gt;Editor-&gt;Apperance -&gt; 选上Show line numbers</p><p>总结：一般这种编码乱码问题，都是由于编码不支持造成的，找到相关地方进行修改就可以了，一般都会在Setting里面。关于中英文编码问题，详见这篇文章，写得非常nice。<br><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="noopener">字符编码</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 工具 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 乱码 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Markdown入门语法汇总</title>
       <link href="/2014/09/18/%E6%8A%80%E6%9C%AF/Markdown%E5%85%A5%E9%97%A8%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/"/>
       <url>/2014/09/18/%E6%8A%80%E6%9C%AF/Markdown%E5%85%A5%E9%97%A8%E8%AF%AD%E6%B3%95%E6%B1%87%E6%80%BB/</url>
@@ -2412,7 +2412,7 @@
       
       <categories>
           
-          <category> 工具 </category>
+          <category> 05 工具 </category>
           
       </categories>
       

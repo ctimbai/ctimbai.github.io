@@ -143,7 +143,7 @@
     <link href="https://chambai.github.io/2018/09/13/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%8E%86%E5%8F%B2%E4%B8%8A%E9%82%A3%E4%BA%9B%E5%85%B7%E6%9C%89%E8%B7%A8%E6%97%B6%E4%BB%A3%E6%84%8F%E4%B9%89%E7%9A%84%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8/"/>
     <id>https://chambai.github.io/2018/09/13/云计算/历史上那些具有跨时代意义的云计算创业公司/</id>
     <published>2018-09-13T05:16:14.000Z</published>
-    <updated>2019-02-21T14:34:58.604Z</updated>
+    <updated>2019-02-22T15:24:05.056Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p></blockquote><center><img src="/images/cloud/8.jpg" alt=""></center><p>这里所说的不是像 Google、VMware、Cisco、Intel 等等这些巨头公司，而是在巨头的夹缝中冉冉升起的那些新星。由于知识面有限，列举不尽完全，大家可以留言说说你心目中还有哪些值得铭记的公司。</p><a id="more"></a><h3 id="Rackspace"><a href="#Rackspace" class="headerlink" title="Rackspace"></a>Rackspace</h3><hr><p>Rackspace 理应不算新星了，但说到“跨时代意义”，它是绝对的名副其实。原因就在于它和 NASA（美国国家航空航天局）合作开发了 OpenStack——一个让云计算产业进入井喷时代的项目。OpenStack 一经开源，短短两年时间就力压群雄成为开源社区仅次于 Linux 的全球第二大开源项目。</p><center><img src="/images/cloud/rackspace.jpg" alt=""></center><p>可以说是 OpenStack 拯救了 Rackspace。Rackspace 于 1998 成立，是最早期的一批云计算提供商，OpenStack 出来之前，一直不温不火，2010 年 OpenStack 出来之后，名声大震，一步跃居为全球仅次于 Amazon 和 VMware 的三大云计算中心之一。</p><p>如今 OpenStack 已经更新到 Rocky 版本，在众多竞争者和效仿者的围追堵截之下，依然很强势，这和它优秀的架构是分不开的。我很好奇它更新到 Z 版本之后会发生什么？</p><h3 id="dotCloud"><a href="#dotCloud" class="headerlink" title="dotCloud"></a>dotCloud</h3><hr><p>OpenStack 带动了 IaaS 的发展，在这个节骨眼上，人们开始意识到，只有 IaaS 已经无法满足用户变态的需求了。</p><p>时间也落在 2010 年，这个时候几个大胡子年轻人在旧金山成立了一家做 PaaS 的公司，起名 dotCloud，开始杀入 PaaS 领域。</p><center><img src="/images/cloud/dotcloud.png" alt=""></center><p>年轻一辈都意识到了商机，大佬们（Google、Microsoft、Amazon 等）能不意识到吗？于是大佬们也纷纷涉足 PaaS 领域，最终 dotCloud 寡不敌众，不得不缴械投降。</p><p>dotCloud 的工程师于心不甘啊，辛辛苦苦画下的大饼就这样被割分完了。但也没办法，谁让人家是大佬呢。</p><p>鉴于工程师们血液里都流淌着一股热爱分享的劲儿，他们决定将 dotCloud 的核心技术开源给世人。</p><p>谁能想到，无心插柳柳成荫。这门技术瞬间风靡全球，开启了又一个新的时代。</p><p>这门技术就是 Docker。</p><center><img src="/images/cloud/docker.jpg" alt=""></center><p>dotCloud 又火了，但为了纪念这个神圣的时刻，dotCloud 改名为 Docker Inc，全身心投入 Docker 的研发中。至于原来的 PaaS 业务，Docker 将其卖给了德国人的 cloudControl。但好景不长，cloudControl 于 2016 年就关闭了。</p><p>如今，Docker 技术依然可圈可点，虽然很多人在 Kubernetes 出来之后，叫衰 Docker，但我却不以为然。</p><h3 id="Nicira"><a href="#Nicira" class="headerlink" title="Nicira"></a>Nicira</h3><hr><p>2007 年，斯坦福大学的 Nick McKeown 教授和他的天才学生 Martin Casado 博士根据他们的研究成果创办了 Nicira。这是 SDN 网络的鼻祖公司，Nick 教授和 Martin 博士也因此被人们称为 SDN 之父。</p><p>Nicira 公司做了很多牛逼的事：发明了世界上第一个 SDN 控制器 NOX，第一个分布式交换机 Open vSwitch 及其配套协议 OpenFlow 协议，领导研发 OpenStack 网络驱动模块 Quantum/Neutron，开源了业界第一个与硬件无关，支持多种 X86 虚拟化平台的分布式网络虚拟化架构（DVNI），等等等等。</p><p>Nicira 当时那套 SDN 的解决方案，放在今天来说都是很超前的东西。很快，Nicira 就被 VMware 和 Cisco 这些巨头盯上了。巨头们看上的不仅是 Nicira 的技术，更是 Nicira 那帮工程师天才般的智慧和对技术敏锐的洞察力。</p><p>巨头们开始了疯狂的收购战，最终 VMware 以 12.6 亿美元拔得头筹。Martin 博士也带领他的一般众将归入了 VMware 的麾下。</p><center><img src="/images/cloud/nicira.jpg" alt=""></center><p>至此，Nicira 的舞台也算退出了。Open vSwitch 如今仍然占据 SDN 数据面的头把交椅。</p><h3 id="Palo-Alto-Networks"><a href="#Palo-Alto-Networks" class="headerlink" title="Palo Alto Networks"></a>Palo Alto Networks</h3><hr><p>2005 年，以色列的一个天才少年 Nir Zuk 在一间简陋的办公室里，一手创办了 PAN，这就是当下极富盛名的下一代防火墙的初创者（很多公司都宣称自己的防火墙是下一代防火墙，众说纷坛，其实争论这个没多大意义，人家 PAN 都还没说话呢）。</p><center><img src="/images/cloud/palo.jpg" alt=""></center><p>回看 Nir 的一生，也是颇具传奇，经历像极了乔布斯，但没乔布斯那么惨是被老东家赶出的，Nir 是因为老东家小气不肯给他资源做项目而无奈出走。谁能想到，PAN 能在短时间之内就超越了老东家。</p><blockquote><p>小公司要在大公司的夹缝中生长，需要天时地利人和，以及运气，就像 Docker，上帝为你关上一扇门，就会为你打开一扇窗。</p></blockquote><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p></blockquote><p><img src="/images/weichat.png" alt=""></p>]]></content>
     
@@ -158,7 +158,7 @@
     
     </summary>
     
-      <category term="云计算" scheme="https://chambai.github.io/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+      <category term="01 云计算" scheme="https://chambai.github.io/categories/01-%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
     
     
       <category term="云计算" scheme="https://chambai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
@@ -440,7 +440,7 @@
     <link href="https://chambai.github.io/2018/08/15/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%86%8D%E8%B0%88%E4%BA%91%E8%AE%A1%E7%AE%97%E6%8A%80%E8%83%BD%E5%9B%BE%E8%B0%B1/"/>
     <id>https://chambai.github.io/2018/08/15/云计算/再谈云计算技能图谱/</id>
     <published>2018-08-15T05:16:14.000Z</published>
-    <updated>2018-10-06T02:52:24.116Z</updated>
+    <updated>2019-02-22T15:21:56.330Z</updated>
     
     <content type="html"><![CDATA[<blockquote><p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p></blockquote><p>之前，我写过一篇「云计算技能图谱」的文章，涵盖了云计算领域绝大部分的分支，很多人看了表示不淡定了——学完这个要等到猴年马月！</p><p>其实那份图谱涉及到很多应用场景，比如说大数据，机器学习，这些是基于云计算引申的技术分支，底层用的是云计算的基础设施，但要说可不可以独立于云计算来做，可以，只是一个规模的问题罢了。</p><p>为了能给很多初学者一个好的引导，我重新整理了这份图谱，把一些相关联的技术分支去掉了，只保留了基础设施部分（包括计算、存储、网络、安全这几个部分）。如下：</p><center><img src="/images/cloud/cloud_tupu.jpg" alt=""></center><p>备注：图片为防抄袭迫不得已加水印，想要原图的可以加我微信私信我</p><p>这样来看，就显得精简多了。</p><p>可能你看到这个还是会很焦虑，其实大可不必焦虑，图谱更多告诉你的是这个领域有什么，至于做不做完全根据你自己的情况选择，比如你想做个 T 型人才 ，那就尽可能去学，想做个 I 型人才，那就专注在某一个领域就好了。这两者没有绝对的孰是孰非，最终都是要解决问题。就像一句话说的，不管黑猫白猫，能捉到老鼠的就是好猫。</p><p>我知道关注我的读者当中，什么人才都有，我目前知道的，有学生，有工作了好几年的老司机，也有博士，首先要感谢大家的关注，我相信大家关注我肯定是因为我的哪一篇文章触动了你或者对你有帮助才会关注的。</p><p>我想说，大家关注我肯定是没错的，我这个号专注的内容就是上面这份图谱提到的内容，你可以在这里看到最基础的开发实践内容（比如 Linux、C/C++、Python、Go 技术栈），也可以看到云计算框架的解读（比如 KVM，OpenStack，Docker，Kubernetes），还可以看到最前沿技术的探讨。当然也有一些非技术的内容，比如行业资讯，以及我一些不吐不快的碎碎念。</p><p>其实我进入这个领域也不算早，跟很多读者比起来，是不折不扣的菜鸟，但正因为我是菜鸟，我写出的文章才会通俗易懂，因为我要保证和我一样的菜鸟能听得懂，当然了，质量肯定是第一位的，你们要是看过我以前写的一些文章就知道质量如何了，绝对是很良心的分享。说这个主要是希望大家能多多向你身边的朋友推荐下我这个号，有更多的朋友加入，我的写作动力就越强，就能给你们输出更多更好的文章。</p><p>为了能让大家有一个交流的氛围，我建了一个群，想加入的可以后台回复“加群”。</p><p>另外，我这里还收藏了一套很有价值的技能图谱，包括上面说的很多细分领域，比如 Python、Docker、Kubernetes、DevOps，还有一些其他的分支，比如机器学习，大数据，架构师，运维，嵌入式等等等等，大概就像下面这样子：</p><center><img src="/images/cloud/cloud_tupuinfo.jpg" alt=""></center><p>这些资料是我精心为大家整理的，整理不易，大家如果需要，有一点点要求，只要你乐于分享即可。这里要说明一点，我觉得好的东西，就是要让更多的人看到，你可以说是诱导你分享，但扪心自问，遇到好的东西谁又不乐意分享呢，让你的朋友看到你分享好东西给他们又何尝不是一种快乐呢。</p><p>获取技能图谱方法：</p><ol><li>转发本文到你的朋友圈；</li><li>添加我的微信号：aCloudDeveloper，或长按下方二维码加我微信；</li><li>加好友后发朋友圈截图给我，我看到会发一整套技能图谱给你，或者你也可以回复“加群”，我拉你进我的技术交流群。</li></ol><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p></blockquote><p><img src="/images/weichat.png" alt=""></p>]]></content>
     
@@ -456,7 +456,7 @@
     
     </summary>
     
-      <category term="云计算" scheme="https://chambai.github.io/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+      <category term="01 云计算" scheme="https://chambai.github.io/categories/01-%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
     
     
       <category term="云计算" scheme="https://chambai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
