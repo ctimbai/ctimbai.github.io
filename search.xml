@@ -595,9 +595,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> CPU </tag>
+            
+            <tag> Linux </tag>
             
             <tag> NUMA </tag>
             
@@ -624,9 +624,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> CPU </tag>
+            
+            <tag> Linux </tag>
             
             <tag> NUMA </tag>
             
@@ -653,9 +653,9 @@
       
         <tags>
             
-            <tag> Linux </tag>
-            
             <tag> CPU </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 性能分析 </tag>
             
@@ -797,9 +797,9 @@
             
             <tag> 云计算 </tag>
             
-            <tag> DPDK </tag>
-            
             <tag> 虚拟化 </tag>
+            
+            <tag> DPDK </tag>
             
             <tag> 网络 </tag>
             
@@ -1311,9 +1311,9 @@
             
             <tag> 云计算 </tag>
             
-            <tag> OVS </tag>
-            
             <tag> 虚拟化 </tag>
+            
+            <tag> OVS </tag>
             
             <tag> 网络 </tag>
             
@@ -1344,9 +1344,9 @@
             
             <tag> 云计算 </tag>
             
-            <tag> OVS </tag>
-            
             <tag> 虚拟化 </tag>
+            
+            <tag> OVS </tag>
             
             <tag> 网络 </tag>
             
@@ -1381,9 +1381,9 @@
             
             <tag> 云计算 </tag>
             
-            <tag> OVS </tag>
-            
             <tag> 虚拟化 </tag>
+            
+            <tag> OVS </tag>
             
             <tag> 网络 </tag>
             
@@ -1550,11 +1550,11 @@
             
             <tag> 云计算 </tag>
             
-            <tag> CPU </tag>
-            
             <tag> 虚拟化 </tag>
             
             <tag> KVM </tag>
+            
+            <tag> CPU </tag>
             
         </tags>
       
@@ -1774,9 +1774,9 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -1851,11 +1851,11 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
             
             <tag> 罗胖 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
@@ -2089,9 +2089,9 @@
       
         <tags>
             
-            <tag> 锤子科技 </tag>
-            
             <tag> 老罗 </tag>
+            
+            <tag> 锤子科技 </tag>
             
         </tags>
       
