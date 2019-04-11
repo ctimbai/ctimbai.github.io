@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>Tag: KVM | 小白的网志空间</title>
+  <title>Tag: KVM | 长亭的网志空间</title>
   
   
-  <meta name="description" content="专注于云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
   
 
-  <link rel="alternate" href="/atom.xml" title="小白的网志空间">
+  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
 
   <meta name="HandheldFriendly" content="True">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,16 +67,16 @@
 
 <body>
     <div id="loading-bar-wrapper">
-  <div id="loading-bar" class="pure"></div>
+  <div id="loading-bar" class="material"></div>
 </div>
 
     <script>setLoadingBarProgress(20)</script>
-    <header class="l_header pure">
+    <header class="l_header material">
 	<div class="wrapper">
 		<div class="nav-main container container--flex">
       <a class="logo flat-box" href="/">
         
-          小白的网志空间
+          长亭的网志空间
         
       </a>
 			<div class="menu">
@@ -92,12 +92,6 @@
   						<li>
 								<a id="archives" class="nav flat-box" href="/archives/">
 									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
-								</a>
-							</li>
-      			
-  						<li>
-								<a id="friends" class="nav flat-box" href="/friends/">
-									<i class="fas fa-users fa-fw"></i>&nbsp;导航
 								</a>
 							</li>
       			
@@ -145,12 +139,6 @@
                   <li>
 										<a id="archives" class="nav flat-box" href="/archives/">
 											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
-										</a>
-                  </li>
-              
-                  <li>
-										<a id="friends" class="nav flat-box" href="/friends/">
-											<i class="fas fa-users fa-fw"></i>&nbsp;导航
 										</a>
                   </li>
               
@@ -378,7 +366,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/06/云计算/vhost_user_简介/">
+          <a href="/2018/02/06/tech/vhost_user_简介/">
               
                   vhost-user 简介
               
@@ -411,7 +399,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <h3 id="1-什么是-vhost-user"><a href="#1-什么是-vhost-user" class="headerlink" title="1. 什么是 vhost-user"></a>1. 什么是 vhost-user</h3><p>在 vhost 的方案中，由于 vhost 实现在内核中，guest 与 vhost 的通信，相较于原生的 virtio 方式性能上有了一定程度的提升，从 guest 到 kvm.ko 的交互只有一次用户态的切换以及数据拷贝。这个方案对于不同 host 之间的通信，或者 guest 到 host nic 之间的通信是比较好的，但是对于某些用户态进程间的通信，比如数据面的通信方案，openvswitch 和与之类似的 SDN 的解决方案，guest 需要和 host 用户态的 vswitch 进行数据交换，如果采用 vhost 的方案，guest 和 host 之间又存在多次的上下文切换和数据拷贝，为了避免这种情况，业界就想出将 vhost 从内核态移到用户态。这就是 vhost-user 的实现。</p>
 <h3 id="2-vhost-user-的实现"><a href="#2-vhost-user-的实现" class="headerlink" title="2 vhost-user 的实现"></a>2 vhost-user 的实现</h3><hr>
@@ -459,11 +447,11 @@
                 
                     <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
                 
-                    <a href="/tags/vhost-user/"><i class="fas fa-hashtag fa-fw"></i>vhost_user</a>
-                
                     <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
                 
                     <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
+                
+                    <a href="/tags/vhost-user/"><i class="fas fa-hashtag fa-fw"></i>vhost_user</a>
                 
             </div>
         
@@ -482,7 +470,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/01/23/云计算/vhost_简介/">
+          <a href="/2018/01/23/tech/vhost_简介/">
               
                   vhost 简介
               
@@ -515,7 +503,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发于我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <h3 id="1-什么是-vhost"><a href="#1-什么是-vhost" class="headerlink" title="1. 什么是 vhost"></a>1. 什么是 vhost</h3><hr>
 <p>vhost 是 virtio 的一种后端实现方案，在 virtio 简介中，我们已经提到 virtio 是一种半虚拟化的实现方案，需要虚拟机端和主机端都提供驱动才能完成通信，通常，virtio 主机端的驱动是实现在用户空间的 qemu 中，而 vhost 是实现在内核中，是内核的一个模块 vhost-net.ko。为什么要实现在内核中，有什么好处呢，请接着往下看。</p>
@@ -573,7 +561,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/12/06/云计算/I:O_虚拟化的三种形式/">
+          <a href="/2017/12/06/tech/I:O_虚拟化的三种形式/">
               
                   I/O 虚拟化的三种形式
               
@@ -606,7 +594,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <p>上文「I/O 虚拟化」简单介绍了 I/O 虚拟化的做法，本文重点关注一下三种 I/O 虚拟化的分类——全虚拟化、半虚拟化和 I/O 直通（透传）。</p>
 <h3 id="I-O-全虚拟化"><a href="#I-O-全虚拟化" class="headerlink" title="I/O 全虚拟化"></a>I/O 全虚拟化</h3><hr>
@@ -695,7 +683,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/12/02/云计算/I:O_虚拟化/">
+          <a href="/2017/12/02/tech/I:O_虚拟化/">
               
                   I/O 虚拟化
               
@@ -728,7 +716,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <p>I/O 虚拟化在虚拟化技术中算是比较复杂，也是最重要的一部分。从整体上看，I/O 虚拟化也包括基于软件的虚拟化和硬件辅助的虚拟化，软件虚拟化部分又可以分为全虚拟化和半虚拟化，如果根据设备类型再细分的话，又可以分为字符设备 I/O 虚拟化（键盘、鼠标、显示器）、块设备 I/O 虚拟化（磁盘、光盘）和网络设备 I/O 虚拟化（网卡）等。</p>
 <p>我们先看下在没有虚拟机存在的情况下，I/O 设备请求是怎样的。某个应用或进程发出 I/O 请求，通过系统调用等方式进入内核，调用相应的驱动程序，请求到具体的 I/O 设备，然后再将结果返回到调用者进行回显。</p>
@@ -791,7 +779,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/11/27/云计算/内存虚拟化/">
+          <a href="/2017/11/27/tech/内存虚拟化/">
               
                   内存虚拟化
               
@@ -824,7 +812,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><hr>
 <p>我们知道，早期的计算机内存，只有物理内存，而且空间是极其有限的，每个应用或进程在使用内存时都得小心翼翼，不能覆盖别的进程的内存区。</p>
@@ -906,7 +894,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/11/26/云计算/CPU_虚拟化/">
+          <a href="/2017/11/26/tech/CPU_虚拟化/">
               
                   CPU 虚拟化
               
@@ -939,7 +927,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <p>前面「虚拟化技术总览」中从虚拟平台 VMM 的角度，将虚拟化分为 Hypervisor 模型和宿主模型，如果根据虚拟的对象（资源类型）来划分，虚拟化又可以分为计算虚拟化、存储虚拟化和网络虚拟化，再细一些，又有中断虚拟化，内存虚拟化，字符/块设备虚拟化，网络功能虚拟化等。</p>
 <p>我会将此作为一个系列来写，本文先看 CPU 虚拟化。在这之前，我们先来笼统看下虚拟化的本质是什么，它到底是如何做到将 Host 的硬件资源虚拟化给 Guest 用，我这里用两个词来定义，<strong>intercept</strong> 和 <strong>virtualize</strong>，中文翻译成截获和模拟比较恰当一点，这两个词基本上是虚拟化的终极定义了，带着这两个词去看每一种虚拟化类型，会发现很容易理解和记忆。</p>
@@ -1018,7 +1006,7 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/11/20/云计算/KVM_初探/">
+          <a href="/2017/11/20/tech/KVM_初探/">
               
                   KVM 初探
               
@@ -1051,7 +1039,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>文章首发我的公众号「CloudDeveloper」，欢迎关注，第一时间掌握技术干货！</p>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
 <p>KVM 是业界最为流行的 Hypervisor，全称是 Kernel-based Virtual Machine。它是作为 Linux kernel 中的一个内核模块而存在，模块名为 kvm.ko，也可以看作是一个进程，被内核调度并管理，从 Linux 2.6.20 版本开始被完全正式加入到内核的主干开发和正式发布代码中。 KVM 主要用于管理 CPU 和内存的虚拟化，IO 设备的虚拟化则是由 Qemu 来完成。为什么会有这样的分工，请继续往下看。</p>
 <h3 id="KVM-与-Qemu-的前世今生"><a href="#KVM-与-Qemu-的前世今生" class="headerlink" title="KVM 与 Qemu 的前世今生"></a>KVM 与 Qemu 的前世今生</h3><hr>
@@ -1124,13 +1112,13 @@
       
         <section class="plain">
   
-<header class="pure">
+<header class="material">
   <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
   
 </header>
 
-  <div class="content pure">
-    <p>你好，这里是<a href="https://chambai.github.io/materialblog/">小白的网志空间</a>，我在这里分享技术和生活，专注于云计算/网络/CC++/Python/Go等技术栈，平常喜欢左手Coding，右手Writing，欢迎关注我的公众号「cloud_dev」，期待与你相遇~</p>
+  <div class="content material">
+    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
 
   </div>
 </section>
@@ -1142,7 +1130,7 @@
       
       
         <section class="author">
-  <div class="content pure">
+  <div class="content material">
     
       <div class="avatar">
         <img class="avatar" src="/images/cloud.png">
@@ -1152,7 +1140,7 @@
       <div class="text">
         
         
-          <p>公众号：CloudDeveloper</p>
+          <p>公众号：Linux云计算网络</p>
 
         
         
@@ -1171,12 +1159,12 @@
         
   <section class="category">
     
-<header class="pure">
+<header class="material">
   <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
   
 </header>
 
-    <div class="content pure">
+    <div class="content material">
       <ul class="entry">
         
           <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
@@ -1225,12 +1213,12 @@
         
   <section class="tagcloud">
     
-<header class="pure">
+<header class="material">
   <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
   
 </header>
 
-    <div class="content pure">
+    <div class="content material">
       <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
     </div>
   </section>
@@ -1244,7 +1232,7 @@
       
         <section class="list">
   
-<header class="pure">
+<header class="material">
   <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
   
     <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
@@ -1252,7 +1240,7 @@
   
 </header>
 
-  <div class="content pure">
+  <div class="content material">
     <ul class="entry">
       
         <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
@@ -1315,12 +1303,12 @@
       
         <section class="list">
   
-<header class="pure">
+<header class="material">
   <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
   
 </header>
 
-  <div class="content pure">
+  <div class="content material">
     <ul class="entry">
       
         <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">

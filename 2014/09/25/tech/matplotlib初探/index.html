@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>matplotlib初探 | 长亭的网志空间</title>
+  
+  
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="material"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header material">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          长亭的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">matplotlib初探</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-09-25
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Python/">Python</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近摸索了Python的画图库<a href="http://matplotlib.org/index.html" target="_blank" rel="noopener">Matplotlib</a>，其画的图要多炫丽有多炫丽，要多优雅有多优雅，真的有被震撼到，最近项目要求需要画图，考虑到matlab虽然博大精深，但却不易上手，貌似网上最近也在盛传“是否matplotlib能取代matlab”的诸多言论，对于一个旁观者和门外汉，我不做评论，我只有一个理念：什么好学用什么。另外，对于语言的学习和掌握，我现在有一个特别明晰的目标，就是以后以Python为主轴，C\C++作为辅助，算法为核心来展开。  </p>
+<p>半年前就接触Python，但期间由于没有一个特定的目标，东捡一点西捡一点，到头来总是在重复同样的事情。现在觉得需要什么学什么，带有目标地去学习才能提高效率，也才能记忆犹新，废话不多说，本文就简单的说说matplotlib。由于刚入门，也没有什么心得，仅仅是看了<a href="http://www.loria.fr/~rougier/teaching/matplotlib/" target="_blank" rel="noopener">matplotlib tutorial</a>的一点笔记记录。由于手册是英文版，所以，本文算是对原文的翻译，但我会完全脱离原文的思路，用自己的思路来写，外加自己的一些引申的东西。在进入主题之前，先看下这个知乎大牛关于<a href="http://www.zhihu.com/question/21664179" target="_blank" rel="noopener">如何在论文中画出漂亮的插图</a>的探讨，先目睹一下matplotlib所体现出炫丽与优雅。</p>
+<a id="more"></a>  
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>先来看看matplotlib的Wikipedia介绍，懒得翻译了。  </p>
+<p><a href="http://en.wikipedia.org/wiki/Matplotlib" target="_blank" rel="noopener">matplotlib</a> is a plotting library for the Python programming language and its <strong>NumPy</strong> numerical mathematics extension. It provides an object-oriented API for embedding plots into applications using general-purpose GUI toolkits like wxPython, Qt, or GTK+. There is also a procedural <strong>pylab</strong> interface based on a state machine (like OpenGL), designed to closely resemble that of MATLAB. <strong>SciPy</strong> makes use of matplotlib. </p>
+<p>matplotlib 一个用来画2D图形的Python库(package)，它同时支持交互式和非交互式的画图方式，能够把画出的图形保存为PNG，PS等多种格式，可以使用多种窗口的工具包，如GTK+，wxWidgets,Qt等，并且可以画出多种类型的图形，如线、条形图、饼状图、柱状图等，主要用于科学计算领域，像常见的<strong>gnuplot</strong>和<strong>MATLAB</strong>一样，它是由John Hunter开发的，他说过一句非常经典的话：<br><strong>Matplotlib tries to make easy things easy and hard things possible.</strong>    </p>
+<p>可见，matplotlib是多么令人心动不已。  </p>
+<p>matplotlib非常的灵活和友善，提供多种画图的方式，在<a href="http://www.packtpub.com/matplotlib-python-development/book?utm_source=matplotlib.sourceforge.net&amp;utm_medium=link&amp;utm_content=pod&amp;utm_campaign=mdb_002124" target="_blank" rel="noopener">《Matplotlib for python developers》</a>中总结了三种使用matplotlib画图的方式：  </p>
+<ul>
+<li><em>pyplot</em>: matplotlib.pyplot提供类似于MATLAB的命令集合，使其表现得像MATLAB。</li>
+<li><em>pylab</em>:结合了matplotlib.pyplot和Numpy的功能，既可以画图，又可以做科学计算，说白了，它就是一个使matplotlib表现得像MATLAB的一个接口，但是John不推荐使用这种方式，原因就是它的封装性覆盖了matplotlib的一些基本的东西，不适合开发者学习，往往造成知其然而不知其所以然的状态。</li>
+<li><em>Object-oriented way（OO）</em>：面向对象方法，以python的方式使用，更加的pythonic，这种方法对于开发者来说可以完全控制matplotlib的执行过程，是最好的，但同时也是最复杂的。</li>
+</ul>
+<p>下面分别以同一个画图例子来说明这三种方式：<br><strong>pyplot</strong>:  </p>
+<pre><code>import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.arange(0, 10, 0.1)
+y = np.random.randn(len(x))
+plt.plot(x, y)
+plt.title(&apos;random numbers&apos;)
+plt.show()
+</code></pre><p>得到如下的图示：  </p>
+<p><img src="/images/next/plt.png" alt="">  </p>
+<p><strong>pylab</strong>:  </p>
+<pre><code>from pylab import *
+
+x = arange(0, 10, 0.1)
+y = randn(len(x)) 
+plot(x, y) 
+title(&apos;random numbers&apos;)
+show()
+</code></pre><p><strong>Object-oriented way（OO）</strong></p>
+<pre><code>import matplotlib.pyplot as plt
+import numpy as np 
+
+x = np.arange(0, 10, 0.1)
+y = np.random.randn(len(x))
+fig = plt.figure()
+ax = fig.add_subplot(111)
+l, = plt.plot(x, y)
+t = ax.set_title(&apos;random numbers&apos;)
+plt.show()
+</code></pre><p>可以看到，面向对象的方式和pyplot需要导入同样的库，才能做相应的操作，在所有代码中，pylab最简单，pyplot其次，OO最复杂，几乎和画图有关的所有元素都由用户自己定义，所以，这种方式更加能够剖析matplotlib的运行机理。因为我们写代码的目标是解决问题，解决问题讲究的是结果和效率，所以，我觉得用pylab是比较清爽的，但每个人都有自己不同的要求，如果一个程序2/3的代码量是依托于Plot，那么用OO的方式是比较合适的，如果只当它是个工具，就应该用最简单的。下面通过一个例子由浅入深地再来matplotlib的美妙之处，这个例子前面说过是翻译，可以找到前面的链接进入原版。  </p>
+<p>这个例子是显示一个cos(x)和sin(x)，由浅入深，层层递进。我们使用pylab来操作。  </p>
+<h3 id="第一步：Using-default"><a href="#第一步：Using-default" class="headerlink" title="第一步：Using default"></a>第一步：Using default</h3><p>使用Plot的默认参数，包括figure size, dpi, line width, color, style, axes, axis, grid properties text and ront properties and so on.代码如下：  </p>
+<pre><code>from pylab import *
+
+X = np.linspace(-np.pi, np.pi, 256, endpoint = True)
+C, S = np.cos(X), np.sin(X)
+
+plot(X, C)
+plot(X, S)
+show()
+</code></pre><p><img src="/images/next/plt1.png" alt=""></p>
+<h3 id="第二步：Instantiating-defaults"><a href="#第二步：Instantiating-defaults" class="headerlink" title="第二步：Instantiating defaults"></a>第二步：Instantiating defaults</h3><p>自己定制一个图示，所有参数都自己定制，关于参数的详细定制请见：<a href="http://matplotlib.org/users/customizing.html" target="_blank" rel="noopener">Customizing matplotlib</a>  </p>
+<pre><code># Import everything from matplotlib (numpy is accessible via &apos;np&apos; alias)
+from pylab import *
+
+# Create a new figure of size 8x6 points, using 80 dots per inch
+figure(figsize=(8,6), dpi=80)
+
+# Create a new subplot from a grid of 1x1
+subplot(1,1,1)
+
+X = np.linspace(-np.pi, np.pi, 256,endpoint=True)
+C,S = np.cos(X), np.sin(X)
+
+# Plot cosine using blue color with a continuous line of width 1 (pixels)
+plot(X, C, color=&quot;blue&quot;, linewidth=1.0, linestyle=&quot;-&quot;)
+
+# Plot sine using green color with a continuous line of width 1 (pixels)
+plot(X, S, color=&quot;green&quot;, linewidth=1.0, linestyle=&quot;-&quot;)
+
+# Set x limits
+xlim(-4.0,4.0)
+
+# Set x ticks
+xticks(np.linspace(-4,4,9,endpoint=True))
+
+# Set y limits
+ylim(-1.0,1.0)
+
+# Set y ticks
+yticks(np.linspace(-1,1,5,endpoint=True))
+
+# Save figure using 72 dots per inch
+# savefig(&quot;exercice_2.png&quot;,dpi=72)
+
+# Show result on screen
+show()
+</code></pre><p>最后一步保存图示，所用的像素值和上面显示的像素值不一样，需要自己设置。<br><img src="/images/next/plt2.png" alt="">  </p>
+<h3 id="第三步：Changing-colors-and-line-widths"><a href="#第三步：Changing-colors-and-line-widths" class="headerlink" title="第三步：Changing colors and line widths"></a>第三步：Changing colors and line widths</h3><pre><code>...
+figure(figsize=(10,6), dpi=80)
+plot(X, C, color=&quot;blue&quot;, linewidth=2.5, linestyle=&quot;-&quot;)
+plot(X, S, color=&quot;red&quot;,  linewidth=2.5, linestyle=&quot;-&quot;)
+...
+</code></pre><p><img src="/images/next/plt3.png" alt="">  </p>
+<h3 id="第四步：Setting-limits"><a href="#第四步：Setting-limits" class="headerlink" title="第四步：Setting limits"></a>第四步：Setting limits</h3><p>上图中的图示感觉太紧凑了，通过对x,y轴设置，可以预留出一些空间，使之看起来清晰一些，如下： </p>
+<pre><code>...
+xlim(X.min()*1.1, X.max()*1.1)
+ylim(C.min()*1.1, C.max()*1.1)
+...
+</code></pre><p><img src="/images/next/plt4.png" alt="">  </p>
+<p>但是，一个更鲁棒性的版本，我们应该这样写：  </p>
+<pre><code>xmin ,xmax = X.min(), X.max()
+ymin, ymax = Y.min(), Y.max()
+
+dx = (xmax - xmin) * 0.2
+dy = (ymax - ymin) * 0.2
+
+xlim(xmin - dx, xmax + dx)
+ylim(ymin - dy, ymax + dy)
+</code></pre><h3 id="第五步：Setting-ticks"><a href="#第五步：Setting-ticks" class="headerlink" title="第五步：Setting ticks"></a>第五步：Setting ticks</h3><p>我们需要将步长设成[+/-pi, +/-pi/2]之间的值，那么需要这样做：  </p>
+<pre><code>...
+xticks( [-np.pi, -np.pi/2, 0, np.pi/2, np.pi])
+yticks([-1, 0, +1])
+...
+</code></pre><p><img src="/images/next/plt5.png" alt="">  </p>
+<h3 id="第六步：Setting-ticks-labels"><a href="#第六步：Setting-ticks-labels" class="headerlink" title="第六步：Setting ticks labels"></a>第六步：Setting ticks labels</h3><p>上图中已经非常接近了，但还需要将3.142表示成π的形式，这样做：  </p>
+<pre><code>...
+xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi],
+       [r&apos;$-\pi$&apos;, r&apos;$-\pi/2$&apos;, r&apos;$0$&apos;, r&apos;$+\pi/2$&apos;, r&apos;$+\pi$&apos;])
+
+yticks([-1, 0, +1],
+       [r&apos;$-1$&apos;, r&apos;$0$&apos;, r&apos;$+1$&apos;])
+...
+</code></pre><p><img src="/images/next/plt6.png" alt=""></p>
+<h3 id="第七步：Moving-spines"><a href="#第七步：Moving-spines" class="headerlink" title="第七步：Moving spines"></a>第七步：Moving spines</h3><p>这一步需要去掉边框，即形成x,y轴，形成一个坐标系，边框在这里定义成spines,我们把上、右边框移去，左边框右移，下边框上移，即可得到最终的图形。  </p>
+<pre><code>...
+ax = gca()
+ax.spines[&apos;right&apos;].set_color(&apos;none&apos;)
+ax.spines[&apos;top&apos;].set_color(&apos;none&apos;)
+ax.xaxis.set_ticks_position(&apos;bottom&apos;)
+ax.spines[&apos;bottom&apos;].set_position((&apos;data&apos;,0))
+ax.yaxis.set_ticks_position(&apos;left&apos;)
+ax.spines[&apos;left&apos;].set_position((&apos;data&apos;,0))
+...
+</code></pre><p><img src="/images/next/plt7.png" alt="">  </p>
+<h3 id="第八步：adding-legend"><a href="#第八步：adding-legend" class="headerlink" title="第八步：adding legend"></a>第八步：adding legend</h3><p>为图示增加一个图例，我们选择左上角的位置，如下：  </p>
+<pre><code>...
+plot(X, C, color=&quot;blue&quot;, linewidth=2.5, linestyle=&quot;-&quot;, label=&quot;cosine&quot;)
+plot(X, S, color=&quot;red&quot;,  linewidth=2.5, linestyle=&quot;-&quot;, label=&quot;sine&quot;)
+
+legend(loc=&apos;upper left&apos;)
+...
+</code></pre><p><img src="/images/next/plt8.png" alt="">  </p>
+<h3 id="第九步：Annotate-some-points"><a href="#第九步：Annotate-some-points" class="headerlink" title="第九步：Annotate some points"></a>第九步：Annotate some points</h3><p>比如我要在图中注释2/3pi,该怎么做呢？  </p>
+<pre><code>t = 2*np.pi/3
+plot([t,t],[0,np.cos(t)], color =&apos;blue&apos;, linewidth=2.5, linestyle=&quot;--&quot;)
+scatter([t,],[np.cos(t),], 50, color =&apos;blue&apos;)
+
+annotate(r&apos;$\sin(\frac{2\pi}{3})=\frac{\sqrt{3}}{2}$&apos;,
+         xy=(t, np.sin(t)), xycoords=&apos;data&apos;,
+         xytext=(+10, +30), textcoords=&apos;offset points&apos;, fontsize=16,
+         arrowprops=dict(arrowstyle=&quot;-&gt;&quot;, connectionstyle=&quot;arc3,rad=.2&quot;))
+
+plot([t,t],[0,np.sin(t)], color =&apos;red&apos;, linewidth=2.5, linestyle=&quot;--&quot;)
+scatter([t,],[np.sin(t),], 50, color =&apos;red&apos;)
+
+annotate(r&apos;$\cos(\frac{2\pi}{3})=-\frac{1}{2}$&apos;,
+         xy=(t, np.cos(t)), xycoords=&apos;data&apos;,
+         xytext=(-90, -50), textcoords=&apos;offset points&apos;, fontsize=16,
+         arrowprops=dict(arrowstyle=&quot;-&gt;&quot;, connectionstyle=&quot;arc3,rad=.2&quot;))
+...
+</code></pre><p><img src="/images/next/plt9.png" alt="">  </p>
+<h3 id="第十步：魔鬼在于细节"><a href="#第十步：魔鬼在于细节" class="headerlink" title="第十步：魔鬼在于细节"></a>第十步：魔鬼在于细节</h3><p>从上幅图中可以看出，整个图示已经够美观了，但是仔细一看，却发现线压字了，所以我们需要把字凸显出来，让线隐没下去。希望我们在这方面能够向处女座的人多学学。^_^  </p>
+<pre><code>...
+for label in ax.get_xticklabels() + ax.get_yticklabels():
+    label.set_fontsize(16)
+    label.set_bbox(dict(facecolor=&apos;white&apos;, edgecolor=&apos;None&apos;, alpha=0.65 ))
+...
+</code></pre><p><img src="/images/next/plt10.png" alt="">  </p>
+<p>OK，到这里为止，10步就把一个图完完整整表现出来了，原作者写这个入门手册也就是为了抛砖引玉，后面怎么举一反三就靠自己了，更多的图例可以看原手册，这里不做过多描述。另外，<a href="http://matplotlib.org/gallery.html" target="_blank" rel="noopener">matplotlib gallery</a>有很多精美的图示，点开就可以看见源码，我们以后如果遇到相关图示，可以做一个简单的参考。还有邮件列表，<a href="https://lists.sourceforge.net/lists/listinfo/matplotlib-users" target="_blank" rel="noopener">user mailing</a>。下面看看画图中常用的线的风格、标志符号和颜色值的表示。<br><strong>line style or marker:</strong>  </p>
+<p><img src="/images/next/lines.PNG" alt="">  </p>
+<p><strong>color</strong><br>标准的颜色值共有8种，如下：  </p>
+<p><img src="/images/next/color.PNG" alt="">  </p>
+<p>但是指定颜色值的方式很灵活，《matplotlib for Python developer》中给出了四种方式：  </p>
+<ul>
+<li>用全名，如‘yellow’或缩写（缩写只有上表中的8种）</li>
+<li>十六进制表示，如紫色用#800080表示，更全的信息详见<a href="http://baike.baidu.com/view/644772.htm" target="_blank" rel="noopener">十六进制颜色码</a></li>
+<li>RGB或RGBA元组，如(1,0,1,1)，关于如何转换RGB颜色，我还没搞懂，如有知晓，请告知。</li>
+<li>灰度值表示，如’0.7’，只针对某一种颜色进行变换。</li>
+</ul>
+<p>OK，就记录到这里，更详尽的还请见<a href="http://www.loria.fr/~rougier/teaching/matplotlib/" target="_blank" rel="noopener">matplotlib tutorial</a>。此处有一个非常全的视频讲Numpy和matplotlib &gt;&gt;&gt;&gt; <a href="http://www.youtube.com/watch?v=3Fp1zn5ao2M&amp;feature=plcp" target="_blank" rel="noopener">introductory tutorial on Numpy and matplotlib</a></p>
+<p><strong>参考：</strong><br><a href="http://matplotlib.org/index.html" target="_blank" rel="noopener">matplotlib</a><br>matplotlib for Python developer</p>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2019-02-24T00:47:37+08:00" content="2019-02-24"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2019-02-24
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/Python/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Python</a></div> <div class="metatag tags"><a class="tag" href="/tags/matplotlib/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;matplotlib</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2014/09/30/life/About Time/" rel="prev" title="About Time ——让时间定格于当下">
+                                  
+                                      About Time ——让时间定格于当下
+                                  
+                                </a>
+                            </h4>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2014/09/24/tech/Numpy科学计算器/" rel="prev" title="Numpy——强大的科学计算器">
+                                    
+                                        Numpy——强大的科学计算器
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/Python/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Python</a> <a class="tag" href="/tags/Numpy/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Numpy</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="https://chambai.github.io/2014/10/01/tech/github/">Git的学习资源</a></li>
+            
+                <li><a href="https://chambai.github.io/2014/09/30/life/About Time/">About Time ——让时间定格于当下</a></li>
+            
+                <li><a href="https://chambai.github.io/2014/09/24/tech/Numpy科学计算器/">Numpy——强大的科学计算器</a></li>
+            
+                <li><a href="https://chambai.github.io/2014/09/23/tech/几个文件显示乱码的解决方法（大同小异）/">JabRef、Pycharm显示乱码的解决方法（大同小异）</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+        <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+        
+        
+        
+          
+            <section id="comments">
+              <div id="valine_container" class="valine_thread">
+                <i class="fas fa-spinner fa-spin fa-fw"></i>
+              </div>
+            </section>
+          
+        
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'matplotlib初探',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="material">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content material">
+    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content material">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：Linux云计算网络</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="material">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content material">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(6)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/科技互联/" href="/categories/科技互联/"><div class="name">科技互联</div><div class="badge">(4)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(3)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="material">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content material">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="material">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content material">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-text">Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步：Using-default"><span class="toc-text">第一步：Using default</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步：Instantiating-defaults"><span class="toc-text">第二步：Instantiating defaults</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三步：Changing-colors-and-line-widths"><span class="toc-text">第三步：Changing colors and line widths</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第四步：Setting-limits"><span class="toc-text">第四步：Setting limits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第五步：Setting-ticks"><span class="toc-text">第五步：Setting ticks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第六步：Setting-ticks-labels"><span class="toc-text">第六步：Setting ticks labels</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第七步：Moving-spines"><span class="toc-text">第七步：Moving spines</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第八步：adding-legend"><span class="toc-text">第八步：adding legend</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第九步：Annotate-some-points"><span class="toc-text">第九步：Annotate some points</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第十步：魔鬼在于细节"><span class="toc-text">第十步：魔鬼在于细节</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+    
+      
+      
+      
+        
+          <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+          
+            
+              <script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+            
+          
+          <script>
+          var GUEST_INFO = ['nick','mail','link'];
+          var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+            return GUEST_INFO.indexOf(item) > -1
+          });
+          var notify = 'false' == true;
+          var verify = 'false' == true;
+          var valine = new Valine();
+          valine.init({
+            el: '#valine_container',
+            notify: notify,
+            verify: verify,
+            guest_info: guest_info,
+            
+            appId: "YKimc4VTkSp7UMdEBOiXetqa-gzGzoHsz",
+            appKey: "swRaTvf3t6ihlCowdCVBNzVA",
+            placeholder: "快来评论吧~",
+            pageSize:'10',
+            avatar:'mp',
+            lang:'zh-cn',
+            highlight:''
+          })
+          </script>
+        
+      
+    
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

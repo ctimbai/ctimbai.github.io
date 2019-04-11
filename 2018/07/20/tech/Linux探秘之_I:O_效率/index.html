@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>Linux探秘之 I/O 效率 | 长亭的网志空间</title>
+  
+  
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="material"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header material">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          长亭的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">Linux探秘之 I/O 效率</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-07-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="文章来由"><a href="#文章来由" class="headerlink" title="文章来由"></a>文章来由</h3><hr>
+<p>最近看了《UNIX环境高级编程》，以前一些比较模糊的知识又清晰了一步，特别是前两章讲到不带缓冲的文件 I/O 和带缓冲的标准 I/O，对 read、write、fread、fwrite、printf 等等这些函数又有了新的认识。</p>
+<p>一个很大的感受是，我们很多时候开发都只注重上层逻辑，虽然一个项目接一个项目，看上去做了不少事，但是夜深人静掐指一想，究竟我们是否真正掌握了这些知识点，对于每一个知识点实现的机制我们是否能完整地说出来？这些东西最能体现一个人的基础知识是否扎实，我发现互联网公司的面试中最喜欢问这些基础知识，由一个很基本的函数层层递进引申出很多的问题。</p>
+<p>很多时候我们内心可能会很排斥，甚至不屑于这些基础知识，想着等用到的时候，再来查，现在专注上层逻辑就好了，这样有助于提升我的开发效率。这样的想法貌似也没什么错，但是往往这就是瓶颈的来源，程序员最可怕的就是遇到瓶颈了。因为瓶颈这个东西是很难意识到的，一味追求实践而放弃理论学习，很容易就遇到瓶颈。（个人见解，不喜勿喷）</p>
+<p>本文算是自己看完《UNIX 环境高级编程》文件 I/O 和标准 I/O 两章的读书笔记，文件 I/O 一章说不带缓冲，但后面又出现可带缓冲，搞得人有点晕，特意记下自己对此的理解。如果有什么不对的，欢迎指出，如果觉得本文对你有帮助，就动动手指推荐下，或者是粉我下，你的支持是我分享的最大动力。^_^</p>
+<h3 id="缓冲机制"><a href="#缓冲机制" class="headerlink" title="缓冲机制"></a>缓冲机制</h3><hr>
+<p>众所周知，CPU 和内存的数据交换要远大于磁盘，通过缓存机制，可以减少磁盘读写的次数，提高并发处理程序的效率，因此，缓存是一种提高任务存储和处理效率的有效方法。我们很多时候可以看到，缓存不仅在操作系统方面被采用，更是在 Web 技术、服务器端、分布式系统等领域发挥着及其重要的作用。</p>
+<p>从宏观上看，Linux 操作系统分为用户态和内核态，在处理 I/O 操作的时候，两者都提供了缓存。用户态的称为标准 I/O 缓存，也称为用户空间缓存，而内核态的称为缓冲区高速缓存，也叫页面高速缓存。既然都提供了缓存，那为什么这本书上却分不带 I/O 的缓存和带 I/O 的缓存，原因其实是“不带 I/O缓存”指的是用户空间中不为这些 I/O 操作设有缓冲，而内核是带缓冲的，这样来看，就不会糊涂了。</p>
+<h3 id="系统-I-O-和标准-I-O"><a href="#系统-I-O-和标准-I-O" class="headerlink" title="系统 I/O 和标准 I/O"></a>系统 I/O 和标准 I/O</h3><hr>
+<p>系统 I/O，又称文件 I/O，或是内核态 I/O，引用文件的方式是通过文件描述符 fd，一个文件对应一个文件描述符。一个文件描述符用一个非负整数表示，0、1、2 系统默认表示标准输入、标准输出、标准错误。</p>
+<p>某些 UNIX 系统规定了描述符的上限值 OPEN_MAX，这些常量都定义在头文件&lt;unistd.h&gt;中。当读或写一个文件时，使用 open 或 create 系统调用返回的文件描述符标识该文件，并将其作为参数传递给 read 或 write 系统调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">ssize_t read(int filedes, void *buf, size_t nbytes);</span><br><span class="line">ssize_t write(int filedes, const void *buf, size_t nbytes);</span><br></pre></td></tr></table></figure>
+<p>标准 I/O，又叫用户态 I/O，引用文件的方式则是通过文件流（stream），一般用 fopen 和 freopen 函数打开一个流，返回一个指向 FILE 对象的指针，其他函数如果要引用这个流，就将 FILE 指针作为参数传递。</p>
+<p>一个进程预定义了三个流，并且这三个流自动被进程使用，它们是标准输入流、标准输出流和标准出错流。这三个流和系统 I/O 所规定的三个文件描述符所引用的文件相同。</p>
+<p>当读或写一个文件时，不像系统 I/O，仅定义了 read 和 write 两个系统调用函数，标准 I/O 定义了多个函数，程序员可以根据自己的需求灵活使用。这些函数可以分为每次一个字符的 I/O，每次一行的 I/O 和直接 I/O（或者二进制 I/O、一次一个对象 I/O、面向记录的 I/O、面向结构的 I/O）。</p>
+<p><strong>1）每次一个字符的 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">int getc(FILE *fp) //-&gt; 宏</span><br><span class="line">int fgetc(FILE *fp) //-&gt; 函数</span><br><span class="line">int getchar(void) //等价于getc(stdin)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int putc(int c, FILE *fp)</span><br><span class="line">int fputc(int c, FILE *fp)</span><br><span class="line">int putchar(int c) //等效于putc(c, stdout)</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）每次一行 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">char *fgets(char *restrict buf, int n, FILE *restrict fp)</span><br><span class="line">char *gets(char *buf)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int fputs(cont char *restrict str, FILE *restrict fp)</span><br><span class="line">int puts(const char *str)</span><br></pre></td></tr></table></figure></p>
+<p><strong>3）直接I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br><span class="line">size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br></pre></td></tr></table></figure></p>
+<p>到此，我们大概了解了系统 I/O 和标准 I/O 引用文件的方法，以及一些常用的 I/O 函数。下面通过一个图来详细看下当用户调用一个 I/O 函数时，用户态和内核态的一个执行流程是什么样的，进一步了解缓存在 I/O 操作中的作用，以及用户态 I/O 和内核态 I/O 在执行效率上的区别。</p>
+<h3 id="I-O-操作的流程"><a href="#I-O-操作的流程" class="headerlink" title="I/O 操作的流程"></a>I/O 操作的流程</h3><hr>
+<center><img src="/images/linux/linuxio.png" alt=""></center>
+
+<p>如上图所示，用户进程空间和内核进程空间读写磁盘的操作都要经过缓冲区缓存，缓存的作用前面提到过，是为了减少磁盘读写的次数，提高 I/O 的效率。（来源于公众号：aLinux云计算网络，此处是防那些无脑SB抄袭，如影响阅读，还请大家见谅）当读写一个文件时，首先看系统 I/O 的操作流程。</p>
+<p><strong>1、系统I/O：</strong>  属于内核系统调用，没有涉及用户态的参与。以图中标号为例：</p>
+<p>③ 调用 write 函数向文件中写数据，buf 中存放的就是要写入的数据，如write(fd, ‘abc’, 3)。调用前需要先设置 BUFFSIZE。不同的 BUFFSIZE 会影响I/O 效率，后面再来说这个问题。</p>
+<p>⑤ 延迟写：当缓存区高速缓存满或者内核要重写缓冲区的时候，才将数据写入输出队列，等数据到队列首部的时候，才真正触发磁盘的写操作。</p>
+<p>⑥ 预读：当检测到正进行顺序读取时，内核就试图读入比应用程序所要求更多的数据，并假想应用程序很快就会读到这些数据。这样，当缓冲区没有数据时，能够快速填充下次要读取的数据。</p>
+<p>④ 调用 read 从缓冲区高速缓存读取所需数据到逻辑单元中进行处理。</p>
+<p>以上，就是系统 I/O 所涉及到的四步操作。</p>
+<p><strong>2、标准 I/O：</strong> 属于 ISO C 实现的标准库函数，调用的是底层的系统调用。</p>
+<p>① 将逻辑单元中的数据写入文件，根据需求，有三种函数类型可以调用，以fputc、fputs、fwrite 为例，这些函数不用人为去控制缓冲区的大小，而是系统自动申请的，当用户定义了相应的 I/O 函数之后，根据不同的缓存类型（是全缓冲、行缓冲还是无缓冲），系统自动调用 malloc 等函数申请缓冲区，即标准 I/O 缓存。</p>
+<p>③⑤ 当用户缓冲区满了之后，如系统 I/O 操作一般，此时调用 write 从标准I/O 缓存中复制数据到内核缓冲区，再写入磁盘。</p>
+<p>④⑥ 同系统 I/O 操作，从内核缓冲区调用 read 读入到用户缓冲区。</p>
+<p>② 同样有三种函数类型可以调用，以 fgetc、fgets、fread 为例，读入逻辑单元进行后续的处理。</p>
+<p>可见，标准 I/O 实现的机制就是基于系统 I/O，这样看来，标准 I/O 在效率上肯定不如系统 I/O，但事实是标准 I/O 与系统 I/O 相比并不慢很多，而且还有很多其他的优点，下面一一述说（本篇文章最重要的就是下一小节）。</p>
+<h3 id="I-O-效率"><a href="#I-O-效率" class="headerlink" title="I/O 效率"></a>I/O 效率</h3><hr>
+<center><img src="/images/linux/ioperf.jpg" alt=""></center>
+
+<p>从图中可以看出，系统 I/O 效率受限于 read、write 系统调用的次数，而系统调用次数又受限于内核缓冲区的大小，即 BUFFSIZE，通过设置不同的 BUFFSIZE，得到的系统 CPU 时间是不同的，其最小值出现在 BUFFSIZE=4096 处，原因是该测试所采用的是 Linux ext2 文件系统，其块长为 4096 字节，也即缓冲区所能申请到的最大缓冲区大小，我们把 4096 字节看做是本次最佳 I/O 长度。</p>
+<p>如果继续扩大缓冲区大小，对此时间几乎没有影响。所以，对于系统 I/O 操作，一个最大的问题就是：需要人为控制缓存的大小及最佳 I/O 长度的选择，另外就是系统调用与普通函数调用相比通常需要花费更多的时间，因为系统调用具体内核要执行这样的操作：1）内核捕获调用，2）检查系统调用参数的有效性，3）在用户空间和内核空间之间传输数据。</p>
+<p>因此，引入标准 I/O 的目的就是为了通过标准 I/O 缓存来避免 BUFFSIZE 选择不当而带来的频繁的系统调用。根据用户不同的需求，选择不同的 I/O 函数，然后根据不同的缓存类型，自动调用 malloc 等缓存分配函数分配合适的缓存，等分配的缓存满之后，再调用系统 I/O 从标准 I/O 缓存向内核缓存拷贝数据，这样就进一步减少了系统调用的次数。</p>
+<center><img src="/images/linux/ionum.png" alt=""></center>
+
+<p>但是不同的标准 I/O 函数，不同的缓存类型也会带来不同的效率。如上图，当选择系统最佳 I/O 长度，即 BUFFSIZE 的大小和文件系统的块长一致，可以得到最佳的时间。</p>
+<p>当选用标准 I/O 函数时，每次一个字符函数 fgetc、fputc 和每次一行函数 fgets、fputs 函数相比要花费较多的 CPU 时间，而每次单个字节调用系统 I/O 则花费更多的时间，如果是一个 100M 的文件，则要执行大概 2亿 次函数调用，也就引起 2亿 次系统调用（从用户缓冲区到内核缓冲区，再到磁盘），而 fgetc 版本也执行了 2亿 次函数调用，但只引起了大约 25222 次系统调用，所以，时间就大大减少了。</p>
+<p>综合以上，标准 I/O 函数虽然基于系统 I/O 实现，但很大程度上减少了系统调用的次数，而且不用人为关心缓冲区大小的选择，整体上提高了 I/O 的效率。另外，标准 I/O 提供了多种缓存类型，方便程序员根据不同的应用需求选择不同的缓存要求，提高了编程的灵活性，当选择无缓存时，就相当于直接调用系统 I/O。</p>
+<p>OK，大概的内容就以上这些，当然关于 I/O 操作这块还有很多需要注意的点，而且还有很多更加高级的 I/O 函数，这些在后面遇到再来做总结。最后，如果你觉得这篇文章对你有帮助就点赞转发支持下我吧，还是那句话，你的支持是我分享的最大动力。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2019-04-11T22:38:24+08:00" content="2019-04-11"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2019-04-11
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Linux</a></div> <div class="metatag tags"><a class="tag" href="/tags/I-O/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;I/O</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2018/08/15/tech/再谈云计算技能图谱/" rel="prev" title="再谈云计算技能图谱">
+                                  
+                                      再谈云计算技能图谱
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/云计算/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>云计算</a> <a class="tag" href="/tags/技能图谱/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>技能图谱</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2018/07/06/tech/Linux探秘之用户态与内核态/" rel="prev" title="Linux探秘之用户态与内核态">
+                                    
+                                        Linux探秘之用户态与内核态
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Linux</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="https://chambai.github.io/2018/08/23/tech/集群：孙悟空分身术/">集群：孙悟空分身术</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/08/15/tech/再谈云计算技能图谱/">再谈云计算技能图谱</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/07/06/tech/Linux探秘之用户态与内核态/">Linux探秘之用户态与内核态</a></li>
+            
+                <li><a href="https://chambai.github.io/2018/06/15/tech/一文掌握_Linux_性能分析之网络篇（续）/">一文掌握 Linux 性能分析之网络篇（续）</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+        <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+        
+        
+        
+          
+            <section id="comments">
+              <div id="valine_container" class="valine_thread">
+                <i class="fas fa-spinner fa-spin fa-fw"></i>
+              </div>
+            </section>
+          
+        
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: 'Linux探秘之 I/O 效率',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="material">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content material">
+    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content material">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：Linux云计算网络</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="material">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content material">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(6)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/科技互联/" href="/categories/科技互联/"><div class="name">科技互联</div><div class="badge">(4)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(3)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="material">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content material">
+      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="material">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content material">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#文章来由"><span class="toc-text">文章来由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓冲机制"><span class="toc-text">缓冲机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统-I-O-和标准-I-O"><span class="toc-text">系统 I/O 和标准 I/O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-操作的流程"><span class="toc-text">I/O 操作的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-效率"><span class="toc-text">I/O 效率</span></a></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+    
+      
+      
+      
+        
+          <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+          
+            
+              <script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+            
+          
+          <script>
+          var GUEST_INFO = ['nick','mail','link'];
+          var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+            return GUEST_INFO.indexOf(item) > -1
+          });
+          var notify = 'false' == true;
+          var verify = 'false' == true;
+          var valine = new Valine();
+          valine.init({
+            el: '#valine_container',
+            notify: notify,
+            verify: verify,
+            guest_info: guest_info,
+            
+            appId: "YKimc4VTkSp7UMdEBOiXetqa-gzGzoHsz",
+            appKey: "swRaTvf3t6ihlCowdCVBNzVA",
+            placeholder: "快来评论吧~",
+            pageSize:'10',
+            avatar:'mp',
+            lang:'zh-cn',
+            highlight:''
+          })
+          </script>
+        
+      
+    
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
