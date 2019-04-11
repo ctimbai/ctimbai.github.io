@@ -166,6 +166,127 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2018/01/21/tech/用户空间网络提升_NFV_的性能/">
+              
+                  用户空间网络提升 NFV 的性能
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-21
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/NFV/">NFV</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">本文是一篇翻译，翻译自：</span><br><span class="line">https://software.intel.com/en-us/blogs/2015/06/12/user-space-networking-fuels-nfv-performance，文章有点老了，15年写的，但是文章总结了一些用户态的协议栈，很有学习参考的意义。</span><br></pre></td></tr></table></figure>
+<h3 id="用户态协议栈"><a href="#用户态协议栈" class="headerlink" title="用户态协议栈"></a>用户态协议栈</h3><hr>
+<p>如今，作为一个网络空间的软件开发人员是非常激动人心的，因为工程师的角色随着这个世界的规则在逐渐发生改变。</p>
+<p>过去这 15 年来，人们对高性能网络做了很多努力，网络模型也发生了很多改变，起初，数据包的收发都要推送到内核才能完成，现在，不用内核态的参与也可以完成。这种改变的背后主要是在解决以下的几个问题：1）用户态和内核态上下文切换的开销；2）软硬中断的开销；3）数据拷贝的开销等等。</p>
+<center><img src="/images/sdn/mtcp.jpg" alt=""></center>
+
+<p>最近，很多人在讨论 mTCP——一个实现了用户态协议栈的开源库，这种技术在很大程度上就颠覆了传统的网络模型，使得网络收发包的效率大大提升。它充分利用了 CPU 的亲和性，共享内存，批处理等技术来实现高效的 I/O 事件。与之类似的技术也相继被提出。</p>
+<p>实验表明，mTCP 这种用户态协议栈，相较原生的内核协议栈，在处理多种流行的应用时的性能得到较大提升，如 SSLShader 提升了 33%，lighttpd 提升了 320%。</p>
+<center><img src="/images/sdn/user_tcp_stack.png" alt=""></center>
+
+<p>软件形态的改变离不开硬件的革新。由以前的单核系统到如今多核系统的性能扩展，直接导致了网络软件架构的改变。例如，以前内核所做的所有功能和处理，包括网络驱动程序，现在都可以被直接放到用户空间中来实现，应用程序可以直接访问底层的 NUMA 结构，利用 CPU 的亲和性，以及多核特性并行处理任务。这种设计避免了上下文之间的切换开销，可以显著降低数据传输的延迟和 CPU 使用，同时提高吞吐量和带宽。另外，提供一种运行到完成（run-to-completion）的模型能够让不同的核独立并行地完成不同的任务。</p>
+<p>随着网络的发展，我们现在看到了大量的开源项目，都在将内核协议栈移到用户空间来做。它们的做法存在一些区别，像 mTCP，它的协议栈是从零开始开发的，而其他很多项目则是基于 FreeBSD 的来做，这主要是因为 FreeBSD 的协议栈具有 “最健壮的网络协议栈的声誉”，此外，很多存储解决方案也是采用的 FreeBSD 来作为其核心操作系统。当然，Linux 协议栈也是可以采用的。</p>
+<p>这些用户态协议栈怎么做到绕过内核的，这就离不开 DPDK 的支持。利用 DPDK，用户态协议栈可以创建一个中断来将数据包从 NIC 的缓冲区直接映射到用户空间，然后利用协议栈的特性来管理 TCP/IP 数据包的处理和传输。</p>
+<p>DPDK 还可以作为一些 vSwitch（虚拟交换机）的加速器，这些 vSwitch 包含 OpenFlow 协议的完整实现，以及与 OpenStack Neutron 的整合。</p>
+<p>下面，我们收集了一些发现的开源项目，无论你决定使用一个 vSwitch 还是一个完整的网络协议栈，网络开发人员都有很多选择，可以将应用程序移到用户空间，并在多核系统上扩展性能。</p>
+<h4 id="DPDK-Enabled-vSwitch："><a href="#DPDK-Enabled-vSwitch：" class="headerlink" title="DPDK-Enabled vSwitch："></a>DPDK-Enabled vSwitch：</h4><hr>
+<p><strong>OVS</strong>      </p>
+<p>Open vSwitch 是一个多核虚拟交换机平台，支持标准的管理接口和开放可扩展的可编程接口，支持第三方的控制接入。<br><a href="https://github.com/openvswitch/ovs" target="_blank" rel="noopener">https://github.com/openvswitch/ovs</a></p>
+<p><strong>Lagopus</strong></p>
+<p>Lagopus 是另一个多核虚拟交换的实现，功能和 OVS 差不多，支持多种网络协议，如 Ethernet，VLAN，QinQ，MAC-in-MAC，MPLS 和 PBB，以及隧道协议，如 GRE，VxLan 和 GTP。<br><a href="https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md" target="_blank" rel="noopener">https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md</a></p>
+<p><strong>Snabb</strong></p>
+<p>Snabb 是一个简单且快速的数据包处理工具箱。<br><a href="https://github.com/SnabbCo/snabbswitch/blob/master/README.md" target="_blank" rel="noopener">https://github.com/SnabbCo/snabbswitch/blob/master/README.md</a></p>
+<p><strong>xDPd</strong></p>
+<p>xDPd 是一个多平台，多 OpenFlow 版本支持的开源 datapath，主要专注在性能和可扩展性上。<br><a href="https://github.com/bisdn/xdpd/blob/stable/README" target="_blank" rel="noopener">https://github.com/bisdn/xdpd/blob/stable/README</a></p>
+<h4 id="从零开发的用户空间协议栈套件"><a href="#从零开发的用户空间协议栈套件" class="headerlink" title="从零开发的用户空间协议栈套件"></a>从零开发的用户空间协议栈套件</h4><hr>
+<p><strong>mTCP</strong></p>
+<p>mTCP 是一个针对多核系统的高可扩展性的用户空间 TCP/IP 协议栈。<br><a href="https://github.com/eunyoung14/mtcp/blob/master/README" target="_blank" rel="noopener">https://github.com/eunyoung14/mtcp/blob/master/README</a></p>
+<p><strong>Mirage-Tcpip</strong></p>
+<p>mirage-tcpip 是一个针对 MirageOS 这种 “库操作系统” 而开发的一个用户态网络协议栈，开发的语言是 OCaml。<br><a href="https://github.com/mirage/mirage-tcpip" target="_blank" rel="noopener">https://github.com/mirage/mirage-tcpip</a></p>
+<p><strong>IwIP</strong></p>
+<p>IwIP 针对 RAM 平台的精简版的 TCP/IP 协议栈实现。<br><a href="http://git.savannah.gnu.org/cgit/lwip.git/tree/README" target="_blank" rel="noopener">http://git.savannah.gnu.org/cgit/lwip.git/tree/README</a></p>
+<h4 id="移植版的用户空间协议栈套件"><a href="#移植版的用户空间协议栈套件" class="headerlink" title="移植版的用户空间协议栈套件"></a>移植版的用户空间协议栈套件</h4><hr>
+<p><strong>Arrakis</strong>  </p>
+<p>针对多核系统的用户空间 OS，移植于 IwIP。<br><a href="https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS" target="_blank" rel="noopener">https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS</a></p>
+<p><strong>libuinet</strong></p>
+<p>用户空间的 TCP/IP 协议栈，移植于 FreeBSD。<br><a href="https://github.com/pkelsey/libuinet/blob/master/README" target="_blank" rel="noopener">https://github.com/pkelsey/libuinet/blob/master/README</a></p>
+<p><strong>NUSE (libos)</strong>  </p>
+<p>一个基于 Linux 的库操作系统，移植于 Linux。<br><a href="https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start" target="_blank" rel="noopener">https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start</a></p>
+<p><strong>OpenDP</strong> </p>
+<p>一个针对 DPDK TCP/IP 协议栈的数据面，移植于 FreeBSD。<br><a href="https://github.com/opendp/dpdk-odp/wiki" target="_blank" rel="noopener">https://github.com/opendp/dpdk-odp/wiki</a></p>
+<p><strong>OpenOnload</strong></p>
+<p>一个高性能的用户态协议栈，移植于 IwIP。<br><a href="http://www.openonload.org/download/openonload-201205-README.txt" target="_blank" rel="noopener">http://www.openonload.org/download/openonload-201205-README.txt</a></p>
+<p><strong>OSv</strong>  </p>
+<p>一个针对虚拟机的开源操作系统。移植于 FreeBSD。<br><a href="https://github.com/cloudius-systems/osv/blob/master/README.md" target="_blank" rel="noopener">https://github.com/cloudius-systems/osv/blob/master/README.md</a></p>
+<p><strong>Sandstorm</strong>  </p>
+<p>一个针对个人服务器安全的开源网络平台，移植于 FreeBSD。<br><a href="https://github.com/sandstorm-io/sandstorm/blob/master/README.md" target="_blank" rel="noopener">https://github.com/sandstorm-io/sandstorm/blob/master/README.md</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>1、这篇文字的亮点在于总结了当前阶段业界出现的一些用户空间协议栈，对于文章标题提到的 NFV 在文中则只字未提，但其实意思也很明了了。用户空间的协议栈是随着硬件技术的发展，以及新鲜应用场景应运而生的，换句话说，对于像 NFV 这种对性能要求比较高的场景，采用用户态的协议栈是比较合适的。</p>
+<p>2、文中是 2015 年写的，这意味着到现在为止，肯定出现了很多比上面总结还要多的方案，其中比较出名的有 SeaStar 和 腾讯开源的 F-Stack，后面找机会再进行详述，敬请期待吧。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
+                
+                    <a href="/tags/mTCP/"><i class="fas fa-hashtag fa-fw"></i>mTCP</a>
+                
+                    <a href="/tags/NFV/"><i class="fas fa-hashtag fa-fw"></i>NFV</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2018/01/12/tech/Linux_网络体系结构全景分析/">
               
                   Linux 网络体系结构全景分析
@@ -1191,121 +1312,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/27/tech/内存虚拟化/">
-              
-                  内存虚拟化
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-27
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><hr>
-<p>我们知道，早期的计算机内存，只有物理内存，而且空间是极其有限的，每个应用或进程在使用内存时都得小心翼翼，不能覆盖别的进程的内存区。</p>
-<p>为了避免这些问题，就提出了虚拟内存的概念，其抽象了物理内存，相当于对物理内存进行了虚拟化，保证每个进程都被赋予一块连续的，超大的（根据系统结构来定，32 位系统寻址空间为 2^32，64 位系统为 2^64）虚拟内存空间，进程可以毫无顾忌地使用内存，不用担心申请内存会和别的进程冲突，因为底层有机制帮忙处理这种冲突，能够将虚拟地址根据一个页表映射成相应的物理地址。</p>
-<p>这种机制正是虚拟化软件做的事，也就是 MMU 内存管理单元。</p>
-<center><img src="/images/virt/mem_virt.png" alt=""></center>
-
-<p>本文要说的不是这种虚拟内存，而是基于虚拟机的内存虚拟化，它们本质上是一样的，通过对虚拟内存的理解，再去理解内存虚拟化就比较容易了。</p>
-<p>结合前面的文章，我们知道，虚拟化分为软件虚拟化和硬件虚拟化，而且遵循 intercept 和 virtualize 的规律。</p>
-<p>内存虚拟化也分为基于软件的内存虚拟化和硬件辅助的内存虚拟化，其中，常用的基于软件的内存虚拟化技术为「影子页表」技术，硬件辅助内存虚拟化技术为 Intel 的 EPT（Extend Page Table，扩展页表）技术。</p>
-<p>为了讲清楚这两门技术，我们从简易到复杂，循序渐进，逐步揭开其神秘面纱。</p>
-<h3 id="常规软件内存虚拟化"><a href="#常规软件内存虚拟化" class="headerlink" title="常规软件内存虚拟化"></a>常规软件内存虚拟化</h3><hr>
-<p>虚拟机本质上是 Host 机上的一个进程，按理说应该可以使用 Host 机的虚拟地址空间，但由于在虚拟化模式下，虚拟机处于非 Root 模式，无法直接访问 Root 模式下的 Host 机上的内存。</p>
-<p>这个时候就需要 VMM 的介入，VMM 需要 intercept （截获）虚拟机的内存访问指令，然后 virtualize（模拟）Host 上的内存，相当于 VMM 在虚拟机的虚拟地址空间和 Host 机的虚拟地址空间中间增加了一层，即虚拟机的物理地址空间，也可以看作是 Qemu 的虚拟地址空间（稍微有点绕，但记住一点，虚拟机是由 Qemu 模拟生成的就比较清楚了）。</p>
-<p>所以，内存软件虚拟化的目标就是要将虚拟机的虚拟地址（Guest Virtual Address, GVA）转化为 Host 的物理地址（Host Physical Address, HPA），中间要经过虚拟机的物理地址（Guest Physical Address, GPA）和 Host 虚拟地址（Host Virtual Address）的转化，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GVA -&gt; GPA -&gt; HVA -&gt; HPA</span><br></pre></td></tr></table></figure></p>
-<p>其中前两步由虚拟机的系统页表完成，中间两步由 VMM 定义的映射表（由数据结构 kvm_memory_slot 记录）完成，它可以将连续的虚拟机物理地址映射成非连续的 Host 机虚拟地址，后面两步则由 Host 机的系统页表完成。如下图所示。</p>
-<center><img src="/images/virt/mem_shadow.png" alt=""></center>
-
-<p>这样做得目的有两个：</p>
-<ol>
-<li><p>提供给虚拟机一个从零开始的连续的物理内存空间。</p>
-</li>
-<li><p>在各虚拟机之间有效隔离、调度以及共享内存资源。</p>
-</li>
-</ol>
-<h3 id="影子页表技术"><a href="#影子页表技术" class="headerlink" title="影子页表技术"></a>影子页表技术</h3><hr>
-<p>接上图，我们可以看到，传统的内存虚拟化方式，虚拟机的每次内存访问都需要 VMM 介入，并由软件进行多次地址转换，其效率是非常低的。因此才有了影子页表技术和 EPT 技术。</p>
-<p>影子页表简化了地址转换的过程，实现了 Guest 虚拟地址空间到 Host 物理地址空间的直接映射。</p>
-<p>要实现这样的映射，必须为 Guest 的系统页表设计一套对应的影子页表，然后将影子页表装入 Host 的 MMU 中，这样当 Guest 访问 Host 内存时，就可以根据 MMU 中的影子页表映射关系，完成 GVA 到 HPA 的直接映射。而维护这套影子页表的工作则由 VMM 来完成。</p>
-<p>由于 Guest 中的每个进程都有自己的虚拟地址空间，这就意味着 VMM 要为 Guest 中的每个进程页表都维护一套对应的影子页表，当 Guest 进程访问内存时，才将该进程的影子页表装入 Host 的 MMU 中，完成地址转换。</p>
-<p>我们也看到，这种方式虽然减少了地址转换的次数，但本质上还是纯软件实现的，效率还是不高，而且 VMM 承担了太多影子页表的维护工作，设计不好。</p>
-<p>为了改善这个问题，就提出了基于硬件的内存虚拟化方式，将这些繁琐的工作都交给硬件来完成，从而大大提高了效率。</p>
-<h3 id="EPT-技术"><a href="#EPT-技术" class="headerlink" title="EPT 技术"></a>EPT 技术</h3><hr>
-<p>这方面 Intel 和 AMD 走在了最前面，Intel 的 EPT 和 AMD 的 NPT 是硬件辅助内存虚拟化的代表，两者在原理上类似，本文重点介绍一下 EPT 技术。</p>
-<p>如下图是 EPT 的基本原理图示，EPT 在原有 CR3 页表地址映射的基础上，引入了 EPT 页表来实现另一层映射，这样，GVA-&gt;GPA-&gt;HPA 的两次地址转换都由硬件来完成。</p>
-<center><img src="/images/virt/ept.png" alt=""></center>
-
-<p>这里举一个小例子来说明整个地址转换的过程。假设现在 Guest 中某个进程需要访问内存，CPU 首先会访问 Guest 中的 CR3 页表来完成 GVA 到 GPA 的转换，如果 GPA 不为空，则 CPU 接着通过 EPT 页表来实现 GPA 到 HPA 的转换（实际上，CPU 会首先查看硬件 EPT TLB 或者缓存，如果没有对应的转换，才会进一步查看 EPT 页表），如果 HPA 为空呢，则 CPU 会抛出 EPT Violation 异常由 VMM 来处理。</p>
-<p>如果 GPA 地址为空，即缺页，则 CPU 产生缺页异常，注意，这里，如果是软件实现的方式，则会产生 VM-exit，但是硬件实现方式，并不会发生 VM-exit，而是按照一般的缺页中断处理，这种情况下，也就是交给 Guest 内核的中断处理程序处理。</p>
-<p>在中断处理程序中会产生 EXIT_REASON_EPT_VIOLATION，Guest  退出，VMM 截获到该异常后，分配物理地址并建立 GVA 到 HPA 的映射，并保存到 EPT 中，这样在下次访问的时候就可以完成从 GVA 到 HPA 的转换了。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>内存虚拟化经历从虚拟内存，到传统软件辅助虚拟化，影子页表，再到硬件辅助虚拟化，EPT 技术的进化，效率越来越高。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/内存/"><i class="fas fa-hashtag fa-fw"></i>内存</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -1420,7 +1426,7 @@
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
         
@@ -1458,7 +1464,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.67px; color: #8e8e8e">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.5px; color: #888">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.83px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.67px; color: #8e8e8e">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.67px; color: #6c6c6c">Docker</a> <a href="/tags/I-O/" style="font-size: 16.5px; color: #888">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19px; color: #777">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.17px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.83px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 22.33px; color: #606060">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.67px; color: #8e8e8e">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.83px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.5px; color: #888">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.83px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.83px; color: #717171">Python</a> <a href="/tags/Qemu/" style="font-size: 18.17px; color: #7d7d7d">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.67px; color: #8e8e8e">git</a> <a href="/tags/github/" style="font-size: 14.83px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.83px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.83px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.83px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.83px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.67px; color: #6c6c6c">容器</a> <a href="/tags/容器网络/" style="font-size: 17.33px; color: #828282">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.17px; color: #7d7d7d">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.83px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 21.5px; color: #666">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.67px; color: #8e8e8e">老罗</a> <a href="/tags/虚拟化/" style="font-size: 22.33px; color: #606060">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.83px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.83px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.67px; color: #8e8e8e">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.67px; color: #8e8e8e">雾计算</a>
     </div>
   </section>
 

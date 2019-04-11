@@ -170,6 +170,106 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2018/04/06/tech/Docker_容器网络之单主机网络/">
+              
+                  Docker 容器网络之单主机网络
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-06
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>当容器逐步向容器集群，容器云技术演进的时候，一个不得不面对的问题就是各个容器的管理问题，有些容器需要交互，有些容器需要隔离，如何保证这些操作能够顺利地进行，这个时候，很多容器管理和编排的平台就应运而生了。首先，当然是 Docker 社区自己开发的 Swarm+Machine+Compose 的集群管理套件，然后还有 Twitter 主推 Apache 的 Mesos，最有名的应该为 Google 开源的 Kubernetes。</p>
+<p>这些平台综合了容器集群资源管理，服务发现和扩容缩融等问题，是一个集大成的解决方案，但其实这些问题本质上都离不开网络，资源在各容器之间调度需要网络，服务发现需要网络，所以，可以说网络是容器集群环境下最基础的一环。</p>
+<p>Docker 容器网络根据容器的部署位置，可以分为单主机网络（host）和多主机网络（multi-host），本文先看 Docker host 网络。</p>
+<p>Docker host 网络分为 none，host，joined container 和 bridge 网络。</p>
+<p>none 网络模式下，Docker 容器拥有自己的 network namespace，但是并不为容器进行任何的网络配置，也就是说容器除了 network namespace 本身自带的 localback 网卡外什么都没有，包括网卡、IP、路由等信息。用户如何要使用 none 网络，就需要自己添加特定的网卡，并配置 IP、路由等信息，但一般不会这么干，none 网络很好地做到了隔离，一般是用来跑那些对安全性要求极高且不需要联网的应用。</p>
+<p>比如某个容器的唯一用途是生成随机密码，就可以放到 none 网络中避免密码被窃取。</p>
+<p>想要使 Docker 使用 none 网络，只需要在创建容器的时候附带 –network = none 即可。</p>
+<p>host 网络，顾名思义就是 Docker 容器使用宿主机的网络，相当于和 host 共用了同一个 network namespace，Docker 容器使用 host 的网卡、IP 和路由等功能对外通信。</p>
+<p>虽然这种模式下 Docker 没有创建独立的 network namespace，但其他 namespace 仍然是隔离的，如文件系统、进程列表等。host 网络最大的好处就是使得 Docker 容器对外通信变得简单，直接使用 host 的 IP 进行通信即可，但缺点也很明显，就是降低了隔离性，同时还会存在和其他容器对网络资源的竞争与冲突的问题。</p>
+<p>同样要使用 host 网络，只需创建容器时附带 –network = host 即可。</p>
+<center><img src="/images/docker/net_host.png" alt=""></center>
+
+<p>joined container 网络和 host 网络不同的是，它是和其他的 container 共享一个 network namespace，一个 network namespace 可以被一个或者多个 Docker 容器共享。在这种模式下，两个容器之间可以通过 localback 回环网卡通信，增加了容器间通信的便利性。</p>
+<p>同样可以在创建容器时，使用参数 –network = container:another_container_name 来和另外容器共享网络。</p>
+<center><img src="/images/docker/net_con.png" alt=""></center>
+
+<p>bridge 网络是最常用的网络模式，它兼顾了安全性和功能的完备性，但其与外部通信要通过 NAT 转换，在复杂的网络场景下会存在诸多不便。</p>
+<p>bridge 网络在创建的时候通过 –network = bridge 指定，Docker daemon 会为创建的容器自动创建一个 Docker 网桥——docker0（也可以人为指定名称 –driver bridge my_net），这个 docker0 就用来联结 Docker 容器和 host 的桥梁。</p>
+<p>然后，Docker daemon 会创建一对虚拟网卡 veth pair，一块网卡留在宿主机的 root network namespace 中，并绑定到 docker0 上，另一块放在新创建的 network namespace 中，命名为 eth0，并为其配置 IP 和路由，将其网关设为 docker0，如下，这样整个容器的 bridge 网络通信环境就建立起来了，其他容器的建立方式也是如此，最终各容器之间就通过 docker0 这个桥梁互联互通了。</p>
+<center><img src="/images/docker/net_bridge.jpg" alt=""></center>
+
+<p>下文将讨论更为复杂的 multi-host 网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2018/03/28/tech/Docker_基础技术之_Linux_cgroups_详解/">
               
                   Docker 基础技术之 Linux cgroups 详解
@@ -1219,124 +1319,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/17/tech/从_Bridge_到_OVS，探索虚拟交换机/">
-              
-                  从 Bridge 到 OVS，探索虚拟交换机
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-17
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/OVS/">OVS</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>和物理网络一样，虚拟网络要通信，必须借助一些交换设备来转发数据。因此，对于网络虚拟化来说，交换设备的虚拟化是很关键的一环。</p>
-<p>上文「网络虚拟化」已经大致介绍了 Linux 内核为了满足网络虚拟化的要求，实现了一套虚拟交换设备——Bridge。本文重点介绍下 Bridge 的加强版——Open vSwitch（OVS），并从 Bridge 过渡到 OVS 的缘由讲起，让大家有个全面的认识。</p>
-<p>借助 Linux Bridge 功能，同主机或跨主机的虚拟机之间能够轻松实现通信，也能够让虚拟机访问到外网，这就是我们所熟知的桥接模式，一般在装 VMware 虚拟机或者 VirtualBox 虚拟机的时候，都会提示我们要选择哪种模式，常用的两种模式是桥接和 NAT。</p>
-<p>NAT 也很好理解，可以简单理解为当虚拟机启用了 NAT 模式之后，宿主机便通过 DHCP 为其生成可以访问外网的 IP，当 VM 访问外网的时候，就可以用该 IP 访问，其实就是宿主机为其做了地址转换。更详细的内容请自行搜索了解。</p>
-<p>物理交换机有个重要的功能，就是虚拟局域网（VLAN），是对局域网（LAN）的软件化升级。一般，两台计算机通过一台交换机连接在一起就构成了一个 LAN。</p>
-<p>一个 LAN 表示一个广播域，这意味着这个 LAN 中的任何节点发的数据包，其他节点都能收到，这有两个问题，一个是容易形成广播风暴，造成网络拥塞，另一个是广播包无法隔离，比如节点 B 不想接收节点 A 的包，但节点 A 强行要发，这就有点说不过去了。</p>
-<p>解决这个问题的方案就是 VLAN，VLAN 能够对广播包进行有效隔离，它的做法是从软件上将交换机的端口虚拟出多个子端口，用 tag 来标记，相当于将交换机的端口划分多个 LAN，同一个 LAN 中的节点发出的数据包打上本 LAN 的 tag，这样，其他 LAN 中的节点就无法收到包，达到隔离的目的。</p>
-<p>Bridge 本身是支持 VLAN 功能的，如下图所示，通过配置，Bridge 可以将一个物理网卡设备 eth0 划分成两个子设备 eth0.10，eth0.20，分别挂到 Bridge 虚拟出的两个 VLAN 上，VLAN id 分别为 VLAN 10 和 VLAN 20。同样，两个 VM 的虚拟网卡设备 vnet0 和 vnet 1 也分别挂到相应的 VLAN 上。这样配好的最终效果就是 VM1 不能和 VM2 通信了，达到了隔离。</p>
-<center><img src="/images/virt/net_vlan.png" alt=""></center>
-
-<p>Linux Bridge + VLAN 便可以构成一个和物理交换机具备相同功能的虚拟交换机了。对于网络虚拟化来说，Bridge 已经能够很好地充当交换设备的角色了。</p>
-<p>但是为什么还有很多厂商都在做自己的虚拟交换机，比如比较流行的有 VMware virtual switch、Cisco Nexus 1000V，以及 Open vSwitch。究其原因，主要有以下几点（我们重点关注 OVS）：</p>
-<p><strong>1）</strong> 方便网络管理与监控。OVS 的引入，可以方便管理员对整套云环境中的网络状态和数据流量进行监控，比如可以分析网络中流淌的数据包是来自哪个 VM、哪个 OS 及哪个用户，这些都可以借助 OVS 提供的工具来达到。</p>
-<p><strong>2）</strong> 加速数据包的寻路与转发。相比 Bridge 单纯的基于 MAC 地址学习的转发规则，OVS 引入流缓存的机制，可以加快数据包的转发效率。</p>
-<p><strong>3）</strong> 基于 SDN 控制面与数据面分离的思想。上面两点其实都跟这一点有关，OVS 控制面负责流表的学习与下发，具体的转发动作则有数据面来完成。可扩展性强。</p>
-<p><strong>4）</strong> 隧道协议支持。Bridge 只支持 VxLAN，OVS 支持 gre/vxlan/IPsec 等。</p>
-<p><strong>5）</strong> 适用于 Xen、KVM、VirtualBox、VMware 等多种 Hypervisors。</p>
-<p>……</p>
-<p>除此之外，OVS 还有很多高级特性，详情可以查阅官网自行了解。</p>
-<p>下面简单看下 OVS 的整体架构，如下图所示，OVS 在 Linux 用户态和内核态都实现了相应的模块，用户态主要组件有数据库服务 ovsdb-server 和守护进程 ovs-vswitchd。内核态中实现了 datapath 模块。</p>
-<center><img src="/images/virt/ovs_path.jpg" alt=""></center>
-
-<p>其中， ovs-vswitchd 和 datapath 共同构成了 OVS 的数据面，控制面由 controller 模块来完成，controller 一般表示的是 OpenFlow 控制器，在 OVS 中，它可以借由第三方来完成，只要支持 OpenFlow 协议即可。</p>
-<p>这里额外提一点，很多的一些产品级的虚拟交换机都是自身集成了控制器，比如 Cisco 1000V 的 Virtual Supervisor Manager(VSM)，VMware 的分布式交换机中的 vCenter，而 OVS 是把这个事交由第三方去做，这么做的意义还是比较大的，可以让自己的产品很好地融入到各种解决方案中。</p>
-<h4 id="OpenFlow"><a href="#OpenFlow" class="headerlink" title="OpenFlow"></a><strong>OpenFlow</strong></h4><hr>
-<p>OpenFlow 是控制面和数据面通信的一套协议，我们常常把支持 OpenFlow 协议的交换机称为 OpenFlow 交换机，控制器称为 OpenFlow 控制器，业界比较知名的 OpenFlow 控制器有 OpenDaylight、ONOS 等。</p>
-<p>OpenFlow 是一个独立的完整的流表协议，不依赖于 OVS，OVS 只是支持 OpenFlow 协议，有了支持，就可以使用 OpenFlow 控制器来管理 OVS 中的流表。OpenFlow 不仅仅支持虚拟交换机，某些硬件交换机也支持 OpenFlow 协议。</p>
-<h4 id="ovs-vswitchd"><a href="#ovs-vswitchd" class="headerlink" title="ovs-vswitchd"></a><strong>ovs-vswitchd</strong></h4><hr>
-<p>ovs-vswitchd 是 OVS 的核心组件，它和内核模块 datapath 共同构成了 OVS 的数据面。它使用 OpenFlow 协议与 OpenFlow 控制器通信，使用 OVSDB 协议与 ovsdb-server 通信，使用 netlink 和 datapath 内核模块通信。</p>
-<h4 id="ovsdb-server"><a href="#ovsdb-server" class="headerlink" title="ovsdb-server"></a><strong>ovsdb-server</strong></h4><hr>
-<p>ovsdb-server 是 OVS 轻量级的数据库服务，用于整个 OVS 的配置信息，包括接口、交换内容、VLAN 等，ovs-vswitchd 根据这些配置信息工作。</p>
-<h4 id="OpenFlow-控制器"><a href="#OpenFlow-控制器" class="headerlink" title="OpenFlow 控制器"></a><strong>OpenFlow 控制器</strong></h4><hr>
-<p>OpenFlow 控制器可以通过 OpenFlow 协议连接到任何支持 OpenFlow 的交换机，比如 OVS 。控制器通过向交换机下发流表规则来控制数据流向。</p>
-<h4 id="Kernel-Datapath"><a href="#Kernel-Datapath" class="headerlink" title="Kernel Datapath"></a><strong>Kernel Datapath</strong></h4><hr>
-<p>datapath 内核模块和 ovs-vswitchd 是相互协作工作的，datapath 负责具体的收发包，而 ovs-vswitchd 通过 controller 下发的流表规则指导 datapath 如何转发包。</p>
-<p>举个例子，datapath 从主机物理网卡 NIC 或者 VM 的 虚拟网卡 vNIC 收到包，如果是第一次收到包，datapath 不知道怎么处理这个包，于是将其丢给  ovs-vswitchd ， ovs-vswitchd 决定该如何处理这个包之后又丢给 datapath，datapath 根据 ovs-vswitchd 的指示执行相应的动作，是丢弃还是从哪个口传出去。同时，ovs-vswitchd 会让 datapath 缓存好这个包的动作，下次再来就可以直接执行动作。</p>
-<p>如果不是第一次收到包，就是按照之前缓存好的动作执行，这样极大地提高了数据处理的速度。</p>
-<p>本文先对 OVS 有个初步印象，下文再详细介绍 OVS 的其他组件。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/OVS/"><i class="fas fa-hashtag fa-fw"></i>OVS</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
-                
-                    <a href="/tags/OpenFlow/"><i class="fas fa-hashtag fa-fw"></i>OpenFlow</a>
-                
-                    <a href="/tags/VLAN/"><i class="fas fa-hashtag fa-fw"></i>VLAN</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -1450,7 +1432,7 @@
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
         
@@ -1488,7 +1470,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.67px; color: #8e8e8e">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.5px; color: #888">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.83px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.67px; color: #8e8e8e">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.67px; color: #6c6c6c">Docker</a> <a href="/tags/I-O/" style="font-size: 16.5px; color: #888">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19px; color: #777">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.17px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.83px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 22.33px; color: #606060">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.67px; color: #8e8e8e">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.83px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.5px; color: #888">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.83px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.83px; color: #717171">Python</a> <a href="/tags/Qemu/" style="font-size: 18.17px; color: #7d7d7d">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.67px; color: #8e8e8e">git</a> <a href="/tags/github/" style="font-size: 14.83px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.83px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.83px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.83px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.83px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.67px; color: #6c6c6c">容器</a> <a href="/tags/容器网络/" style="font-size: 17.33px; color: #828282">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.17px; color: #7d7d7d">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.83px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 21.5px; color: #666">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.67px; color: #8e8e8e">老罗</a> <a href="/tags/虚拟化/" style="font-size: 22.33px; color: #606060">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.83px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.83px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.67px; color: #8e8e8e">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.67px; color: #8e8e8e">雾计算</a>
     </div>
   </section>
 

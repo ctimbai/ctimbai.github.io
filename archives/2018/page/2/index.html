@@ -171,6 +171,78 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2018/09/03/tech/Kubernetes_笔记_03_扫清概念/">
+              
+                  Kubernetes 笔记 03 扫清概念
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-03
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/k8s/5.jpg" alt=""></center>
+
+<p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第三篇。</p>
+<p>每一种技术，为了描述清楚它的设计理念，都会自定义一堆概念或术语。在进入一门技术的研究之前，我们有必要扫清它的基本概念。</p>
+        
+            <div class="readmore">
+                <a href="/2018/09/03/tech/Kubernetes_笔记_03_扫清概念/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2018/08/31/tech/Kubernetes_笔记_02_demo_初体验/">
               
                   Kubernetes 笔记 02 demo 初体验
@@ -1132,152 +1204,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/05/24/tech/一文掌握Linux性能分析之IO篇/">
-              
-                  一文掌握 Linux 性能分析之 IO 篇
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-24
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>这是 Linux 性能分析系列的第三篇。</p>
-<p>IO 和 存储密切相关，存储可以概括为磁盘，内存，缓存，三者读写的性能差距非常大，磁盘读写是毫秒级的（一般 0.1-10ms），内存读写是微妙级的（一般 0.1-10us），cache 是纳秒级的（一般 1-10ns）。但这也是牺牲其他特性为代价的，速度快的，价格越贵，容量也越小。</p>
-<p>IO 性能这块，我们更多关注的是读写磁盘的性能。首先，先了解下磁盘的基本信息。</p>
-<h3 id="磁盘基本信息"><a href="#磁盘基本信息" class="headerlink" title="磁盘基本信息"></a>磁盘基本信息</h3><hr>
-<h4 id="fdisk"><a href="#fdisk" class="headerlink" title="fdisk"></a><strong>fdisk</strong></h4><p>查看磁盘信息，包括磁盘容量，扇区大小，IO 大小等信息，常用 <code>fdisk -l</code>查看：</p>
-<center><img src="/images/linux/fdisk.jpg" alt=""></center>
-
-<p>可以看到 /dev/ 下有一个 40G 的硬盘，一共 8K 多万个扇区，每个扇区 512字节，IO 大小也是 512 字节。</p>
-<h4 id="df"><a href="#df" class="headerlink" title="df"></a><strong>df</strong></h4><p>查看磁盘使用情况，通常看磁盘使用率：</p>
-<center><img src="/images/linux/df.jpg" alt=""></center>
-
-
-<h3 id="磁盘性能分析"><a href="#磁盘性能分析" class="headerlink" title="磁盘性能分析"></a>磁盘性能分析</h3><hr>
-<p>主要分析磁盘的读写效率（IOPS：每秒读写的次数；吞吐量：每秒读写的数据量），IO 繁忙程度，及 IO 访问对 CPU 的消耗等性能指标。</p>
-<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a><strong>vmstat</strong></h4><p>第一个较为常用的还是这个万能的 vmstat：</p>
-<center><img src="/images/linux/vmstatio.jpg" alt=""></center>
-
-<p>对于 IO，我们常关注三个部分：</p>
-<ul>
-<li>b 值：表示因为 IO 阻塞排队的任务数</li>
-<li>bi 和 bo 值：表示每秒读写磁盘的块数，bi（block in）是写磁盘，bo（block out）是读磁盘。</li>
-<li>wa 值：表示因为 IO 等待（wait）而消耗的 CPU 比例。</li>
-</ul>
-<p>一般这几个值偏大，都意味着系统 IO 的消耗较大，对于读请求较大的服务器，b、bo、wa 的值偏大，而写请求较大的服务器，b、bi、wa 的值偏大。</p>
-<h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a><strong>iostat</strong></h4><p>vmstat 虽然万能，但是它分析的东西有限，iostat 是专业分析 IO 性能的工具，可以方便查看 CPU、网卡、tty 设备、磁盘、CD-ROM 等等设备的信息，非常强大，总结下来，共有以下几种用法：</p>
-<p><strong>1）iostat -c 查看部分 CPU 使用情况：</strong></p>
-<center><img src="/images/linux/iostat.png" alt=""></center>
-
-<p>这里显示的是多个 CPU 的平均值，每个字段的含义我就不多解释了，我一般会重点关注 %iowait 和 %idle，分别表示 CPU 等待 IO 完成时间的百分比和 CPU 空闲时间百分比。</p>
-<p>如果 %iowait 较高，则表明磁盘存在 IO 瓶颈，如果 %idle 较高，则 CPU 比较空闲，如果两个值都比较高，则有可能 CPU 在等待分配内存，瓶颈在内存，此时应该加大内存，如果 %idle 较低，则此时瓶颈在 CPU，应该增加 CPU 资源。</p>
-<p><strong>2）iostat -d 查看磁盘使用情况，主要是显示 IOPS 和吞吐量信息</strong>（-k : 以 KB 为单位显示，-m：以 M 为单位显示）：</p>
-<center><img src="/images/linux/iostatd.png" alt=""></center>
-
-<p>其中，几个参数分别解释如下：</p>
-<ul>
-<li>tps：设备每秒的传输次数（transfers per second），也就是读写次数。</li>
-<li>kB_read/s 和 kB_wrtn/s：每秒读写磁盘的数据量。</li>
-<li>kB_read 和 kB_wrtn：读取磁盘的数据总量。</li>
-</ul>
-<p><strong>3）iostat -x 查看磁盘详细信息：</strong></p>
-<center><img src="/images/linux/iostatx.jpg" alt=""></center>
-
-<p>其中，几个参数解释如下；</p>
-<ul>
-<li>rrqm/s 和 wrqm/s：分别每秒进行合并的读操作数和写操作数，这是什么意思呢，合并就是说把多次 IO 请求合并成少量的几次，这样可以减小 IO 开销，buffer 存在的意义就是为了解决这个问题的。</li>
-<li>r/s 和 w/s：每秒磁盘读写的次数。这两个值相加就是 tps。</li>
-<li>rkB/s 和 wkB/s：每秒磁盘读写的数据量，这两个值和上面的 kB_read/s、kB_wrnt/s 是一样的。</li>
-<li>avgrq-sz：平均每次读写磁盘扇区的大小。</li>
-<li>avgqu-sze：平均 IO 队列长度。队列长度越短越好。</li>
-<li>await：平均每次磁盘读写的等待时间（ms）。</li>
-<li>svctm：平均每次磁盘读写的服务时间（ms）。</li>
-<li>%util：一秒钟有百分之多少的时间用于磁盘读写操作。</li>
-</ul>
-<p>以上这些参数太多了，我们并不需要每个都关注，可以重点关注两个：</p>
-<p><strong>a. %util：衡量 IO 的繁忙程度</strong></p>
-<p>这个值越大，说明产生的 IO 请求较多，IO 压力较大，我们可以结合 %idle 参数来看，如果 %idle &lt; 70% 就说明 IO 比较繁忙了。也可以结合 vmstat 的 b 参数（等待 IO 的进程数）和 wa 参数（IO 等待所占 CPU 时间百分比）来看，如果 wa &gt; 30% 也说明 IO 较为繁忙。</p>
-<p><strong>b. await：衡量 IO 的响应速度</strong></p>
-<p>通俗理解，await 就像我们去医院看病排队等待的时间，这个值和医生的服务速度（svctm）和你前面排队的人数（avgqu-size）有关。如果 svctm 和 await 接近，说明磁盘 IO 响应时间较快，排队较少，如果 await 远大于 svctm，说明此时队列太长，响应较慢，这时可以考虑换性能更好的磁盘或升级 CPU。</p>
-<p><strong>4）iostat 1 2 默认显示 cpu 和 吞吐量信息，1 定时 1s 显示，2 显示 2 条信息</strong></p>
-<center><img src="/images/linux/iostat12.jpg" alt=""></center>
-
-<h3 id="进程-IO-性能分析"><a href="#进程-IO-性能分析" class="headerlink" title="进程 IO 性能分析"></a>进程 IO 性能分析</h3><hr>
-<p>有了以上两个命令，基本上能对磁盘 IO 的信息有个全方位的了解了。但如果要确定具体哪个进程的 IO 开销较大，这就得借助另外的工具了。</p>
-<h4 id="iotop"><a href="#iotop" class="headerlink" title="iotop"></a><strong>iotop</strong></h4><p>这个命令类似 top，可以显示每个进程的 IO 情况，有了这个命令，就可以定位具体哪个进程的 IO 开销比较大了。</p>
-<center><img src="/images/linux/iostop.jpg" alt=""></center>
-
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>OK，最后还是总结下，fdisk -l 和 df 查看磁盘基本信息，iostat -d 查看磁盘 IOPS 和吞吐量，iostat -x 结合 vmstat 查看磁盘的繁忙程度和处理效率。</p>
-<p>下文我们将探讨网络方面的的性能分析问题。</p>
-<p>Reference：<br>1.linux 性能分析：<br><a href="http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html" target="_blank" rel="noopener">http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html</a></p>
-<ol start="2">
-<li>linux 性能分析工具总结：<br><a href="http://rdc.hundsun.com/portal/article/731.html" target="_blank" rel="noopener">http://rdc.hundsun.com/portal/article/731.html</a></li>
-</ol>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -1393,7 +1319,7 @@
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(13)</div></a></li>
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
         
@@ -1431,7 +1357,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.82px; color: #8d8d8d">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.73px; color: #868686">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.91px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.82px; color: #8d8d8d">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 21.27px; color: #686868">Docker</a> <a href="/tags/I-O/" style="font-size: 16.73px; color: #868686">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19.45px; color: #747474">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.09px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.91px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.09px; color: #5b5b5b">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.82px; color: #8d8d8d">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.91px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.73px; color: #868686">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.91px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 20.36px; color: #6e6e6e">Python</a> <a href="/tags/Qemu/" style="font-size: 18.55px; color: #7a7a7a">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.82px; color: #8d8d8d">git</a> <a href="/tags/github/" style="font-size: 14.91px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.91px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.91px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.91px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.91px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 21.27px; color: #686868">容器</a> <a href="/tags/容器网络/" style="font-size: 17.64px; color: #808080">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.55px; color: #7a7a7a">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.91px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.18px; color: #616161">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.82px; color: #8d8d8d">老罗</a> <a href="/tags/虚拟化/" style="font-size: 23.09px; color: #5b5b5b">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.91px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.91px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.82px; color: #8d8d8d">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.82px; color: #8d8d8d">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.67px; color: #8e8e8e">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.5px; color: #888">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.83px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.67px; color: #8e8e8e">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.67px; color: #6c6c6c">Docker</a> <a href="/tags/I-O/" style="font-size: 16.5px; color: #888">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19px; color: #777">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.17px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.83px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 22.33px; color: #606060">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.67px; color: #8e8e8e">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.83px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.5px; color: #888">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.83px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.83px; color: #717171">Python</a> <a href="/tags/Qemu/" style="font-size: 18.17px; color: #7d7d7d">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.67px; color: #8e8e8e">git</a> <a href="/tags/github/" style="font-size: 14.83px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.83px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.83px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.83px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.83px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.67px; color: #6c6c6c">容器</a> <a href="/tags/容器网络/" style="font-size: 17.33px; color: #828282">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.17px; color: #7d7d7d">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.83px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 21.5px; color: #666">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.67px; color: #8e8e8e">老罗</a> <a href="/tags/虚拟化/" style="font-size: 22.33px; color: #606060">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.83px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.83px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.67px; color: #8e8e8e">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.67px; color: #8e8e8e">雾计算</a>
     </div>
   </section>
 
