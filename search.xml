@@ -1162,11 +1162,11 @@
             
             <tag> Qemu </tag>
             
-            <tag> vhost_user </tag>
-            
             <tag> vhost </tag>
             
             <tag> virtio </tag>
+            
+            <tag> vhost_user </tag>
             
         </tags>
       
