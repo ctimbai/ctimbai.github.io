@@ -166,6 +166,461 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2017/11/18/tech/虚拟化技术总览/">
+              
+                  虚拟化技术总览
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-18
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>说起虚拟化，相信大家应该都不陌生，像虚拟内存、Java 虚拟机、Android 模拟器这些都是虚拟化技术的体现，为什么这样说，这个就要回到虚拟化技术的本质上——<strong>虚拟化就是由位于下层的软件模块，根据上层的软件模块的期待，抽象（虚拟）出一个虚拟的软件或硬件模块，使上一层软件直接运行在这个与自己期待完全一致的虚拟环境上</strong>。从这个意义上来看，虚拟化既可以是软件层的抽象，又可以是硬件层的抽象。</p>
+<center><img src="/images/virt/virt_abs.png" alt=""><br>虚拟化技术本质上是软/硬件层的抽象</center>
+
+
+<p>所以说，像虚拟内存、Java 虚拟机、Android 模拟器这些都属于是软件虚拟化技术，而硬件虚拟化技术更多的应用就是在云计算领域。从提出至今，虚拟化技术已经出现了多种实现方式，这些不同的方式其实就是软件和硬件的不同组合。本文主要就是对这些实现方式进行一个总览，形成一个总体认识，方便后面的学习。</p>
+<h3 id="VMM"><a href="#VMM" class="headerlink" title="VMM"></a>VMM</h3><hr>
+<p>VMM 全称是 Virtual Machine Monitor，虚拟机监控系统，也叫 Hypervisor，是虚拟化层的具体实现。主要是以软件的方式，实现一套和物理主机环境完全一样的虚拟环境，物理主机有的所有资源，包括 CPU、内存、网络 IO、设备 IO等等，它都有。这样的方式相当于 VMM 对物理主机的资源进行划分和隔离，使其可以充分利用资源供上层使用。虚拟出的资源以虚拟机的形式提供服务，一个虚拟机本质上和一台物理机没有什么区别，可以跑各种操作系统，在之上再跑各种应用。这种方式无疑是计算机历史上非常里程碑的一步，你想想，以前可能要买多台服务器才能解决的事，现在只用一台就解决了。</p>
+<p>虚拟机通常叫做客户机（guest），物理机叫宿主机（host），VMM 处在中间层，既要负责对虚拟资源的管理，包括虚拟环境的调度，虚拟机之间的通信以及虚拟机的管理等，又要负责物理资源的管理，包括处理器、中断、内存、设备等的管理，此外，还要提供一些附加功能，包括定时器、安全机制、电源管理等。</p>
+<center><img src="/images/virt/vmm.png" alt=""><br>VMM</center>
+
+<h3 id="VMM-分类"><a href="#VMM-分类" class="headerlink" title="VMM 分类"></a>VMM 分类</h3><hr>
+<p>VMM 根据平台类型和实现结构有两种不同的分类，按平台类型可以分为完全虚拟化和类虚拟化，完全虚拟化就是 VMM 完全模拟出一个跟物理主机完全一样的环境。但是这个是非常困难的，首先，这需要硬件的支持，而硬件在初期设计的时候，没有那么远的前瞻性，可以预想到为虚拟化提供支持，前次，指令的复杂性，即使通过模拟的方式也很难做到全部指令都模拟。所以，就需要借助其他的一些技术来辅助虚拟化。</p>
+<center><img src="/images/virt/vmm_type.png" alt=""><br>VMM 分类</center>
+
+<p>软件辅助虚拟化是通过优先级压缩（Ring Compression）和二进制代码翻译（Binary Translation）这两个技术来完成的。简单讲，RC 基于 CPU 特权级的原理，也就是 guest、VMM 和 host 分别处于不同的特权级上（这个后面讲 CPU 虚拟化的时候会详述），guest 要访问 host 就属于越级访问，会抛异常，这时 VMM 会截获这个异常，并模拟出其可能的行为，从而进行相应处理。但这个问题很明显，就是由于硬件设计的缺陷，有些指令并不能截获，从而导致“漏洞”。</p>
+<p>BT 可以弥补这个缺陷，它通过去扫描 guest 的二进制的代码，将难以虚拟化的指令转为支持虚拟化的指令，从而可以配合 VMM 完成虚拟化功能。这两种方式都是通过「打补丁」的方式来辅助虚拟化，很难再架构上保证完整性。</p>
+<p>所以，后期的硬件厂商就在硬件上对虚拟化提供了支持，有了硬件辅助的虚拟化。通过对硬件本身加入更多的虚拟化功能，就可以截获更多的敏感指令，填补上漏洞。在这一块，Intel 的 VT-x/d 技术和 AMD 的 AMD-V 技术是其中的代表。</p>
+<p>而类虚拟化则是另外一种通过软件来避免漏洞的方式，就是通过修改 guest 操作系统内核代码（API 级）来避免漏洞，这种方式好处就是可以自定义内核的执行行为，某种程度上对性能进行优化。</p>
+<p>上面这种分类仅供了解即可，重点掌握下面这种分类，就是根据 VMM 的实现结构分类，主要分类 Hypervisor 模型（1 型）和宿主模型（2 型）。</p>
+<p>Hypervisor 模型中 VMM 既是操作系统，也是虚拟化软件，也就是集成了虚拟化功能的操作系统，对上为 guest 提供虚拟化功能，对下管理着所有物理资源，它的优点就是效率高，虚拟机的安全性只依赖于 VMM，缺点就是管理所有的物理资源，意味着 VMM 要承担很多的开发工作，特别是驱动层面的开发，我们知道硬件的 I/O 设备是很多的，这些设备都要有对应的驱动来设配才能为虚拟机提供功能。</p>
+<center><img src="/images/virt/hyper.png" alt=""><br>Hypervisor 模型或 1 型模型</center>
+
+<p>宿主模型剥离了管理功能和虚拟化功能，虚拟化功能只是作为内核的一个模块来加载，比如 KVM 技术就是其中的佼佼者，KVM 技术可以说是云计算最核心的技术了，后面会经常用到。一般 KVM 只负责 CPU 和内存的虚拟化，I/O 的虚拟化则由另外一个技术来完成，即 Qemu。这些技术都是后面的重点，在这里只是提一下。</p>
+<center><img src="/images/virt/hyper1.png" alt=""><br>宿主模型或 2 型模型</center>
+
+
+<h3 id="典型的虚拟化产品"><a href="#典型的虚拟化产品" class="headerlink" title="典型的虚拟化产品"></a>典型的虚拟化产品</h3><hr>
+<ul>
+<li><strong>VMware</strong></li>
+</ul>
+<p>VMware 可以说是虚拟化的鼻祖，现在很多公司都是在模仿 VMware 的产品，相应用过 VMware 虚拟机的朋友应该不陌生了，VMware 提供了很多的虚拟化产品，从服务器到桌面都有很多应用。主要有面向企业级应用的 ESX Server，面向服务端的入门级产品 VMware Server，面向桌面的主打产品 VMware Workstation（这个相信大家经常用），面向苹果系统的桌面产品 VMware Fusion，还有提供整套虚拟应用产品的 VMware vSphere，细分的话还有 VMware vStorage（虚拟存储），VMware vNet（虚拟网络）等。</p>
+<ul>
+<li><strong>Xen</strong></li>
+</ul>
+<p>Xen 是一款开源虚拟机软件，Xen 结合了 Hypervisor 模型和宿主模型，属于一种混合的虚拟化模型，基于 Xen 的虚拟化产品也有很多，比如 Ctrix、VirtualIron、RedHat 和 Novell 等都有相应的产品。这个一般是研究机构用得多一些，生产环境中大部分用的是 KVM。</p>
+<ul>
+<li><strong>KVM</strong></li>
+</ul>
+<p>KVM 也是一款开源软件，于 2007 年 2 月被集成到了 Linux 2.6.20 内核中，成为了内核的一部分。KVM 采用的是基于 Intel VT 的硬件辅助虚拟化技术，以及结合 Qemu 来提供设备虚拟化，从实现上看，属于宿主模型。使用 KVM 的厂商很多啊，像我们比较熟悉 VMware Workstation 和 VirtualBox 都在使用，在此就不一一列举了。</p>
+<p>OK，有了这些基本认识，对于学后面的高深内容可能会好理解一些，大家如果觉得写得不错，可以给我个赞，你的鼓励是我不断输出好内容的动力。现在我开始写公众号，才发现这种看上去很虚的东西其实蛮鼓励人的，我现在看到那些坚持原创的作者都会感同身受，都会忍不住想给他们赞。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/17/tech/云计算技能图谱/">
+              
+                  计算技能图谱
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-17
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>云计算领域是一个很庞大的技术领域，技术分支很多，从底层的虚拟化技术，到各种框架，再到上层各种应用服务，都涉及非常多的技能点，
+        
+            <div class="readmore">
+                <a href="/2017/11/17/tech/云计算技能图谱/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/技能图谱/"><i class="fas fa-hashtag fa-fw"></i>技能图谱</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/16/tech/初识云计算/">
+              
+                  初识云计算
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-16
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/cloud/2.png" alt=""></p>
+<blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="云计算的发展历史"><a href="#云计算的发展历史" class="headerlink" title="云计算的发展历史"></a>云计算的发展历史</h3><hr>
+<p>我们主要从用户对云计算的认知角度来谈云计算的发展史，至于它从提出到发扬光大的那些大事件，网上搜下就知道了，而且我觉得去谈那些发展事件意义也不大，
+        
+            <div class="readmore">
+                <a href="/2017/11/16/tech/初识云计算/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/15/tech/云计算术语扫盲/">
+              
+                  云计算术语扫盲
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-15
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/cloud/1.png" alt=""></p>
+<blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><hr>
+<p>在云计算中，资源和服务本质上是一样的，服务可能更泛一些，资源一般特指 CPU（计算）、Mem（存储）和 IO （网络）三大资源，
+        
+            <div class="readmore">
+                <a href="/2017/11/15/tech/云计算术语扫盲/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/05/20/life/架构小觑——来自《大型网站技术架构》/">
+              
+                  架构小觑——来自《大型网站技术架构》
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-05-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/读书/">读书</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/tech/大型网站核心架构要素.png" alt=""></p>
+<p>这本书出版比较早了，13年出的，在互联网发展超乎想象的今天，可能书中某些东西都不值一提了，但对于没有做过什么大型项目的小白来说，还是很有指导意义的，特别开阔眼界，对性能、可用性、扩展性、伸缩性、安全性等这些抽象的词会有更为具体且全面的理解。</p>
+        
+            <div class="readmore">
+                <a href="/2017/05/20/life/架构小觑——来自《大型网站技术架构》/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/读书/"><i class="fas fa-hashtag fa-fw"></i>读书</a>
+                
+                    <a href="/tags/架构/"><i class="fas fa-hashtag fa-fw"></i>架构</a>
+                
+                    <a href="/tags/阿里巴巴/"><i class="fas fa-hashtag fa-fw"></i>阿里巴巴</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/05/10/life/我锤这次真的惊艳到我了/">
+              
+                  我锤这次真的惊艳到我了！
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-05-10
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/mobile/jgpro.jpg" alt=""></p>
+<p>不带半点的感情掺杂，作为一个理性的消费者，我仍然觉得「坚果pro」是目前为止我见过的最好的外观设计的手机，它满足了我对手机设计的所有期待：简洁，大方，硬朗，充满了质感，漂亮得不像实力派，感觉就像是为我量身定制的一样。</p>
+        
+            <div class="readmore">
+                <a href="/2017/05/10/life/我锤这次真的惊艳到我了/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/老罗/"><i class="fas fa-hashtag fa-fw"></i>老罗</a>
+                
+                    <a href="/tags/锤子科技/"><i class="fas fa-hashtag fa-fw"></i>锤子科技</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2017/04/27/life/《人民的名义》好在哪/">
               
                   《人民的名义》好在哪
@@ -383,7 +838,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/科技互联/">科技互联</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
     </div>
 
 
@@ -423,397 +878,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/03/20/life/《硅谷之谜》读书笔记/">
-              
-                  《硅谷之谜》给我的启示
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/读书/">读书</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>作为一个程序猿，我觉得读一些科普类的书是很有必要的，不但扩充了自己的眼界，还对这个世界更加充满了好奇。之前就拜读过吴军老师的《浪潮之巅》，第一次了解了世界知名大公司的兴衰史，读起来让人热血沸腾。当知道了曾经那些叱咤风云的大公司如今已呈衰败之势，或倒闭，或被收购，无不让人唏嘘不已。</p>
-<p>《硅谷之谜》是吴军老师对科技，对文明深度探讨的另一大作，系列的书还有《大学之路》、《文明之光》以及今年新出的《智能时代》，《智能时代》已入手，准备之后拜读，其余两本也会跟上。现在恨不得没日没夜抱着啃，但是急不得，好东西是需要慢慢品味的。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/20/life/《硅谷之谜》读书笔记/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/读书/"><i class="fas fa-hashtag fa-fw"></i>读书</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/03/15/life/终于还是鼓起勇气看了《霸王别姬》/">
-              
-                  终于还是鼓起勇气看了《霸王别姬》
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-15
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>我是一个感性胜过理性的人，虽然大学一直读的理科专业。对于那些悲情虐心的电影，我一般是没有勇气看的，因为很容易被感动，很多时候看完之后心情总是久久不能平静，很难继续做事情。但好电影还是忍不住想看，觉得不能压抑自己的情绪，看得多了，自然也就免疫了。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/15/life/终于还是鼓起勇气看了《霸王别姬》/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/03/05/life/共享经济浪潮下的另类——ofo与摩拜/">
-              
-                  共享经济浪潮下的另类——ofo与摩拜
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-05
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/科技互联/">科技互联</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>当下ofo和摩拜正以迅雷不及掩耳之势火遍全中国，追本溯源，这是共享经济的又一波冲击。  </p>
-<p>百度百科上对共享经济的定义是：以获取一定的报酬为目的，基于陌生人且存在物品使用权暂时转移的一种新的经济模式。其中涉及到三个关键词：获取报酬、陌生人和使用权暂时转移。简单来说，就是将个人闲置的资源共享给别人使用，然后从中抽取一定的费用作为激励。这种共享的思想古已有之。古时物质很匮乏，所有的东西都是公有的，大家互相信任，都会把自己东西无偿地共享出来作为共用，记得爷爷曾经说过，他们都是吃大锅饭长大的。随着时间的推移，人们的生活水平逐步提高，物资开始有了盈余，人与人的关系也开始渐渐变得陌生和冷漠起来。而现在呢，物资依然有盈余，很多东西开始闲置下来，造成了大量资源的浪费，这时共享经济就作为一种解决方案被推行出来，与此同时，人变得越来越开放，需求也变得更加多元化，人与人之间的关系也随着共享经济的推行而变得信任起来。这是自然，也是必然的。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/05/life/共享经济浪潮下的另类——ofo与摩拜/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/共享经济/"><i class="fas fa-hashtag fa-fw"></i>共享经济</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/">
-              
-                  Hexo 不同电脑/终端同步方法
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-01-08
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>问题描述：  </p>
-<blockquote>
-<p>在Linux系统上搭建了博客，现想在windows上写博客，如何在两个系统进行文章的同步？</p>
-</blockquote>
-<p>上面是在同一台电脑的不同终端上操作，同样这个问题也适用于不同电脑上，所以这个问题可以扩展成一个比较通用的问题：  </p>
-<blockquote>
-<p>不同电脑，或终端上如何同步Hexo？</p>
-</blockquote>
-<p>Google一下，网友已经给了很好的解决方案，大体上有以下两种方案：<strong>利用分支</strong>和<strong>新建仓库</strong>。<br>
-        
-            <div class="readmore">
-                <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/hexo/"><i class="fas fa-hashtag fa-fw"></i>hexo</a>
-                
-            </div>
-        
-    </p></section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/">
-              
-                  Git学习笔记——来自廖雪峰的博客
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-12-29
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <h2 id="Git-简介"><a href="#Git-简介" class="headerlink" title="Git 简介"></a>Git 简介</h2><p>Git是目前世界上最先进的开源的<strong>分布式</strong>版本控制系统。<br>和<strong>集中式</strong>的版本控制系统，如CVS、SVN等相比，Git有几大优点：<br>1、不像集中式版本控制系统一样，需要联网才能工作；<br>2、安全性较高，避免了单点失效的问题，不会因为某台电脑坏了，文件就丢失了；<br>3、具有强大的分支管理功能。</p>
-<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><pre><code>Linux：sudo apt-get install git
-centos: sudo yum install git-core
-windows: git bash
-</code></pre><p>安装完成后，需要配置机器的Git仓库，即：  </p>
-<pre><code>git config --global user.name &quot;Your Name&quot;
-git config --global user.email &quot;email@example.com&quot;
-</code></pre>
-        
-            <div class="readmore">
-                <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/git/"><i class="fas fa-hashtag fa-fw"></i>git</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2016/06/15/life/狗狗的记忆——《人狗奇缘》续/">
-              
-                  狗狗的记忆——《人狗奇缘》续
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-06-15
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>这部电影真是太赞了，看了之后，在感动之余，勾起了我很多的回忆，突然有很多想说的话，上一篇算是一篇观后感，这一篇打算写写我与狗狗的故事。  </p>
-<p>小时候，我非常喜欢小狗，我爸妈也很喜欢，大概在上小学的时候家里就开始养狗。我记得非常清楚，那只小狗是爸妈从一个邻居家报来养的，当时邻居家的一只母狗一次性产了5只小狗，震惊了整个村子（最近听说某国的一只杜宾狗一次性产下了13只！！），我当时看到5小只乖乖地躺在一个小箩筐里，立刻就被萌化了，就喊着要一只，邻居家也很大方，就给了。</p>
-<p><img src="/images/movie/dubin.jpg" alt=""><br>
-        
-            <div class="readmore">
-                <a href="/2016/06/15/life/狗狗的记忆——《人狗奇缘》续/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-    </p></section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -828,7 +892,7 @@ git config --global user.email &quot;email@example.com&quot;
                 </a>
             
             <p class="current">
-                7 / 10
+                7 / 11
             </p>
             
                 <a class="next" rel="next" href="/page/8/">
@@ -924,6 +988,8 @@ git config --global user.email &quot;email@example.com&quot;
         
           <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
         
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(5)</div></a></li>
+        
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
           <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
@@ -940,9 +1006,7 @@ git config --global user.email &quot;email@example.com&quot;
         
           <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(6)</div></a></li>
-        
-          <li><a class="flat-box" title="/categories/科技互联/" href="/categories/科技互联/"><div class="name">科技互联</div><div class="badge">(4)</div></a></li>
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
         
           <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(3)</div></a></li>
         
@@ -966,7 +1030,7 @@ git config --global user.email &quot;email@example.com&quot;
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.67px; color: #8e8e8e">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.5px; color: #888">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.83px; color: #939393">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.67px; color: #8e8e8e">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.67px; color: #6c6c6c">Docker</a> <a href="/tags/I-O/" style="font-size: 16.5px; color: #888">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 19px; color: #777">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 23.17px; color: #5b5b5b">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.83px; color: #939393">LaTeX</a> <a href="/tags/Linux/" style="font-size: 22.33px; color: #606060">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.67px; color: #8e8e8e">NUMA</a> <a href="/tags/Namespace/" style="font-size: 14.83px; color: #939393">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.5px; color: #888">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.83px; color: #939393">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.83px; color: #717171">Python</a> <a href="/tags/Qemu/" style="font-size: 18.17px; color: #7d7d7d">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14px; color: #999">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.67px; color: #8e8e8e">git</a> <a href="/tags/github/" style="font-size: 14.83px; color: #939393">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.83px; color: #939393">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/vhost/" style="font-size: 14.83px; color: #939393">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.83px; color: #939393">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.83px; color: #939393">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.67px; color: #6c6c6c">容器</a> <a href="/tags/容器网络/" style="font-size: 17.33px; color: #828282">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 18.17px; color: #7d7d7d">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.83px; color: #939393">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 21.5px; color: #666">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.67px; color: #8e8e8e">老罗</a> <a href="/tags/虚拟化/" style="font-size: 22.33px; color: #606060">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.83px; color: #939393">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.83px; color: #939393">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.67px; color: #8e8e8e">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.67px; color: #8e8e8e">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 14.77px; color: #949494">tap</a> <a href="/tags/tun/" style="font-size: 14.77px; color: #949494">tun</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 
