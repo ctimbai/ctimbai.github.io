@@ -369,7 +369,236 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2019/03/08/tech/eth-taptun-vethpair总结/">
+              
+                  一文总结虚拟网络设备 eth, tap/tun, veth-pair
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-03-08
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<blockquote>
+<p>本文翻译自：<a href="http://t.cn/EIdjMTc" target="_blank" rel="noopener">http://t.cn/EIdjMTc</a></p>
+</blockquote>
+<p>Linux 虚拟网络的背后都是由一个个的虚拟设备构成的。虚拟化技术没出现之前，计算机网络系统都只包含物理的网卡设备，通过网卡适配器，线缆介质，连接外部网络，构成庞大的 Internet。</p>
+<p><img src="/images/net/virtual-device-physical-2.png" alt="virtual-device-physical-2.png"></p>
+        
+            <div class="readmore">
+                <a href="/2019/03/08/tech/eth-taptun-vethpair总结/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/tap/"><i class="fas fa-hashtag fa-fw"></i>tap</a>
+                
+                    <a href="/tags/tun/"><i class="fas fa-hashtag fa-fw"></i>tun</a>
+                
+                    <a href="/tags/veth-pair/"><i class="fas fa-hashtag fa-fw"></i>veth-pair</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2019/03/03/tech/veth-pair详解/">
+              
+                  Linux云网络基础之虚拟网络设备 veth-pair 详解
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-03-03
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<p>前面这篇文章介绍了 tap/tun 设备之后，大家应该对虚拟网络设备有了一定的了解，本文来看另外一种虚拟网络设备 veth-pair。</p>
+<h2 id="01-veth-pair-是什么"><a href="#01-veth-pair-是什么" class="headerlink" title="01 veth-pair 是什么"></a>01 veth-pair 是什么</h2><p>顾名思义，veth-pair 就是一对的虚拟设备接口，和 tap/tun 设备不同的是，它都是成对出现的。一端连着协议栈，一端彼此相连着。如下图所示：</p>
+<p><img src="/images/net/veth.jpeg" alt="veth"></p>
+        
+            <div class="readmore">
+                <a href="/2019/03/03/tech/veth-pair详解/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/veth-pair/"><i class="fas fa-hashtag fa-fw"></i>veth-pair</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2019/03/01/tech/基于taptun写一个ICMP程序/">
+              
+                  如何用 tap/tun 设备编写一个 ICMP 程序
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-03-01
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<p>前面两篇文章已经介绍过 tap/tun 的<a href="http://mp.weixin.qq.com/s?__biz=MzI1OTY2MzMxOQ==&amp;mid=2247484961&amp;idx=1&amp;sn=f26d7994f57abbf5de2007a2f451d9f5&amp;chksm=ea743299dd03bb8f6ac063c1cb00d5a592094c7778ab0a5baf37b7469fa3eb018101ef34551f&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">原理</a>和<a href="http://mp.weixin.qq.com/s?__biz=MzI1OTY2MzMxOQ==&amp;mid=2247484976&amp;idx=1&amp;sn=a3c5112bea36c8a543660c7ac1497b36&amp;chksm=ea743288dd03bb9e15e7971894c80151e504ad5912d660204d6a3ea140cb3e6f55af245d50f2&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">配置工具</a>。这篇文章通过一个编程示例来深入了解 tap/tun 的程序结构。</p>
+        
+            <div class="readmore">
+                <a href="/2019/03/01/tech/基于taptun写一个ICMP程序/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/tap/"><i class="fas fa-hashtag fa-fw"></i>tap</a>
+                
+                    <a href="/tags/tun/"><i class="fas fa-hashtag fa-fw"></i>tun</a>
+                
+                    <a href="/tags/ICMP/"><i class="fas fa-hashtag fa-fw"></i>ICMP</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
     
       
         <div class="post-wrapper">
@@ -560,7 +789,7 @@
 
     <section class="article typo">
         <blockquote>
-<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
 </blockquote>
 <center>–END–</center>
 
@@ -568,7 +797,7 @@
 
 <hr>
 <blockquote>
-<p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有 <strong>10T</strong> 书籍和视频资源，后台回复 <strong>「1024」</strong> 即可领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p>
+<p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有 <strong>10T</strong> 书籍和视频资源，后台回复 <strong>「1024」</strong> 即可免费领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p>
 <p><img src="/images/weichat.png" alt=""></p>
 </blockquote>
 
@@ -959,524 +1188,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/06/15/tech/一文掌握_Linux_性能分析之网络篇（续）/">
-              
-                  一文掌握 Linux 性能分析之网络篇（续）
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-06-15
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>这是 Linux 性能分析系列的第五篇，前四篇在这里：<br>一文掌握 Linux 性能分析之 CPU 篇<br>一文掌握 Linux 性能分析之内存篇<br>一文掌握 Linux 性能分析之 IO 篇<br>一文掌握 Linux 性能分析之网络篇</p>
-<p>在上篇中，我们已经介绍了几个 Linux 网络方向的性能分析工具，本文再补充几个。总结下来，余下的工具包括但不限于以下几个：</p>
-<ul>
-<li>sar：统计信息历史</li>
-<li>traceroute：测试网络路由</li>
-<li>dtrace：TCP/IP 栈跟踪</li>
-<li>iperf / netperf / netserver：网络性能测试工具</li>
-<li>perf 性能分析神器</li>
-</ul>
-<p>由于篇幅有限，本文会先介绍前面两个，其他工具留作后面介绍，大家可以持续关注。</p>
-<h4 id="sar"><a href="#sar" class="headerlink" title="sar"></a><strong>sar</strong></h4><p>sar 是一个系统历史数据统计工具。统计的信息非常全，包括 CPU、内存、磁盘 I/O、网络、进程、系统调用等等信息，是一个集大成的工具，非常强大。在 Linux 系统上 <code>sar --help</code> 一下，可以看到它的完整用法。</p>
-<ul>
-<li>-A：所有报告的总和</li>
-<li>-u：输出 CPU 使用情况的统计信息</li>
-<li>-v：输出 inode、文件和其他内核表的统计信息</li>
-<li>-d：输出每一个块设备的活动信息</li>
-<li>-r：输出内存和交换空间的统计信息</li>
-<li>-b：显示 I/O和传送速率的统计信息</li>
-<li>-a：文件读写情况</li>
-<li>-c：输出进程统计信息，每秒创建的进程数</li>
-<li>-R：输出内存页面的统计信息</li>
-<li>-y：终端设备活动情况</li>
-<li>-w：输出系统交换活动信息</li>
-<li>-n：输出网络设备统计信息</li>
-</ul>
-<p>在平时使用中，我们常常用来分析网络状况，其他几项的通常有更好的工具来分析。所以，本文会重点介绍 sar 在网络方面的分析手法。</p>
-<p>Linux 系统用以下几个选项提供网络统计信息：</p>
-<ul>
-<li>-n DEV：网络接口统计信息。</li>
-<li>-n EDEV：网络接口错误。</li>
-<li>-n IP：IP 数据报统计信息。</li>
-<li>-n EIP：IP 错误统计信息。</li>
-<li>-n TCP：TCP 统计信息。</li>
-<li>-n ETCP：TCP 错误统计信息。</li>
-<li>-n SOCK：套接字使用。</li>
-</ul>
-<p>我们来看几个示例：</p>
-<p><strong>（1）每秒打印 TCP 的统计信息：</strong></p>
-<p><code>sar -n TCP 1</code></p>
-<center><img src="/images/linux/sarn.png" alt=""></center>
-
-<p>几个参数了解一下：</p>
-<ul>
-<li>active/s：新的 TCP 主动连接（也就是 socket 中的 connect() 事件），单位是：连接数/s。</li>
-<li>passive/s：新的 TCP 被动连接（也就是 socket 中的 listen() 事件）。</li>
-<li>iseg/s：接收的段（传输层以段为传输单位），单位是：段/s</li>
-<li>oseg/s：发送的段。<br>通过这几个参数，我们基本可以知道当前系统 TCP 连接的负载情况。</li>
-</ul>
-<p><strong>（2）每秒打印感兴趣的网卡的统计信息：</strong></p>
-<p><code>sar -n DEV 1 | awk &#39;NR == 3 || $3 == &quot;eth0&quot;&#39;</code></p>
-<center><img src="/images/linux/sarnd.png" alt=""></center>
-
-<p>几个参数了解一下：</p>
-<ul>
-<li>rxpck/s / txpck/s：网卡接收/发送的数据包，单位是：数据包/s。</li>
-<li>rxkB/s / txkB/s：网卡接收/发送的千字节，单位是：千字节/s。</li>
-<li>rxcmp/s / txcmp/s：网卡每秒接受/发送的压缩数据包，单位是：数据包/s。</li>
-<li>rxmcst/s：每秒接收的多播数据包，单位是：数据包/s。</li>
-<li>%ifutil：网络接口的利用率。<br>这几个参数对于分析网卡接收和发送的网络吞吐量很有帮助。</li>
-</ul>
-<p><strong>（3）错误包和丢包情况分析：</strong></p>
-<p><code>sar -n EDEV 1</code></p>
-<center><img src="/images/linux/sarne.png" alt=""></center>
-
-<p>几个参数了解一下：</p>
-<ul>
-<li>rxerr/s / txerr/s：每秒钟接收/发送的坏数据包</li>
-<li>coll/s：每秒冲突数</li>
-<li>rxdrop/s：因为缓冲充满，每秒钟丢弃的已接收数据包数</li>
-<li>txdrop/s：因为缓冲充满，每秒钟丢弃的已发送数据包数</li>
-<li>txcarr/s：发送数据包时，每秒载波错误数</li>
-<li>rxfram/s：每秒接收数据包的帧对齐错误数</li>
-<li>rxfifo/s / txfifo/s：接收/发送的数据包每秒 FIFO 过速的错误数</li>
-</ul>
-<p>当发现接口传输数据包有问题时，查看以上参数能够让我们快速判断具体是出的什么问题。</p>
-<p>OK，这个工具就介绍到这里，以上只是抛砖引玉，更多技巧还需要大家动手去探索，只有动手，才能融会贯通。</p>
-<h4 id="traceroute"><a href="#traceroute" class="headerlink" title="traceroute"></a><strong>traceroute</strong></h4><p>traceroute 也是一个排查网络问题的好工具，它能显示数据包到达目标主机所经过的路径（路由器或网关的 IP 地址）。如果发现网络不通，我们可以通过这个命令来进一步判断是主机的问题还是网关的问题。</p>
-<p>它通过向源主机和目标主机之间的设备发送一系列的探测数据包（UDP 或者 ICMP）来发现设备的存在，实现上利用了递增每一个包的 TTL 时间，来探测最终的目标主机。比如开始 TTL = 1，当到达第一个网关设备的时候，TTL - 1，当 TTL = 0 导致网关响应一个 ICMP 超时报文，这样，如果没有防火墙拦截的话，源主机就知道网关设备的地址。以此类推，逐步增加 TTL 时间，就可以探测到目标主机之间所经过的路径。</p>
-<p>为了防止发送和响应过程出现问题导致丢包，traceroute 默认会发送 3 个探测包，我们可以用 -q x 来改变探测的数量。如果中间设备设置了防火墙限制，会导致源主机收不到响应包，就会显示 * 号。如下是 <code>traceroute baidu</code> 的结果：</p>
-<center><img src="/images/linux/traceroute.png" alt=""></center>
-
-<p>每一行默认会显示设备名称（IP 地址）和对应的响应时间。发送多少个探测包，就显示多少个。如果只想显示 IP 地址可以用 -n 参数，这个参数可以避免 DNS 域名解析，加快响应时间。</p>
-<p>和这个工具类似的还有一个工具叫 pathchar，但平时用的不多，我就不介绍了。<br>以上就是两个工具的简单介绍，工具虽然简单，但只要能解决问题，就是好工具。当然，性能分析不仅仅依靠工具就能解决的，更多需要我们多思考、多动手、多总结，逐步培养自己的系统能力，才能融会贯通。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/06/01/tech/一文掌握_Linux_性能分析之网络篇/">
-              
-                  一文掌握 Linux 性能分析之网络篇
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-06-01
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>这是 Linux 性能分析系列的第四篇。</p>
-<p>比较宽泛地讲，网络方向的性能分析既包括主机测的网络配置查看、监控，又包括网络链路上的包转发时延、吞吐量、带宽等指标分析。包括但不限于以下分析工具：</p>
-<ul>
-<li>ping：测试网络连通性</li>
-<li>ifconfig：接口配置</li>
-<li>ip：网络接口统计信息</li>
-<li>netsat：多种网络栈和接口统计信息</li>
-<li>ifstat：接口网络流量监控工具</li>
-<li>netcat：快速构建网络连接</li>
-<li>tcpdump：抓包工具</li>
-<li>sar：统计信息历史</li>
-<li>traceroute：测试网络路由</li>
-<li>pathchar：确定网络路径特征</li>
-<li>dtrace：TCP/IP 栈跟踪</li>
-<li>iperf / netperf / netserver：网络性能测试工具</li>
-<li>perf ：性能分析神器</li>
-</ul>
-<p>本文先来看前面 7 个。</p>
-<h4 id="ping"><a href="#ping" class="headerlink" title="ping"></a><strong>ping</strong></h4><hr>
-<p>ping 发送 ICMP echo 数据包来探测网络的连通性，除了能直观地看出网络的连通状况外，还能获得本次连接的往返时间（RTT 时间），丢包情况，以及访问的域名所对应的 IP 地址（使用 DNS 域名解析），比如：</p>
-<center><img src="/images/linux/ping.jpg" alt=""></center>
-
-<p>我们 <code>ping baidu.com，-c</code>参数指定发包数。可以看到，解析到了 baidu 的一台服务器 IP 地址为 220.181.112.244。RTT 时间的最小、平均、最大和算术平均差分别是 40.732ms、40.762ms、40.791ms 和 0.248。</p>
-<h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a><strong>ifconfig</strong></h3><hr>
-<p>ifconfig 命令被用于配置和显示 Linux 内核中网络接口的统计信息。通过这些统计信息，我们也能够进行一定的网络性能调优。</p>
-<p><strong>1）ifconfig 显示网络接口配置信息</strong></p>
-<center><img src="/images/linux/ifconfig.jpg" alt=""></center>
-
-<p>其中，RX/TX packets 是对接收/发送数据包的情况统计，包括错误的包，丢掉多少包等。RX/TX bytes 是接收/发送数据字节数统计。其余还有很多参数，就不一一述说了，性能调优时可以重点关注 MTU（最大传输单元） 和 txqueuelen（发送队列长度），比如可以用下面的命令来对这两个参数进行微调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 txqueuelen 2000</span><br><span class="line">ifconfig eth0 mtu 1500</span><br></pre></td></tr></table></figure></p>
-<p><strong>2）网络接口地址配置</strong></p>
-<p>ifconfig 还常用来配置网口的地址，比如：<br>为网卡配置和删除 IPv6 地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 add 33ffe:3240:800:1005::2/64    #为网卡eth0配置IPv6地址</span><br><span class="line">ifconfig eth0 del 33ffe:3240:800:1005::2/64    #为网卡eth0删除IPv6地址</span><br></pre></td></tr></table></figure></p>
-<p>修改MAC地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 hw ether 00:AA:BB:CC:dd:EE</span><br></pre></td></tr></table></figure></p>
-<p>配置IP地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.2.10</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0 broadcast 192.168.2.255</span><br></pre></td></tr></table></figure></p>
-<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a><strong>IP</strong></h4><hr>
-<p>ip 命令用来显示或设置 Linux 主机的网络接口、路由、网络设备、策略路由和隧道等信息，是 Linux 下功能强大的网络配置工具，旨在替代 ifconfig 命令，如下显示 IP 命令的强大之处，功能涵盖到 ifconfig、netstat、route 三个命令。</p>
-<center><img src="/images/linux/iptool.jpg" alt=""></center>
-
-<h4 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a><strong>netstat</strong></h4><hr>
-<p>netstat 可以查看整个 Linux 系统关于网络的情况，是一个集多钟网络工具于一身的组合工具。</p>
-<p>常用的选项包括以下几个：</p>
-<ul>
-<li>默认：列出连接的套接字</li>
-<li>-a：列出所有套接字的信息</li>
-<li>-s：各种网络协议栈统计信息</li>
-<li>-i：网络接口信息</li>
-<li>-r：列出路由表</li>
-<li>-l：仅列出有在 Listen 的服务状态</li>
-<li>-p：显示 PID 和进程名称</li>
-</ul>
-<p>各参数组合使用实例如下：</p>
-<ul>
-<li>netstat -at 列出所有 TCP 端口</li>
-<li>netstat -au 列出所有 UDP 端口</li>
-<li>netstat -lt 列出所有监听 TCP 端口的 socket</li>
-<li>netstat -lu 列出所有监听 UDP 端口的 socket</li>
-<li>netstat -lx 列出所有监听 UNIX 端口的 socket</li>
-<li>netstat -ap | grep ssh 找出程序运行的端口</li>
-<li>netstat -an | grep ‘:80’ 找出运行在指定端口的进程</li>
-</ul>
-<p><strong>1）netstat 默认显示连接的套接字数据</strong></p>
-<center><img src="/images/linux/netstat.jpg" alt=""></center>
-
-<p>整体上来看，输出结果包括两个部分：</p>
-<ul>
-<li>Active Internet connections ：有源 TCP 连接，其中 Recv-Q 和 Send-Q 指的是接收队列和发送队列，这些数字一般都是 0，如果不是，说明请求包和回包正在队列中堆积。</li>
-<li>Active UNIX domain sockets：有源 UNIX 域套接口，其中 proto 显示连接使用的协议，RefCnt 表示连接到本套接口上的进程号，Types 是套接口的类型，State 是套接口当前的状态，Path 是连接到套接口的进程使用的路径名。</li>
-</ul>
-<p><strong>2）netstat -i 显示网络接口信息</strong></p>
-<center><img src="/images/linux/netstati.png" alt=""></center>
-
-<p>接口信息包括网络接口名称（Iface）、MTU，以及一系列接收（RX-）和传输（TX-）的指标。其中 OK 表示传输成功的包，ERR 是错误包，DRP 是丢包，OVR 是超限包。</p>
-<p>这些参数有助于我们对网络收包情况进行分析，从而判断瓶颈所在。</p>
-<p><strong>3）netstat -s 显示所有网络协议栈的信息</strong></p>
-<center><img src="/images/linux/netstats.jpg" alt=""></center>
-
-<p>可以看到，这条命令能够显示每个协议详细的信息，这有助于我们针对协议栈进行更细粒度的分析。</p>
-<p><strong>4）netstat -r 显示路由表信息</strong></p>
-<center><img src="/images/linux/netstat.jpg" alt=""></center>
-
-<p>这条命令能够看到主机路由表的一个情况。当然查路由我们也可以用 ip route 和 route 命令，这个命令显示的信息会更详细一些。</p>
-<h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a><strong>ifstat</strong></h4><hr>
-<p>ifstat 主要用来监测主机网口的网络流量，常用的选项包括：</p>
-<ul>
-<li>-a：监测主机所有网口</li>
-<li>-i：指定要监测的网口</li>
-<li>-t：在每行输出信息前加上时间戳</li>
-<li>-b：以 Kbit/s 显示流量数据，而不是默认的 KB/s</li>
-<li>delay：采样间隔（单位是 s），即每隔 delay 的时间输出一次统计信息</li>
-<li>count：采样次数，即共输出 count 次统计信息</li>
-</ul>
-<p>比如，通过以下命令统计主机所有网口某一段时间内的流量数据：</p>
-<center><img src="/images/linux/ifstat.png" alt=""></center>
-
-<p>可以看出，分别统计了三个网口的流量数据，前面输出的时间戳，有助于我们统计一段时间内各网口总的输入、输出流量。</p>
-<h4 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a><strong>netcat</strong></h4><hr>
-<p>netcat，简称 nc，命令简单，但功能强大，在排查网络故障时非常有用，因此它也在众多网络工具中有着“瑞士军刀”的美誉。</p>
-<p>它主要被用来构建网络连接。可以以客户端和服务端的方式运行，当以服务端方式运行时，它负责监听某个端口并接受客户端的连接，因此可以用它来调试客户端程序；当以客户端方式运行时，它负责向服务端发起连接并收发数据，因此也可以用它来调试服务端程序，此时它有点像 Telnet 程序。</p>
-<p>常用的选项包括以下几种：</p>
-<ul>
-<li>-l：以服务端的方式运行，监听指定的端口。默认是以客户端的方式运行。</li>
-<li>-k：重复接受并处理某个端口上的所有连接，必须与 -l 一起使用。</li>
-<li>-n：使用 IP 地址表示主机，而不是主机名，使用数字表示端口号，而不是服务名称。</li>
-<li>-p：当以客户端运行时，指定端口号。</li>
-<li>-s：设置本地主机发出的数据包的 IP 地址。</li>
-<li>-C：将 CR 和 LF 两个字符作为结束符。</li>
-<li>-U：使用 UNIX 本地域套接字通信。</li>
-<li>-u：使用 UDP 协议通信，默认使用的是 TCP 协议。</li>
-<li>-w：如果 nc 客户端在指定的时间内未检测到任何输入，则退出。</li>
-<li>-X：当 nc 客户端与代理服务器通信时，该选项指定它们之间的通信协议，目前支持的代理协议包括 “4”（SOCKS v.4），“5”（SOCKS v.5）和 “connect” （HTTPs Proxy），默认使用 SOCKS v.5。</li>
-<li>-x：指定目标代理服务器的 IP 地址和端口号。</li>
-</ul>
-<p>下面举一个简单的例子，使用 nc 命令发送消息：<br>首先，启动服务端，用 nc -l 0.0.0.0 12345 监听端口 12345 上的所有连接。</p>
-<center><img src="/images/linux/netcat.png" alt=""></center>
-
-<p>然后，启动客户端，用 nc -p 1234 127.0.0.1 12345 使用 1234 端口连接服务器 127.0.0.1::12345。</p>
-<center><img src="/images/linux/netcatc.png" alt=""></center>
-
-<p>接着就可以在两端互发数据了。这里只是抛砖引玉，更多例子大家可以多实践。</p>
-<h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a><strong>tcpdump</strong></h4><hr>
-<p>最后是 tcpdump，强大的网络抓包工具。虽然有 wireshark 这样更易使用的图形化抓包工具，但 tcpdump 仍然是网络排错的必备利器。</p>
-<p>tcpdump 选项很多，我就不一一列举了，大家可以看文章末尾的引用来进一步了解。这里列举几种 tcpdump 常用的用法。</p>
-<p><strong>1）捕获某主机的数据包</strong></p>
-<p>比如想要捕获主机 200.200.200.100 上所有收到和发出的所有数据包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.100</span><br></pre></td></tr></table></figure></p>
-<p><strong>2）捕获多个主机的数据包</strong></p>
-<p>比如要捕获主机 200.200.200.1 和主机 200.200.200.2 或 200.200.200.3 的通信，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.1 and \(200.200.200.2 or \)</span><br></pre></td></tr></table></figure></p>
-<p>同样要捕获主机 200.200.200.1 除了和主机 200.200.200.2 之外所有主机通信的 IP 包。使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump ip host 200.200.200.1 and ! 200.200.200.2</span><br></pre></td></tr></table></figure></p>
-<p><strong>3）捕获某主机接收或发出的某种协议类型的包</strong><br>比如要捕获主机 200.200.200.1 接收或发出的 Telnet 包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump tcp port 23 host 200.200.200.1</span><br></pre></td></tr></table></figure></p>
-<p><strong>4）捕获某端口相关的数据包</strong></p>
-<p>比如捕获在端口 6666 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump port 6666</span><br></pre></td></tr></table></figure></p>
-<p><strong>5）捕获某网口的数据包</strong><br>比如捕获在网口 eth0 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0</span><br></pre></td></tr></table></figure></p>
-<p>下面还是举个例子，抓取 TCP 三次握手的包：<br>首先，用 nc 启动一个服务端，监听端口 12345 上客户端的连接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v -l 0.0.0.0 12345</span><br></pre></td></tr></table></figure></p>
-<p>接着，启动 tcpdump 监听端口 12345 上通过的包：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i any &apos;port 12345&apos; -XX -nn -vv -S</span><br></pre></td></tr></table></figure></p>
-<p>然后，再用 nc 启动客户端，连接服务端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v 127.0.0.1 12345</span><br></pre></td></tr></table></figure></p>
-<p>最后，我们看到 tcpdump 抓到包如下：</p>
-<center><img src="/images/linux/tcpdump.jpg" alt=""></center>
-
-<p>怎么分析是 TCP 的三次握手，就当做小作业留给大家吧，其实看图就已经很明显了。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
-<p>本文总结了几种初级的网络工具，一般的网络性能分析，通过组合以上几种工具，基本都能应付，但对于复杂的问题，以上工具可能就无能为力了。更多高阶的工具将在下文送上，敬请期待。</p>
-<p>Reference：</p>
-<ol>
-<li>ip 和 ipconfig：<br><a href="https://blog.csdn.net/freeking101/article/details/68939059" target="_blank" rel="noopener">https://blog.csdn.net/freeking101/article/details/68939059</a></li>
-<li>性能之巅：Linux网络性能分析工具<br><a href="http://www.infoq.com/cn/articles/linux-networking-performance-analytics" target="_blank" rel="noopener">http://www.infoq.com/cn/articles/linux-networking-performance-analytics</a></li>
-<li>抓包工具tcpdump用法说明<br><a href="https://www.cnblogs.com/f-ck-need-u/p/7064286.html" target="_blank" rel="noopener">https://www.cnblogs.com/f-ck-need-u/p/7064286.html</a></li>
-</ol>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/05/24/tech/一文掌握Linux性能分析之IO篇/">
-              
-                  一文掌握 Linux 性能分析之 IO 篇
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-24
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>这是 Linux 性能分析系列的第三篇。</p>
-<p>IO 和 存储密切相关，存储可以概括为磁盘，内存，缓存，三者读写的性能差距非常大，磁盘读写是毫秒级的（一般 0.1-10ms），内存读写是微妙级的（一般 0.1-10us），cache 是纳秒级的（一般 1-10ns）。但这也是牺牲其他特性为代价的，速度快的，价格越贵，容量也越小。</p>
-<p>IO 性能这块，我们更多关注的是读写磁盘的性能。首先，先了解下磁盘的基本信息。</p>
-<h3 id="磁盘基本信息"><a href="#磁盘基本信息" class="headerlink" title="磁盘基本信息"></a>磁盘基本信息</h3><hr>
-<h4 id="fdisk"><a href="#fdisk" class="headerlink" title="fdisk"></a><strong>fdisk</strong></h4><p>查看磁盘信息，包括磁盘容量，扇区大小，IO 大小等信息，常用 <code>fdisk -l</code>查看：</p>
-<center><img src="/images/linux/fdisk.jpg" alt=""></center>
-
-<p>可以看到 /dev/ 下有一个 40G 的硬盘，一共 8K 多万个扇区，每个扇区 512字节，IO 大小也是 512 字节。</p>
-<h4 id="df"><a href="#df" class="headerlink" title="df"></a><strong>df</strong></h4><p>查看磁盘使用情况，通常看磁盘使用率：</p>
-<center><img src="/images/linux/df.jpg" alt=""></center>
-
-
-<h3 id="磁盘性能分析"><a href="#磁盘性能分析" class="headerlink" title="磁盘性能分析"></a>磁盘性能分析</h3><hr>
-<p>主要分析磁盘的读写效率（IOPS：每秒读写的次数；吞吐量：每秒读写的数据量），IO 繁忙程度，及 IO 访问对 CPU 的消耗等性能指标。</p>
-<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a><strong>vmstat</strong></h4><p>第一个较为常用的还是这个万能的 vmstat：</p>
-<center><img src="/images/linux/vmstatio.jpg" alt=""></center>
-
-<p>对于 IO，我们常关注三个部分：</p>
-<ul>
-<li>b 值：表示因为 IO 阻塞排队的任务数</li>
-<li>bi 和 bo 值：表示每秒读写磁盘的块数，bi（block in）是写磁盘，bo（block out）是读磁盘。</li>
-<li>wa 值：表示因为 IO 等待（wait）而消耗的 CPU 比例。</li>
-</ul>
-<p>一般这几个值偏大，都意味着系统 IO 的消耗较大，对于读请求较大的服务器，b、bo、wa 的值偏大，而写请求较大的服务器，b、bi、wa 的值偏大。</p>
-<h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a><strong>iostat</strong></h4><p>vmstat 虽然万能，但是它分析的东西有限，iostat 是专业分析 IO 性能的工具，可以方便查看 CPU、网卡、tty 设备、磁盘、CD-ROM 等等设备的信息，非常强大，总结下来，共有以下几种用法：</p>
-<p><strong>1）iostat -c 查看部分 CPU 使用情况：</strong></p>
-<center><img src="/images/linux/iostat.png" alt=""></center>
-
-<p>这里显示的是多个 CPU 的平均值，每个字段的含义我就不多解释了，我一般会重点关注 %iowait 和 %idle，分别表示 CPU 等待 IO 完成时间的百分比和 CPU 空闲时间百分比。</p>
-<p>如果 %iowait 较高，则表明磁盘存在 IO 瓶颈，如果 %idle 较高，则 CPU 比较空闲，如果两个值都比较高，则有可能 CPU 在等待分配内存，瓶颈在内存，此时应该加大内存，如果 %idle 较低，则此时瓶颈在 CPU，应该增加 CPU 资源。</p>
-<p><strong>2）iostat -d 查看磁盘使用情况，主要是显示 IOPS 和吞吐量信息</strong>（-k : 以 KB 为单位显示，-m：以 M 为单位显示）：</p>
-<center><img src="/images/linux/iostatd.png" alt=""></center>
-
-<p>其中，几个参数分别解释如下：</p>
-<ul>
-<li>tps：设备每秒的传输次数（transfers per second），也就是读写次数。</li>
-<li>kB_read/s 和 kB_wrtn/s：每秒读写磁盘的数据量。</li>
-<li>kB_read 和 kB_wrtn：读取磁盘的数据总量。</li>
-</ul>
-<p><strong>3）iostat -x 查看磁盘详细信息：</strong></p>
-<center><img src="/images/linux/iostatx.jpg" alt=""></center>
-
-<p>其中，几个参数解释如下；</p>
-<ul>
-<li>rrqm/s 和 wrqm/s：分别每秒进行合并的读操作数和写操作数，这是什么意思呢，合并就是说把多次 IO 请求合并成少量的几次，这样可以减小 IO 开销，buffer 存在的意义就是为了解决这个问题的。</li>
-<li>r/s 和 w/s：每秒磁盘读写的次数。这两个值相加就是 tps。</li>
-<li>rkB/s 和 wkB/s：每秒磁盘读写的数据量，这两个值和上面的 kB_read/s、kB_wrnt/s 是一样的。</li>
-<li>avgrq-sz：平均每次读写磁盘扇区的大小。</li>
-<li>avgqu-sze：平均 IO 队列长度。队列长度越短越好。</li>
-<li>await：平均每次磁盘读写的等待时间（ms）。</li>
-<li>svctm：平均每次磁盘读写的服务时间（ms）。</li>
-<li>%util：一秒钟有百分之多少的时间用于磁盘读写操作。</li>
-</ul>
-<p>以上这些参数太多了，我们并不需要每个都关注，可以重点关注两个：</p>
-<p><strong>a. %util：衡量 IO 的繁忙程度</strong></p>
-<p>这个值越大，说明产生的 IO 请求较多，IO 压力较大，我们可以结合 %idle 参数来看，如果 %idle &lt; 70% 就说明 IO 比较繁忙了。也可以结合 vmstat 的 b 参数（等待 IO 的进程数）和 wa 参数（IO 等待所占 CPU 时间百分比）来看，如果 wa &gt; 30% 也说明 IO 较为繁忙。</p>
-<p><strong>b. await：衡量 IO 的响应速度</strong></p>
-<p>通俗理解，await 就像我们去医院看病排队等待的时间，这个值和医生的服务速度（svctm）和你前面排队的人数（avgqu-size）有关。如果 svctm 和 await 接近，说明磁盘 IO 响应时间较快，排队较少，如果 await 远大于 svctm，说明此时队列太长，响应较慢，这时可以考虑换性能更好的磁盘或升级 CPU。</p>
-<p><strong>4）iostat 1 2 默认显示 cpu 和 吞吐量信息，1 定时 1s 显示，2 显示 2 条信息</strong></p>
-<center><img src="/images/linux/iostat12.jpg" alt=""></center>
-
-<h3 id="进程-IO-性能分析"><a href="#进程-IO-性能分析" class="headerlink" title="进程 IO 性能分析"></a>进程 IO 性能分析</h3><hr>
-<p>有了以上两个命令，基本上能对磁盘 IO 的信息有个全方位的了解了。但如果要确定具体哪个进程的 IO 开销较大，这就得借助另外的工具了。</p>
-<h4 id="iotop"><a href="#iotop" class="headerlink" title="iotop"></a><strong>iotop</strong></h4><p>这个命令类似 top，可以显示每个进程的 IO 情况，有了这个命令，就可以定位具体哪个进程的 IO 开销比较大了。</p>
-<center><img src="/images/linux/iostop.jpg" alt=""></center>
-
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>OK，最后还是总结下，fdisk -l 和 df 查看磁盘基本信息，iostat -d 查看磁盘 IOPS 和吞吐量，iostat -x 结合 vmstat 查看磁盘的繁忙程度和处理效率。</p>
-<p>下文我们将探讨网络方面的的性能分析问题。</p>
-<p>Reference：<br>1.linux 性能分析：<br><a href="http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html" target="_blank" rel="noopener">http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html</a></p>
-<ol start="2">
-<li>linux 性能分析工具总结：<br><a href="http://rdc.hundsun.com/portal/article/731.html" target="_blank" rel="noopener">http://rdc.hundsun.com/portal/article/731.html</a></li>
-</ol>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -1485,7 +1196,7 @@
         <div class="prev-next">
             
             <p class="current">
-                1 / 2
+                1 / 3
             </p>
             
                 <a class="next" rel="next" href="/tags/Linux/page/2/">
@@ -1580,7 +1291,7 @@
         
           <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(5)</div></a></li>
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(8)</div></a></li>
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
@@ -1622,7 +1333,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 14.77px; color: #949494">tap</a> <a href="/tags/tun/" style="font-size: 14.77px; color: #949494">tun</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.31px; color: #898989">tap</a> <a href="/tags/tun/" style="font-size: 16.31px; color: #898989">tun</a> <a href="/tags/veth-pair/" style="font-size: 14.77px; color: #949494">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 

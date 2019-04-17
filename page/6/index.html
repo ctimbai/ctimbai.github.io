@@ -166,6 +166,356 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2018/01/12/tech/Linux_网络体系结构全景分析/">
+              
+                  Linux 网络体系结构全景分析
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-12
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>Linux 是一个非常庞大的系统结构，模块众多，各个模块分工合作，共同运作着各自的任务，为 Linux 这个大家庭贡献着自己的力量。</p>
+<h3 id="Linux-网络子系统"><a href="#Linux-网络子系统" class="headerlink" title="Linux 网络子系统"></a>Linux 网络子系统</h3><hr>
+<p>其中，网络子系统是一个较为复杂的模块，如下图是 Linux 网络子系统的体系结构，自顶向下，可以分应用层、插口层（或协议无关层）、协议层和接口层（或设备驱动层），这个层级关系也分别对应着我们所熟悉的 OSI 七层模型（物理层、数据链路层、网络层、传输层、会话层、表示层和应用层）。</p>
+<center><img src="/images/linux/linux_net_level.jpg" alt=""></center>
+
+<p>Linux 所有用户态的应用程序要访问链接内核都要依赖系统调用，这是内核提供给用户态的调用接口，这通常是由标准的 C 库函数来实现的。对于网络应用程序，内核提供了一套通用的 socket 系统调用的接口。</p>
+<p>插口层，也叫协议无关层，它屏蔽了协议相关的操作，不论是什么协议（UDP，TCP），都提供一组通用的函数接口，也就是 socket 的实现。</p>
+<p>协议层，用于实现各种具体的网络协议族，包括 TCP/IP，OSI 和 Unix 域的实现，每个协议族都包含自己的内部结构，例如，对于 TCP/IP 协议族，IP 是最底层，TCP 和 UDP 层在 IP 层的上面。</p>
+<p>接口层，包括了通用设备接口，和网络设备通信的设备驱动程序，其中，包串口使用的 SLIP 驱动程序以及以太网使用的以太网驱动程序，以及环回口使用的都是这一层的设备。它对上提供了协议与设备驱动通信的通用接口，对下也提供了一组通用函数供底层网络设备驱动程序使用。具体的细节后面再开文章详细讲述。</p>
+<p>以上是从分层的体系结构来看，下面从数据传输的角度来说说，一个数据包是如何依赖这些层次关系被发送/接收的。</p>
+<p>首先，数据的发送过程，应用层组织好待发送的数据包，执行系统调用进入内核协议栈，按照层次关系分别进行包头的封装，如到达传输层，封装 TCP/UDP 的包头，进入网络层封装 IP 包头，进入接口层封装 MAC 帧，最后借助驱动将数据包从网卡发送出去。</p>
+<p>然后，数据的接收过程正好与发包过程相反，是一个拆包的过程。接口层借助网卡 DMA 硬件中断感知数据包的到来，拆解包头，识别数据，借助软中断机制告知上层进行相应的收包处理，最终用户态执行系统调用接收数据包。</p>
+<center><img src="/images/linux/linux_net_flow.jpg" alt=""></center>
+
+<p>继续细化这个过程，其内部在实现上都是通过具体的数据结构来完成每一层的过渡的，譬如说，应用层和内核之间通过 struct sock 结构实现协议无关的接口调用进行交互，传输层提供 struct proto 的结构来支持多种协议，网络层通过 struct sk_buff 来传递数据，接口层定义 struct net_device 来完成和驱动程序的交互。</p>
+<center><img src="/images/linux/linux_net_struct.jpg" alt=""></center>
+
+<p>Linux 网络体系结构还是比较博大精深的，尤其是这套自顶向下的分层设计方式对很多技术都有借鉴意义。更具体的函数调用和数据收发过程，后面的文章再进行讲述，敬请期待。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>Linux 网络子系统的分层模型，数据收发过程，以及核心数据结构。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/01/05/tech/Linux_下几种零拷贝的方法/">
+              
+                  Linux 下几种零拷贝的方法
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-05
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>本文讲解 Linux 的零拷贝技术，我在「云计算技能图谱」中说过，云计算是一门很庞大的技术学科，融合了很多技术，Linux 算是比较基础的技术，所以，学好 Linux 对于云计算的学习会有比较大的帮助。</p>
+<p>本文借鉴并总结了几种比较常见的 Linux 下的零拷贝技术，相关的引用链接见文后，大家如果觉得本文总结得太抽象，可以转到链接看详细解释。</p>
+<h3 id="为什么需要零拷贝"><a href="#为什么需要零拷贝" class="headerlink" title="为什么需要零拷贝"></a>为什么需要零拷贝</h3><hr>
+<p>传统的 Linux 系统的标准 I/O 接口（read、write）是基于数据拷贝的，也就是数据都是 copy_to_user 或者 copy_from_user，这样做的好处是，通过中间缓存的机制，减少磁盘 I/O 的操作，但是坏处也很明显，大量数据的拷贝，用户态和内核态的频繁切换，会消耗大量的 CPU 资源，严重影响数据传输的性能，有数据表明，在Linux内核协议栈中，这个拷贝的耗时甚至占到了数据包整个处理流程的57.1%。</p>
+<h3 id="什么是零拷贝"><a href="#什么是零拷贝" class="headerlink" title="什么是零拷贝"></a>什么是零拷贝</h3><hr>
+<p>零拷贝就是这个问题的一个解决方案，通过尽量避免拷贝操作来缓解 CPU 的压力。Linux 下常见的零拷贝技术可以分为两大类：一是针对特定场景，去掉不必要的拷贝；二是去优化整个拷贝的过程。由此看来，零拷贝并没有真正做到“0”拷贝，它更多是一种思想，很多的零拷贝技术都是基于这个思想去做的优化。</p>
+<center><img src="/imagessss/linux/copy_type.jpg" alt=""></center>
+
+<h3 id="零拷贝的几种方法"><a href="#零拷贝的几种方法" class="headerlink" title="零拷贝的几种方法"></a>零拷贝的几种方法</h3><hr>
+<h4 id="原始数据拷贝操作"><a href="#原始数据拷贝操作" class="headerlink" title="原始数据拷贝操作"></a>原始数据拷贝操作</h4><hr>
+<p>在介绍之前，先看看 Linux 原始的数据拷贝操作是怎样的。如下图，假如一个应用需要从某个磁盘文件中读取内容通过网络发出去，像这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">while((n = read(diskfd, buf, BUF_SIZE)) &gt; 0)</span><br><span class="line"></span><br><span class="line">write(sockfd, buf , n);</span><br></pre></td></tr></table></figure>
+<p>那么整个过程就需要经历：1）read 将数据从磁盘文件通过 DMA 等方式拷贝到内核开辟的缓冲区；2）数据从内核缓冲区复制到用户态缓冲区；3）write 将数据从用户态缓冲区复制到内核协议栈开辟的 socket 缓冲区；4）数据从 socket 缓冲区通过 DMA 拷贝到网卡上发出去。</p>
+<center><img src="/imagessss/linux/copy_tran.png" alt=""></center>
+
+<p>可见，整个过程发生了至少四次数据拷贝，其中两次是 DMA 与硬件通讯来完成，CPU 不直接参与，去掉这两次，仍然有两次 CPU 数据拷贝操作。</p>
+<h4 id="方法一：用户态直接-I-O"><a href="#方法一：用户态直接-I-O" class="headerlink" title="方法一：用户态直接 I/O"></a>方法一：用户态直接 I/O</h4><hr>
+<p>这种方法可以使应用程序或者运行在用户态下的库函数直接访问硬件设备，数据直接跨过内核进行传输，内核在整个数据传输过程除了会进行必要的虚拟存储配置工作之外，不参与其他任何工作，这种方式能够直接绕过内核，极大提高了性能。</p>
+<center><img src="/imagessss/linux/copy_dirtio.jpg" alt=""></center>
+
+<p><strong>缺陷：</strong></p>
+<p>1）这种方法只能适用于那些不需要内核缓冲区处理的应用程序，这些应用程序通常在进程地址空间有自己的数据缓存机制，称为自缓存应用程序，如数据库管理系统就是一个代表。</p>
+<p>2）这种方法直接操作磁盘 I/O，由于 CPU 和磁盘 I/O 之间的执行时间差距，会造成资源的浪费，解决这个问题需要和异步 I/O 结合使用。</p>
+<h4 id="方法二：mmap"><a href="#方法二：mmap" class="headerlink" title="方法二：mmap"></a>方法二：mmap</h4><hr>
+<p>这种方法，使用 mmap 来代替 read，可以减少一次拷贝操作，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buf = mmap(diskfd, len);</span><br><span class="line"></span><br><span class="line">write(sockfd, buf, len);</span><br></pre></td></tr></table></figure>
+<p>应用程序调用 mmap ，磁盘文件中的数据通过 DMA 拷贝到内核缓冲区，接着操作系统会将这个缓冲区与应用程序共享，这样就不用往用户空间拷贝。应用程序调用write ，操作系统直接将数据从内核缓冲区拷贝到 socket 缓冲区，最后再通过 DMA 拷贝到网卡发出去。</p>
+<center><img src="/imagessss/linux/copy_mmap.png" alt=""></center>
+
+<p><strong>缺陷：</strong> </p>
+<p>1）mmap 隐藏着一个陷阱，当 mmap 一个文件时，如果这个文件被另一个进程所截获，那么 write 系统调用会因为访问非法地址被 SIGBUS 信号终止，SIGBUS 默认会杀死进程并产生一个 coredump，如果服务器被这样终止了，那损失就可能不小了。</p>
+<p>解决这个问题通常使用文件的租借锁：首先为文件申请一个租借锁，当其他进程想要截断这个文件时，内核会发送一个实时的 RT_SIGNAL_LEASE 信号，告诉当前进程有进程在试图破坏文件，这样 write 在被 SIGBUS 杀死之前，会被中断，返回已经写入的字节数，并设置 errno 为 success。</p>
+<p>通常的做法是在 mmap 之前加锁，操作完之后解锁：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">if(fcntl(diskfd, F_SETSIG, RT_SIGNAL_LEASE) == -1) &#123;</span><br><span class="line"></span><br><span class="line">perror(&quot;kernel lease set signal&quot;);</span><br><span class="line"></span><br><span class="line">return -1;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* l_type can be F_RDLCK F_WRLCK  加锁*/</span><br><span class="line"></span><br><span class="line">/* l_type can be  F_UNLCK 解锁*/</span><br><span class="line"></span><br><span class="line">if(fcntl(diskfd, F_SETLEASE, l_type))&#123;</span><br><span class="line"></span><br><span class="line">perror(&quot;kernel lease set type&quot;);</span><br><span class="line"></span><br><span class="line">return -1;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="方法三：sendfile"><a href="#方法三：sendfile" class="headerlink" title="方法三：sendfile"></a>方法三：sendfile</h4><hr>
+<p>从Linux 2.1版内核开始，Linux引入了sendfile，也能减少一次拷贝。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/sendfile.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);</span><br></pre></td></tr></table></figure>
+<p>sendfile 是只发生在内核态的数据传输接口，没有用户态的参与，自然避免了用户态数据拷贝。它指定在 in_fd 和 out_fd 之间传输数据，其中，它规定 in_fd 指向的文件必须是可以 mmap 的，out_fd 必须指向一个套接字，也就是规定数据只能从文件传输到套接字，反之则不行。sendfile 不存在像 mmap 时文件被截获的情况，它自带异常处理机制。</p>
+<center><img src="/imagessss/linux/copy_sendfile.jpg" alt=""></center>
+
+<p><strong>缺陷：</strong></p>
+<p>1）只能适用于那些不需要用户态处理的应用程序。</p>
+<h4 id="方法四：DMA-辅助的-sendfile"><a href="#方法四：DMA-辅助的-sendfile" class="headerlink" title="方法四：DMA 辅助的 sendfile"></a>方法四：DMA 辅助的 sendfile</h4><hr>
+<p>常规 sendfile 还有一次内核态的拷贝操作，能不能也把这次拷贝给去掉呢？</p>
+<p>答案就是这种 DMA 辅助的 sendfile。</p>
+<p>这种方法借助硬件的帮助，在数据从内核缓冲区到 socket 缓冲区这一步操作上，并不是拷贝数据，而是拷贝缓冲区描述符，待完成后，DMA 引擎直接将数据从内核缓冲区拷贝到协议引擎中去，避免了最后一次拷贝。</p>
+<center><img src="/imagessss/linux/copy_dma_sendfile.jpg" alt=""></center>
+
+<p><strong>缺陷：</strong></p>
+<p>1）除了3.4 中的缺陷，还需要硬件以及驱动程序支持。</p>
+<p>2）只适用于将数据从文件拷贝到套接字上。</p>
+<h4 id="方法五：splice"><a href="#方法五：splice" class="headerlink" title="方法五：splice"></a>方法五：splice</h4><hr>
+<p>splice 去掉 sendfile 的使用范围限制，可以用于任意两个文件描述符中传输数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#define _GNU_SOURCE         /* See feature_test_macros(7) */</span><br><span class="line"></span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t splice(int fd_in, loff_t *off_in, int fd_out, loff_t *off_out, size_t len, unsigned int flags);</span><br></pre></td></tr></table></figure>
+<p>但是 splice 也有局限，它使用了 Linux 的管道缓冲机制，所以，它的两个文件描述符参数中至少有一个必须是管道设备。</p>
+<p>splice 提供了一种流控制的机制，通过预先定义的水印（watermark）来阻塞写请求，有实验表明，利用这种方法将数据从一个磁盘传输到另外一个磁盘会增加 30%-70% 的吞吐量，CPU负责也会减少一半。</p>
+<p><strong>缺陷：</strong> </p>
+<p>1）同样只适用于不需要用户态处理的程序</p>
+<p>2）传输描述符至少有一个是管道设备。</p>
+<h4 id="方法六：写时复制"><a href="#方法六：写时复制" class="headerlink" title="方法六：写时复制"></a>方法六：写时复制</h4><hr>
+<p>在某些情况下，内核缓冲区可能被多个进程所共享，如果某个进程想要这个共享区进行 write 操作，由于 write 不提供任何的锁操作，那么就会对共享区中的数据造成破坏，写时复制就是 Linux 引入来保护数据的。</p>
+<p>写时复制，就是当多个进程共享同一块数据时，如果其中一个进程需要对这份数据进行修改，那么就需要将其拷贝到自己的进程地址空间中，这样做并不影响其他进程对这块数据的操作，每个进程要修改的时候才会进行拷贝，所以叫写时拷贝。这种方法在某种程度上能够降低系统开销，如果某个进程永远不会对所访问的数据进行更改，那么也就永远不需要拷贝。</p>
+<p><strong>缺陷：</strong></p>
+<p>需要 MMU 的支持，MMU 需要知道进程地址空间中哪些页面是只读的，当需要往这些页面写数据时，发出一个异常给操作系统内核，内核会分配新的存储空间来供写入的需求。</p>
+<h4 id="方法七：缓冲区共享"><a href="#方法七：缓冲区共享" class="headerlink" title="方法七：缓冲区共享"></a>方法七：缓冲区共享</h4><hr>
+<p>这种方法完全改写 I/O 操作，因为传统 I/O 接口都是基于数据拷贝的，要避免拷贝，就去掉原先的那套接口，重新改写，所以这种方法是比较全面的零拷贝技术，目前比较成熟的一个方案是最先在 Solaris 上实现的 fbuf （Fast Buffer，快速缓冲区）。</p>
+<p>Fbuf 的思想是每个进程都维护着一个缓冲区池，这个缓冲区池能被同时映射到程序地址空间和内核地址空间，内核和用户共享这个缓冲区池，这样就避免了拷贝。</p>
+<center><img src="/imagessss/linux/copy_fbuf.jpg" alt=""></center>
+
+<p><strong>缺陷：</strong></p>
+<p>1）管理共享缓冲区池需要应用程序、网络软件、以及设备驱动程序之间的紧密合作</p>
+<p>2）改写 API ，尚处于试验阶段。</p>
+<h4 id="高性能网络-I-O-框架——netmap"><a href="#高性能网络-I-O-框架——netmap" class="headerlink" title="高性能网络 I/O 框架——netmap"></a>高性能网络 I/O 框架——netmap</h4><hr>
+<p>Netmap 基于共享内存的思想，是一个高性能收发原始数据包的框架，由Luigi Rizzo 等人开发完成，其包含了内核模块以及用户态库函数。其目标是，不修改现有操作系统软件以及不需要特殊硬件支持，实现用户态和网卡之间数据包的高性能传递。</p>
+<center><img src="/imagessss/linux/netmap.jpg" alt=""></center>
+
+<p>在 Netmap 框架下，内核拥有数据包池，发送环\接收环上的数据包不需要动态申请，有数据到达网卡时，当有数据到达后，直接从数据包池中取出一个数据包，然后将数据放入此数据包中，再将数据包的描述符放入接收环中。内核中的数据包池，通过 mmap 技术映射到用户空间。用户态程序最终通过 netmap_if 获取接收发送环 netmap_ring，进行数据包的获取发送。</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><hr>
+<p>1、零拷贝本质上体现了一种优化的思想</p>
+<p>2、直接 I/O，mmap，sendfile，DMA sendfile，splice，缓冲区共享，写时复制……</p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><hr>
+<p>（1）Linux 中的零拷贝技术，第 1 部分<br><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html</a><br>（2）Linux 中的零拷贝技术，第 2 部分<br><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/</a><br>（3）Netmap 原理<br><a href="http://www.tuicool.com/articles/MnIRbuU" target="_blank" rel="noopener">http://www.tuicool.com/articles/MnIRbuU</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagessss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/零拷贝/"><i class="fas fa-hashtag fa-fw"></i>零拷贝</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/12/30/tech/雾计算简史/">
+              
+                  雾计算简史
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-30
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/02-雾计算/">02 雾计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>在我看来，雾计算和云计算的本质是一样的——都是充分利用「闲置的资源」进行任务的处理。不同在于云计算利用的是网络核心的资源，而雾计算则利用网络边缘的资源。</p>
+<p>1961 年，人工智能之父麦卡锡在一次会议上提出了「效用计算」这个概念，第一次体现了这种共享资源的思想。当时计算设备的价格非常昂贵，远非普通企业和机构所能承受，所以就想到将分散的闲置资源整合起来，共享给多个用户使用。类似的概念还有「网络计算」、「分布式计算」、「弹性计算」等，这些概念都是经由学术界提出，并逐步成为支撑工程应用发展的基础理论。</p>
+<center><img src="/images/cloud/mkx.jpg" alt=""></center>
+
+<p>工业界虽说比学术界要落后，但工业界做着让所有人都兴奋的事——让概念标准化，真正让技术实现落地。上面这些概念让人晕乎，虽有差异，但本质一致，所以工业界就统一用「云计算」一词来囊括。</p>
+<p>2006 年 8 月 9 日，Google 首席执行官埃里克·施密特在搜索引擎大会(SES San Jose 2006)首次提出云计算(Cloud Computing)的概念。从此云计算的发展进入了井喷时代。</p>
+<center><img src="/images/cloud/smt.jpg" alt=""></center>
+
+<p>2007 年初，Amazon 推出弹性计算云 EC2 服务；2007 年 11 月，IBM 发布业界首个云计算商业解决方案「蓝云」计划；2008 年 4 月，Google APP Engine 发布；2008 年 Gartner 发布报告，认为云计算代表了今后计算的方向；2009 年 1 月，阿里巴巴在南京建立首个“电子商务云计算中心”；2010 年 1 月，微软正式发布 Microsoft Azure 云平台服务；2010 年 7 月，美国国家航空航天局和包括 Rackspace、AMD、Intel、戴尔等支持厂商共同宣布开放「OpenStack」项目源代码……</p>
+<p>时至今日，云计算已经进入稳定发展时期，面临的是新的问题。</p>
+<p>随着移动设备、嵌入式设备和传感设备等智能设备的不断创新和普及，进入了「万物互联网时代（IoT）」，全球的移动数据呈现出疯狂式的增长。</p>
+<p>据 Cisco 2016 年做的一个关于移动数据预测报告显示，全球的移动数据将会在 2016 年和 2021 年之间提高 18  倍，2021 年截止将会超过 49 EB。面对大量的数据和新型的应用程序对服务质量的严苛需求，云计算的问题也凸显出来。</p>
+<center><img src="/images/cloud/datagrow.jpg" alt=""></center>
+
+<p>首先，云计算中心位于远程的 Internet，对于那些对延迟敏感的应用程序（如视频流、在线游戏等），将会带来较长的传播时延（WAN），这对于用户体验来说是无法忍受的。其次，对移动场景支持不足，特别是对于高速移动的车载网络环境，司机对于路况、交通流等的感知都必须是快速且实时的。再次，无法满足地理位置分布相关的感知环境的实时要求，如大规模的传感网络，要求传感节点定时向其他节点更新自身的信息。再有，大量的设备接入云端，网络带宽就显得捉襟见肘。最后，云计算的安全性和隐私性不容乐观，在用户和云计算中心之间需要经过多跳的网络传输，越深的网络传输，数据的完整性和机密性就越难保证。</p>
+<p>以上问题的解决方案，自然是由学术界首先提出的。2009 年卡内基梅隆大学的沙特亚教授等人在其发表的论文[1]中提出「微云（Cloudlet）」的概念。论文指出微云是一种「和云有着同样的技术标准，但邻近用户」的新型计算模式。</p>
+<center><img src="/images/cloud/cloudlet.jpg" alt=""></center>
+
+<p>这里面蕴含着几层信息。第一，能够提供和云计算一样的服务，但所提供的资源有限，不如云计算能够提供无限的资源；第二，邻近用户，意味着用户请求的响应时延大大减少；第三，雾计算基础设施以分布式的方式部署在网络的边缘，满足高速移动场景和地理位置分布的场景需求，同时，减缓了网络核心的带宽负载；第四，安全性和隐私性较云计算得到较大保障。</p>
+<p>这是「雾计算」最初的雏形。之后，学术界又提出很多类似的解决方案，如「Fog Computing」、「Edge Computing」、「Follow me Cloud」、「Small-Cell Cloud」、「Virtual Cloud」、「FemtoCloud」等。</p>
+<p>这些概念其实本质都是一样的，都是在讲一件事，就是将「计算去中心化」——将云计算资源和服务从网络的核心转移到网络的边缘，以此来适应今天多种 IoT 应用的需求。和云计算的提出如出一辙，只不过引导这次工业变革的对象不再是 Google，而是 Cisco。</p>
+<center><img src="/images/cloud/fog_cisco.jpg" alt=""></center>
+
+<p>Cisco 在 Cisco Live 2014 会议上首度提出这个概念。Cisco 强调雾计算是依托于现今无处不在的 IoT 应用产生的一种新型计算模式。</p>
+<p>相比于云计算，雾计算是一种更加新进和广泛的计算模式，更具扩展性和可持续性。但是雾计算也不能完全取代云计算，必须依托于云计算才能更好地发挥其作用，因此它们的关系是相辅相成，相互联系的。</p>
+<p>在会上，Cisco 同时发布了供开发者使用的开发套件 IOx。IOx 是 Cisco 对于雾计算模式的实现。它为开发者提供了一整套的开发框架（包括开发、分发、部署、监控和管理等多种组件）和计算平台，开发者能够将开发好的应用部署到网络的边界上（路由器、交换机等）进行处理。如下是 IOx 的架构图，更多信息请访问 IOx 开发者文档。</p>
+<center><img src="/images/cloud/fog_iox.jpg" alt=""></center>
+
+<p>雾计算是应现今「人工智能」、「物联网」一波红海而生的技术革新。业界多家企业和组织机构都开始在布局雾计算的生态体系，除了 Cisco、华为这些通讯产商，还有很多云计算、物联网的企业也加入进来。</p>
+<p>在中国，最早布局雾计算架构的是成立于2005 年的全球领先的物联网云服务商「智云」。他们在 2016 年初即发布了主打 IoT 雾计算的机智云 4.0，整合了雾计算、物联网大数据和机器学习应用能力，形成了一体化的解决方案。</p>
+<p>此外，2015 年 11 月 19 日，Cisco 联合 ARM、Dell、Intel、Microsoft 和普林斯顿大学成立了「开放雾联盟（OpenFog）」，旨在制定雾计算相关的技术标准和推动行业的技术变革。</p>
+<p>由此可见，雾计算将会成为继云计算之后的又一波技术浪潮。</p>
+<p>PS：最近听一些朋友在谈「雾计算」，正好我研究生期间研究过一段时间这玩意，于是有一种不吐不快之感，遂拿出来跟大家分享了。如果你觉得对你有一点帮助，点赞，转发，不胜感激，或者有什么想跟我探讨的，欢迎留言。</p>
+<p><strong>Reference:</strong> </p>
+<hr>
+<p>[1] The Case for VM-Based Cloudlets in Mobile Computing<br>[2] Fog Computing: A Taxonomy, Survey and future direction<br>[3] Edge-centric Computing: Vision and Challenges<br>[4] Edge-Computing: Challenges to support edge-as-a-service<br>[5] A virtual Cloud computing provider for mobile devices<br>[6] Femto Clouds: Leveraging mobile devices to provide Cloud service at the edge<br>[7] Follow me Cloud: interworking federated Clouds and distributed mobile networks</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
+                
+                    <a href="/tags/边缘计算/"><i class="fas fa-hashtag fa-fw"></i>边缘计算</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2017/12/23/tech/OVS_总体架构、源码结构及数据流程全面解析/">
               
                   OVS 总体架构、源码结构及数据流程全面解析
@@ -956,356 +1306,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/26/tech/CPU_虚拟化/">
-              
-                  CPU 虚拟化
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-26
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>前面「虚拟化技术总览」中从虚拟平台 VMM 的角度，将虚拟化分为 Hypervisor 模型和宿主模型，如果根据虚拟的对象（资源类型）来划分，虚拟化又可以分为计算虚拟化、存储虚拟化和网络虚拟化，再细一些，又有中断虚拟化，内存虚拟化，字符/块设备虚拟化，网络功能虚拟化等。</p>
-<p>我会将此作为一个系列来写，本文先看 CPU 虚拟化。在这之前，我们先来笼统看下虚拟化的本质是什么，它到底是如何做到将 Host 的硬件资源虚拟化给 Guest 用，我这里用两个词来定义，<strong>intercept</strong> 和 <strong>virtualize</strong>，中文翻译成截获和模拟比较恰当一点，这两个词基本上是虚拟化的终极定义了，带着这两个词去看每一种虚拟化类型，会发现很容易理解和记忆。</p>
-<h3 id="CPU-软件虚拟化"><a href="#CPU-软件虚拟化" class="headerlink" title="CPU 软件虚拟化"></a>CPU 软件虚拟化</h3><hr>
-<p>基于软件的 CPU 虚拟化，故名思议，就是通过软件的形式来模拟每一条指令。通过前面的文章我们知道常用的软件虚拟化技术有两种：优先级压缩和二进制代码翻译。这两种是通用技术，可以用在所有虚拟化类型中。我们就结合 intercept 和 virtualize 来看看 CPU 软件虚拟化是怎么做的。</p>
-<p>首先，一些必须的硬件知识要知道，X86 体系架构为了让上层的软件（操作系统、应用程序）能够访问硬件，提供了四个 CPU 特权级别，Ring 0 是最高级别，Ring 1 次之，Ring 2 更次之，Ring 3 是最低级别。</p>
-<p>一般，操作系统由于要直接访问硬件和内存，因此它的代码需要运行在最高级别 Ring 0 上，而应用程序的代码运行在最低级别 Ring 3 上，如果要访问硬件和内存，比如设备访问，写文件等，就要执行相关的系统调用，CPU 的运行级别发生从 Ring 3 到 Ring 0 的切换，当完成之后，再切换回去，我们熟悉的用户态和内核态切换的本质就来自这里。</p>
-<p>虚拟化的实现也是基于这个思想，VMM 本质上是个 Host OS，运行在 Ring 0 上，Guest OS 运行在 Ring 1 上，再往上是相应层次的应用程序运行在 Ring 2 和 Ring 3 上。</p>
-<p>当 Guest OS 或上层应用在执行相关的特权指令时，就会发生越权访问，触发异常，这个时候 VMM 就截获（intercept）这个指令，然后模拟（virtualize）这个指令，返回给 Guest OS，让其以为自己的特权指令可以正常工作，继续运行。整个过程其实就是优先级压缩和二进制代码翻译的体现。</p>
-<center><img src="/images/virt/cpu_soft.jpg" alt=""></center>
-
-
-<h3 id="CPU-硬件虚拟化"><a href="#CPU-硬件虚拟化" class="headerlink" title="CPU 硬件虚拟化"></a>CPU 硬件虚拟化</h3><hr>
-<p>上面的这种截获再模拟的纯软件的虚拟化方式，势必是性能非常低的。那怎么样提高性能呢，有一种改进的方式是修改 Guest OS 中关于特权指令的相关操作，将其改为一种函数调用的方式，让 VMM 直接执行，而不是截获和模拟，这样就能在一定程度上提高性能。</p>
-<p>但这种方式并不通用，要去改 Guest OS 的代码，只能看作是一种定制。为了能够通用，又能够提高性能，就只能从硬件上去做文章了。所以，后来，以 Intel 的 VT-x 和 AMD 的 AMD-V 为主的硬件辅助的 CPU 虚拟化就被提出来（Intel VT 包括 VT-x （支持 CPU 虚拟化）、EPT（支持内存虚拟化）和 VT-d（支持 I/O 虚拟化））。</p>
-<center><img src="/images/virt/cpu_hard.jpg" alt=""></center>
-
-<p>CPU 硬件辅助虚拟化在 Ring 模式的基础上引入了一种新的模式，叫 VMX 模式。它包括根操作模式（VMX Root Operation）和非根操作模式（VMX Non-Root Operation）。</p>
-<p>这两种模式都有 Ring 0 - Ring 3 的特权级。所以，在描述某个应用程序时，除了描述其属于哪个特权级，还要指明其处于根模式还是非根模式。</p>
-<p>引入这种模式的好处就在于，Guest OS 运行在 Ring 0 上，就意味着它的核心指令可以直接下达到硬件层去执行，而特权指令等敏感指令的执行则是由硬件辅助，直接切换到 VMM 执行，这是自动执行的，应用程序是感知不到的，性能自然就提高了。</p>
-<p>这种切换 VT-x 定义了一套机制，称为 VM-entry 和 VM-exit。从非根模式切换到根模式，也就是从 Guest 切换到 Host VMM，称为 VM-exit，反之称为 VM-entry。</p>
-<ul>
-<li><p>VM-exit ： 如果 Guest OS 运行过程中遇到需要 VMM 处理的事件，比如中断或缺页异常，或者主动调用 VMCALL 指令调用 VMM 服务的时候（类似于系统调用），硬件自动挂起 Guest OS，切换到根模式，VMM 开始执行。</p>
-</li>
-<li><p>VM-entry： VMM 通过显示调用 VMLAUNCH 或 VMRESUME 指令切换到非根模式，硬件自动加载 Guest OS 的上下文，Guest OS 开始执行。</p>
-</li>
-</ul>
-<center><img src="/images/virt/vm_exit.png" alt=""></center>
-
-<h3 id="KVM-CPU-虚拟化"><a href="#KVM-CPU-虚拟化" class="headerlink" title="KVM CPU 虚拟化"></a>KVM CPU 虚拟化</h3><hr>
-<p>KVM 是一种硬件辅助的虚拟化技术，支持 Intel VT-x 和 AMD-v 技术，怎么知道 CPU 是否支持 KVM 虚拟化呢？可以通过如下命令查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># grep -E &apos;(vmx|svm)&apos; /proc/cpuinfo</span><br></pre></td></tr></table></figure></p>
-<p>如果输出是 vmx 或 svm，则表明当前 CPU 支持 KVM，Intel 是 vmx，AMD 是svm。</p>
-<p>从本质上看，一个 KVM 虚拟机对应 Host 上的一个 qemu-kvm 进程，它和其他 Linux 进程一样被调度，而 qemu-kvm 进程中的一个线程就对应虚拟机的虚拟 CPU （vCPU），虚拟机中的任务线程就被 vCPU 所调度。</p>
-<p>比如下面这个例子，Host 机有两个物理 CPU，上面起了两个虚拟机 VM1 和 VM2，VM1 有两个 vCPU，VM2 有 3 个 vCPU，VM1 和 VM2 分别有 2 个 和 3 个线程在 2 个物理 CPU 上调度。VM1 和 VM2 中又分别有 3 个任务线程在被 vCPU 调度。</p>
-<p>所以，这里有两级的 CPU 调度，Guest OS 中的 vCPU 负责一级调度，Host VMM 负责另一级调度，即 vCPU 在物理 CPU 上的调度。</p>
-<center><img src="/images/virt/cpu_over.png" alt=""></center>
-
-<p>我们也可以看到，vCPU 的个数，可以超过物理 CPU 的个数，这个叫 CPU 「超配」，这正是 CPU 虚拟化的优势所在，这表明了虚拟机能够充分利用 Host 的 CPU 资源，进行相应的业务处理，运维人员也可以据此控制 CPU 资源使用，达到灵活调度。</p>
-<p>OK，CPU 虚拟化就到这里，下篇文章将讲述内存虚拟化。觉得写得凑合可以给个赞，谢谢大家的支持。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/20/tech/KVM_初探/">
-              
-                  KVM 初探
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>KVM 是业界最为流行的 Hypervisor，全称是 Kernel-based Virtual Machine。它是作为 Linux kernel 中的一个内核模块而存在，模块名为 kvm.ko，也可以看作是一个进程，被内核调度并管理，从 Linux 2.6.20 版本开始被完全正式加入到内核的主干开发和正式发布代码中。 KVM 主要用于管理 CPU 和内存的虚拟化，IO 设备的虚拟化则是由 Qemu 来完成。为什么会有这样的分工，请继续往下看。</p>
-<h3 id="KVM-与-Qemu-的前世今生"><a href="#KVM-与-Qemu-的前世今生" class="headerlink" title="KVM 与 Qemu 的前世今生"></a>KVM 与 Qemu 的前世今生</h3><hr>
-<p>Qemu 是一个纯软件实现的开源「模拟」软件，它能够模拟整套虚拟机的实现，包括 CPU、内存、各种 IO 设备、鼠标、键盘、USB 、网卡、声卡等等，基本上没有它不能模拟的。有人可能会比较疑惑它跟 KVM 之间到底有何关系，我们可以把它们看成是合作关系，好基友，谁都离不开彼此。</p>
-<p>KVM 离不开 Qemu。KVM 实现初期，为了简化开发和代码重用，在 Qemu 的基础上进行了修改，主要是将比较耗性能的 CPU 虚拟化和内存虚拟化部分移到了内核中实现，保留 IO 虚拟化模块在用户空间实现。这样的做法主要是考虑到性能的原因，CPU 和 内存虚拟化是非常复杂的虚拟化模块，而且使用非常频繁，如果实现在用户空间的话，用户态和内核态的频繁切换势必会对性能造成很大的影响。那为什么要单独保留 IO 虚拟化在用户空间呢，这个也是权衡之下的结果，首先 IO 设备太多了，其次 IO 虚拟化相对其他两个模块使用不是很频繁，开销会小一些，所以，为了尽可能保持内核的纯净性，才有了这样的分配。</p>
-<p>Qemu 离不开 KVM。上面也说了，Qemu 是一个纯软件的实现，运行在用户空间，性能非常低下，所以，从 Qemu 的角度，可以说是 Qemu 使用了 KVM 的虚拟化功能，为自身虚拟机提供加速。</p>
-<p>早期两者还没有区分（没有同居），KVM 修改的模块叫 qemu-kvm，到 Qemu1.3 版本之后，两者就合二为一了（同居啦），如果我们在用 Qemu 创建虚拟机时，要加载 KVM 模块，需要为其指定参数 <code>--enable-kvm</code>。</p>
-<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>KVM 与 Qemu 的关系（图片来源于网络，侵权必删）</center>
-
-<h3 id="KVM-架构"><a href="#KVM-架构" class="headerlink" title="KVM 架构"></a>KVM 架构</h3><hr>
-<p>KVM 是基于硬件虚拟化（Intel VT 或 AMD-V）实现的一套虚拟化解决方案，通过以上一个与 Qemu 关系的分析，我们基本上知道它在虚拟化领域处在一个什么样的地位。它其实只负责 CPU 和内存的虚拟化，不负责任何设备的模拟，而是提供接口给用户空间的 Qemu 来模拟。这个接口是 /dev/kvm，<br>Qemu 通过 /dev/kvm 接口设置一个虚拟机的地址空间，然后向它提供模拟好的 I/O 设备，并将相关的设备回显操作映射到宿主机，完成整个 I/O 设备的虚拟化操作。</p>
-<center><img src="/imagesss/virt/kvm_arch.png" alt=""><br>KVM 架构</center>
-
-
-<p>/dev/kvm 接口是 Qemu 和 KVM 交互的“桥梁”，基本的原理是：/dev/kvm 本身是一个设备文件，这就意味着可以通过 ioctl 函数来对该文件进行控制和管理，从而可以完成用户空间与内核空间的数据交互。在 KVM 与 Qemu 的通信过程主要就是一系列针对该设备文件的 ioctl 调用。</p>
-<p>我就拿创建虚拟机举个例子，虚拟机本质上是宿主机的一个进程，包括用户态数据结构和内核态数据结构，用户态部分由 Qemu 创建并初始化，内核态部分则由 KVM 来完成，完成后会返回一个文件句柄来代表所创建的虚拟机，针对该文件句柄的 ioctl 调用就可以对虚拟机进行相应的管理，比如建立虚拟机地址空间和宿主机地址空间的映射关系，创建多个线程（虚拟处理器，vCPU）来供虚拟机使用等，对于创建出的 vCPU，也会生成相应的文件句柄，同样，对 vCPU 的文件句柄的 ioctl 调用就可以对 vCPU 进行管理。</p>
-<p>关于这块的具体细节，后面会有文章来专门讨论。</p>
-<h3 id="VMM-管理工具-——-libvirt"><a href="#VMM-管理工具-——-libvirt" class="headerlink" title="VMM 管理工具 —— libvirt"></a>VMM 管理工具 —— libvirt</h3><hr>
-<p>目前，虚拟化这个领域可以说是百花齐放，针对不同的场景提出了很多的虚拟化解决方案，KVM、Xen、VMware、VirtualBox、Hyper-V 等等，具体的这些方案有什么特点，可以看前文「虚拟化技术总览」。这么多方案势必有很多通用的模块，不同之处可能在于，与不同硬件厂商的适配上，为了支持更多厂商，以及应用更多的领域，有很多 IaaS 解决方案需要融合多种虚拟化技术。这个时候如果有一个平台类的管理工具就会非常方便，libvirt 就是这样一个工具。</p>
-<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>libvirt 架构（图片来源于网络，侵权必删）</center>
-
-<p>libvirt 除了能够支持多种虚拟化方案之外，还支持 OpenVZ、LXC 等容器虚拟化系统。它提供一套完善的虚拟机管理工具，支持 GUI 和命令行的形式，如 virsh、virt-install、virt-manager。由于它的通用性和易管理，很多云计算框架平台都在底层使用 libvirt 的 API 来管理虚拟机，比如 OpenStack、OpenNebula、Eucalyptus 等。这个工具我们仅仅提一下，有兴趣的可以装个玩玩。</p>
-<p>下面给出 KVM 和 Qemu 的 git 路径，有兴趣的可以把源码下下来研究下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kvm.git：</span><br><span class="line">git clone git://git.kernel.org/pub/scm/virt/kvm/kvm.git</span><br><span class="line">qemu.git（包括了 kvm）:</span><br><span class="line">git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure></p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/imagesss/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/19/tech/一文读懂_Qemu_模拟器/">
-              
-                  一文读懂 Qemu 模拟器
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-19
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="Qemu-架构"><a href="#Qemu-架构" class="headerlink" title="Qemu 架构"></a>Qemu 架构</h3><hr>
-<p>Qemu  是纯软件实现的虚拟化模拟器，几乎可以模拟任何硬件设备，我们最熟悉的就是能够模拟一台能够独立运行操作系统的虚拟机，虚拟机认为自己和硬件打交道，但其实是和 Qemu 模拟出来的硬件打交道，Qemu 将这些指令转译给真正的硬件。</p>
-<p>正因为 Qemu 是纯软件实现的，所有的指令都要经 Qemu 过一手，性能非常低，所以，在生产环境中，大多数的做法都是配合 KVM 来完成虚拟化工作，因为 KVM 是硬件辅助的虚拟化技术，主要负责 比较繁琐的 CPU 和内存虚拟化，而 Qemu 则负责 I/O 虚拟化，两者合作各自发挥自身的优势，相得益彰。</p>
-<center><img src="/images/virt/qemu.png" alt=""><br>Qemu 总结结构</center>
-
-
-
-
-<p>从本质上看，虚拟出的每个虚拟机对应 host 上的一个 Qemu 进程，而虚拟机的执行线程（如 CPU 线程、I/O 线程等）对应 Qemu 进程的一个线程。下面通过一个虚拟机启动过程看看 Qemu 是如何与 KVM 交互的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 第一步，获取到 KVM 句柄</span><br><span class="line">kvmfd = open(&quot;/dev/kvm&quot;, O_RDWR);</span><br><span class="line">// 第二步，创建虚拟机，获取到虚拟机句柄。</span><br><span class="line">vmfd = ioctl(kvmfd, KVM_CREATE_VM, 0);</span><br><span class="line">// 第三步，为虚拟机映射内存，还有其他的 PCI，信号处理的初始化。</span><br><span class="line">ioctl(kvmfd, KVM_SET_USER_MEMORY_REGION, &amp;mem);</span><br><span class="line">// 第四步，将虚拟机镜像映射到内存，相当于物理机的 boot 过程，把镜像映射到内存。</span><br><span class="line">// 第五步，创建 vCPU，并为 vCPU 分配内存空间。</span><br><span class="line">ioctl(kvmfd, KVM_CREATE_VCPU, vcpuid);</span><br><span class="line">vcpu-&gt;kvm_run_mmap_size = ioctl(kvm-&gt;dev_fd, KVM_GET_VCPU_MMAP_SIZE, 0);</span><br><span class="line">// 第五步，创建 vCPU 个数的线程并运行虚拟机。</span><br><span class="line">ioctl(kvm-&gt;vcpus-&gt;vcpu_fd, KVM_RUN, 0);</span><br><span class="line">// 第六步，线程进入循环，并捕获虚拟机退出原因，做相应的处理。</span><br><span class="line">for (;;) &#123;</span><br><span class="line">ioctl(KVM_RUN)</span><br><span class="line">switch (exit_reason) &#123;</span><br><span class="line">case KVM_EXIT_IO:  /* ... */</span><br><span class="line">case KVM_EXIT_HLT: /* ... */</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">// 这里的退出并不一定是虚拟机关机，</span><br><span class="line">// 虚拟机如果遇到 I/O 操作，访问硬件设备，缺页中断等都会退出执行，</span><br><span class="line">// 退出执行可以理解为将 CPU 执行上下文返回到 Qemu。</span><br></pre></td></tr></table></figure>
-<h3 id="Qemu-源码结构"><a href="#Qemu-源码结构" class="headerlink" title="Qemu 源码结构"></a>Qemu 源码结构</h3><hr>
-<p>Qemu 软件虚拟化实现的思路是采用二进制指令翻译技术，主要是提取 guest 代码，然后将其翻译成 TCG 中间代码，最后再将中间代码翻译成 host 指定架构的代码，如 x86 体系就翻译成其支持的代码形式，ARM 架构同理。</p>
-<center><img src="/images/virt/qemu_src.png" alt=""></center>
-
-<p>所以，从宏观上看，源码结构主要包含以下几个部分：</p>
-<ul>
-<li>/vl.c：最主要的模拟循环，虚拟机环境初始化，和 CPU 的执行。</li>
-<li>/target-arch/translate.c：将 guest 代码翻译成不同架构的 TCG 操作码。</li>
-<li>/tcg/tcg.c：主要的 TCG 代码。</li>
-<li>/tcg/arch/tcg-target.c：将 TCG 代码转化生成主机代码。</li>
-<li>/cpu-exec.c：主要寻找下一个二进制翻译代码块，如果没有找到就请求得到下一个代码块，并且操作生成的代码块。</li>
-</ul>
-<p>其中，涉及的主要几个函数如下：</p>
-<center><img src="/images/virt/qemu_dir.png" alt=""></center>
-
-<p>知道了这个总体的代码结构，再去具体了解每一个模块可能会相对容易一点。</p>
-<h3 id="Qemu-的使用"><a href="#Qemu-的使用" class="headerlink" title="Qemu 的使用"></a>Qemu 的使用</h3><hr>
-<h4 id="1-源码下载"><a href="#1-源码下载" class="headerlink" title="1. 源码下载"></a>1. 源码下载</h4><hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">centos：sudo apt-get install qemu</span><br><span class="line">ubuntu：sudo yum install qemu -y</span><br><span class="line">安装包：</span><br><span class="line">$wget http://wiki.qemu-project.org/download/qemu-2.0.0.tar.bz2</span><br><span class="line">$tar xjvf qemu-2.0.0.tar.bz2</span><br><span class="line">Git：</span><br><span class="line">$git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure>
-<h4 id="2-编译及安装"><a href="#2-编译及安装" class="headerlink" title="2. 编译及安装"></a>2. 编译及安装</h4><hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$cd qemu-2.0.0 //如果使用的是git下载的源码，执行cd qemu</span><br><span class="line">$./configure --enable-kvm --enable-debug --enable-vnc --enable-werror  --target-list=&quot;x86_64-softmmu&quot;</span><br><span class="line">$make -j8</span><br><span class="line">$sudo make install</span><br></pre></td></tr></table></figure>
-<p>configure 脚本用于生成 Makefile，其选项可以用 ./configure –help 查看。</p>
-<p>这里使用到的选项含义如下：</p>
-<ul>
-<li>–enable-kvm：编译 KVM 模块，使 Qemu 可以利用 KVM 来访问硬件提供的虚拟化服务。</li>
-<li>–enable-vnc：启用 VNC。</li>
-<li>–enalbe-werror：编译时，将所有的警告当作错误处理。</li>
-<li>–target-list：选择目标机器的架构。默认是将所有的架构都编译，但为了更快的完成编译，指定需要的架构即可。</li>
-</ul>
-<p>安装好之后，会生成如下应用程序：</p>
-<center><img src="/images/virt/qemu_app.png" alt=""></center>
-
-
-<ul>
-<li>ivshmem-client/server：这是一个 guest 和 host 共享内存的应用程序，遵循 C/S 的架构。</li>
-<li>qemu-ga：这是一个不利用网络实现 guest 和 host 之间交互的应用程序（使用 virtio-serial），运行在 guest 中。</li>
-<li>qemu-io：这是一个执行 Qemu I/O 操作的命令行工具。</li>
-<li>qemu-system-x86_64：Qemu 的核心应用程序，虚拟机就由它创建的。</li>
-<li>qemu-img：创建虚拟机镜像文件的工具，下面有例子说明。</li>
-<li>qemu-nbd：磁盘挂载工具。</li>
-</ul>
-<p>下面通过创建虚拟机操作来对这些工具有个初步的认识。</p>
-<h4 id="3-创建虚拟机"><a href="#3-创建虚拟机" class="headerlink" title="3. 创建虚拟机"></a>3. 创建虚拟机</h4><hr>
-<ul>
-<li>使用qemu-img创建虚拟机镜像</li>
-</ul>
-<p>虚拟机镜像用来模拟虚拟机的硬盘，在启动虚拟机之前需要创建镜像文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create -f qcow2 test-vm-1.qcow2 10G</span><br></pre></td></tr></table></figure></p>
-<p>-f 选项用于指定镜像的格式，qcow2 格式是 Qemu 最常用的镜像格式，采用来写时复制技术来优化性能。test-vm-1.qcow2 是镜像文件的名字，10G是镜像文件大小。镜像文件创建完成后，可使用 qemu-system-x86 来启动x86 架构的虚拟机：</p>
-<ul>
-<li>使用 qemu-system-x86 来启动 x86 架构的虚拟机<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 test-vm-1.qcow2</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>因为 test-vm-1.qcow2 中并未给虚拟机安装操作系统，所以会提示 “No bootable device”，无可启动设备。</p>
-<ul>
-<li>启动 VM 安装操作系统镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2 -cdrom ./Centos-Desktop-x86_64-20-1.iso</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>-m 指定虚拟机内存大小，默认单位是 MB， -enable-kvm 使用 KVM 进行加速，-cdrom 添加 fedora 的安装镜像。可在弹出的窗口中操作虚拟机，安装操作系统，安装完成后重起虚拟机便会从硬盘 ( test-vm-1.qcow2 ) 启动。之后再启动虚拟机只需要执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2</span><br></pre></td></tr></table></figure></p>
-<p>qemu-img 支持非常多种的文件格式，可以通过 qemu-img -h 查看<br>其中 raw 和 qcow2 是比较常用的两种，raw 是 qemu-img 命令默认的，qcow2 是 qemu 目前推荐的镜像格式，是功能最多的格式。这些知识后面会有文章来专门讲述。</p>
-<p>这篇文章写得有点长，可能是 Qemu 唯一一篇文章，这并不是说 Qemu 不重要，而是我们平时在使用过程中主要把它当工具用，遇到不懂的查就行了，当然，如果你觉得看代码爽一点，非常鼓励，如果看了有什么心得，我们可以一起交流交流。好了，老铁们，看在我深夜一点还在写干货给你们，就给我点个赞吧。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -1416,7 +1416,7 @@
         
           <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(5)</div></a></li>
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(8)</div></a></li>
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
@@ -1458,7 +1458,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 14.77px; color: #949494">tap</a> <a href="/tags/tun/" style="font-size: 14.77px; color: #949494">tun</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.31px; color: #898989">tap</a> <a href="/tags/tun/" style="font-size: 16.31px; color: #898989">tun</a> <a href="/tags/veth-pair/" style="font-size: 14.77px; color: #949494">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 
