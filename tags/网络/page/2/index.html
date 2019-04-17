@@ -170,6 +170,797 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
+          <a href="/2019/01/10/tech/模板/">
+              
+                  一文搞懂 network namespace
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-01-10
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<center>–END–</center>
+
+<hr>
+<p>后台回复「<font color="red">加群</font>」，带你进入高手如云交流群。</p>
+<hr>
+<blockquote>
+<p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有 <strong>10T</strong> 书籍和视频资源，后台回复 <strong>「1024」</strong> 即可免费领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p>
+<p><img src="/images/weichat.png" alt=""></p>
+</blockquote>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/Namespace/"><i class="fas fa-hashtag fa-fw"></i>Namespace</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2019/01/10/tech/一文搞懂network_namespace/">
+              
+                  一文搞懂 network namespace
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-01-10
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<p>本文通过 IP 命令操作来简单介绍 network namespace 的基本概念和用法。</p>
+<p>深入了解可以看看我之前写的两篇文章 <a href="http://mp.weixin.qq.com/s?__biz=MzI1OTY2MzMxOQ==&amp;mid=2247483982&amp;idx=1&amp;sn=35e2aac1f4c164c8afa79aa91707c90d&amp;chksm=ea7436f6dd03bfe036ccc8293aaf25d0c042f21afac5277bf04a32af36643a2780c980e53d09&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">Docker 基础技术之 Linux namespace 详解</a> 和 <a href="http://mp.weixin.qq.com/s?__biz=MzI1OTY2MzMxOQ==&amp;mid=2247483993&amp;idx=1&amp;sn=906551e374c0d8d40db00cbde934e624&amp;chksm=ea7436e1dd03bff724d7ee03267115b2ecf54bd146fa3f826b69e918b5a2455d1562d085ab62&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">Docker 基础技术之 Linux namespace 源码分析</a>。</p>
+<p>和 network namespace 相关的操作的子命令是 <code>ip netns</code> 。</p>
+        
+            <div class="readmore">
+                <a href="/2019/01/10/tech/一文搞懂network_namespace/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/Namespace/"><i class="fas fa-hashtag fa-fw"></i>Namespace</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2019/01/07/tech/Linux系统下实践VLAN/">
+              
+                  Linux 系统下实践 VLAN
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-01-07
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<h2 id="01-准备环境"><a href="#01-准备环境" class="headerlink" title="01 准备环境"></a>01 准备环境</h2><p>环境：ubuntu 16.04 环境（物理 or 虚拟）</p>
+<p>确认 CPU 是否支持虚拟化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># egrep -o &apos;(vmx|svm)&apos; /proc/cpuinfo</span><br><span class="line"># vmx</span><br></pre></td></tr></table></figure>
+<p>如果不支持，开启 KVM 嵌套虚拟化之后再重启。</p>
+        
+            <div class="readmore">
+                <a href="/2019/01/07/tech/Linux系统下实践VLAN/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/VLAN/"><i class="fas fa-hashtag fa-fw"></i>VLAN</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/06/15/tech/一文掌握_Linux_性能分析之网络篇（续）/">
+              
+                  一文掌握 Linux 性能分析之网络篇（续）
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-06-15
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>这是 Linux 性能分析系列的第五篇，前四篇在这里：<br>一文掌握 Linux 性能分析之 CPU 篇<br>一文掌握 Linux 性能分析之内存篇<br>一文掌握 Linux 性能分析之 IO 篇<br>一文掌握 Linux 性能分析之网络篇</p>
+<p>在上篇中，我们已经介绍了几个 Linux 网络方向的性能分析工具，本文再补充几个。总结下来，余下的工具包括但不限于以下几个：</p>
+<ul>
+<li>sar：统计信息历史</li>
+<li>traceroute：测试网络路由</li>
+<li>dtrace：TCP/IP 栈跟踪</li>
+<li>iperf / netperf / netserver：网络性能测试工具</li>
+<li>perf 性能分析神器</li>
+</ul>
+<p>由于篇幅有限，本文会先介绍前面两个，其他工具留作后面介绍，大家可以持续关注。</p>
+<h4 id="sar"><a href="#sar" class="headerlink" title="sar"></a><strong>sar</strong></h4><p>sar 是一个系统历史数据统计工具。统计的信息非常全，包括 CPU、内存、磁盘 I/O、网络、进程、系统调用等等信息，是一个集大成的工具，非常强大。在 Linux 系统上 <code>sar --help</code> 一下，可以看到它的完整用法。</p>
+<ul>
+<li>-A：所有报告的总和</li>
+<li>-u：输出 CPU 使用情况的统计信息</li>
+<li>-v：输出 inode、文件和其他内核表的统计信息</li>
+<li>-d：输出每一个块设备的活动信息</li>
+<li>-r：输出内存和交换空间的统计信息</li>
+<li>-b：显示 I/O和传送速率的统计信息</li>
+<li>-a：文件读写情况</li>
+<li>-c：输出进程统计信息，每秒创建的进程数</li>
+<li>-R：输出内存页面的统计信息</li>
+<li>-y：终端设备活动情况</li>
+<li>-w：输出系统交换活动信息</li>
+<li>-n：输出网络设备统计信息</li>
+</ul>
+<p>在平时使用中，我们常常用来分析网络状况，其他几项的通常有更好的工具来分析。所以，本文会重点介绍 sar 在网络方面的分析手法。</p>
+<p>Linux 系统用以下几个选项提供网络统计信息：</p>
+<ul>
+<li>-n DEV：网络接口统计信息。</li>
+<li>-n EDEV：网络接口错误。</li>
+<li>-n IP：IP 数据报统计信息。</li>
+<li>-n EIP：IP 错误统计信息。</li>
+<li>-n TCP：TCP 统计信息。</li>
+<li>-n ETCP：TCP 错误统计信息。</li>
+<li>-n SOCK：套接字使用。</li>
+</ul>
+<p>我们来看几个示例：</p>
+<p><strong>（1）每秒打印 TCP 的统计信息：</strong></p>
+<p><code>sar -n TCP 1</code></p>
+<center><img src="/images/linux/sarn.png" alt=""></center>
+
+<p>几个参数了解一下：</p>
+<ul>
+<li>active/s：新的 TCP 主动连接（也就是 socket 中的 connect() 事件），单位是：连接数/s。</li>
+<li>passive/s：新的 TCP 被动连接（也就是 socket 中的 listen() 事件）。</li>
+<li>iseg/s：接收的段（传输层以段为传输单位），单位是：段/s</li>
+<li>oseg/s：发送的段。<br>通过这几个参数，我们基本可以知道当前系统 TCP 连接的负载情况。</li>
+</ul>
+<p><strong>（2）每秒打印感兴趣的网卡的统计信息：</strong></p>
+<p><code>sar -n DEV 1 | awk &#39;NR == 3 || $3 == &quot;eth0&quot;&#39;</code></p>
+<center><img src="/images/linux/sarnd.png" alt=""></center>
+
+<p>几个参数了解一下：</p>
+<ul>
+<li>rxpck/s / txpck/s：网卡接收/发送的数据包，单位是：数据包/s。</li>
+<li>rxkB/s / txkB/s：网卡接收/发送的千字节，单位是：千字节/s。</li>
+<li>rxcmp/s / txcmp/s：网卡每秒接受/发送的压缩数据包，单位是：数据包/s。</li>
+<li>rxmcst/s：每秒接收的多播数据包，单位是：数据包/s。</li>
+<li>%ifutil：网络接口的利用率。<br>这几个参数对于分析网卡接收和发送的网络吞吐量很有帮助。</li>
+</ul>
+<p><strong>（3）错误包和丢包情况分析：</strong></p>
+<p><code>sar -n EDEV 1</code></p>
+<center><img src="/images/linux/sarne.png" alt=""></center>
+
+<p>几个参数了解一下：</p>
+<ul>
+<li>rxerr/s / txerr/s：每秒钟接收/发送的坏数据包</li>
+<li>coll/s：每秒冲突数</li>
+<li>rxdrop/s：因为缓冲充满，每秒钟丢弃的已接收数据包数</li>
+<li>txdrop/s：因为缓冲充满，每秒钟丢弃的已发送数据包数</li>
+<li>txcarr/s：发送数据包时，每秒载波错误数</li>
+<li>rxfram/s：每秒接收数据包的帧对齐错误数</li>
+<li>rxfifo/s / txfifo/s：接收/发送的数据包每秒 FIFO 过速的错误数</li>
+</ul>
+<p>当发现接口传输数据包有问题时，查看以上参数能够让我们快速判断具体是出的什么问题。</p>
+<p>OK，这个工具就介绍到这里，以上只是抛砖引玉，更多技巧还需要大家动手去探索，只有动手，才能融会贯通。</p>
+<h4 id="traceroute"><a href="#traceroute" class="headerlink" title="traceroute"></a><strong>traceroute</strong></h4><p>traceroute 也是一个排查网络问题的好工具，它能显示数据包到达目标主机所经过的路径（路由器或网关的 IP 地址）。如果发现网络不通，我们可以通过这个命令来进一步判断是主机的问题还是网关的问题。</p>
+<p>它通过向源主机和目标主机之间的设备发送一系列的探测数据包（UDP 或者 ICMP）来发现设备的存在，实现上利用了递增每一个包的 TTL 时间，来探测最终的目标主机。比如开始 TTL = 1，当到达第一个网关设备的时候，TTL - 1，当 TTL = 0 导致网关响应一个 ICMP 超时报文，这样，如果没有防火墙拦截的话，源主机就知道网关设备的地址。以此类推，逐步增加 TTL 时间，就可以探测到目标主机之间所经过的路径。</p>
+<p>为了防止发送和响应过程出现问题导致丢包，traceroute 默认会发送 3 个探测包，我们可以用 -q x 来改变探测的数量。如果中间设备设置了防火墙限制，会导致源主机收不到响应包，就会显示 * 号。如下是 <code>traceroute baidu</code> 的结果：</p>
+<center><img src="/images/linux/traceroute.png" alt=""></center>
+
+<p>每一行默认会显示设备名称（IP 地址）和对应的响应时间。发送多少个探测包，就显示多少个。如果只想显示 IP 地址可以用 -n 参数，这个参数可以避免 DNS 域名解析，加快响应时间。</p>
+<p>和这个工具类似的还有一个工具叫 pathchar，但平时用的不多，我就不介绍了。<br>以上就是两个工具的简单介绍，工具虽然简单，但只要能解决问题，就是好工具。当然，性能分析不仅仅依靠工具就能解决的，更多需要我们多思考、多动手、多总结，逐步培养自己的系统能力，才能融会贯通。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/06/01/tech/一文掌握_Linux_性能分析之网络篇/">
+              
+                  一文掌握 Linux 性能分析之网络篇
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-06-01
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>这是 Linux 性能分析系列的第四篇。</p>
+<p>比较宽泛地讲，网络方向的性能分析既包括主机测的网络配置查看、监控，又包括网络链路上的包转发时延、吞吐量、带宽等指标分析。包括但不限于以下分析工具：</p>
+<ul>
+<li>ping：测试网络连通性</li>
+<li>ifconfig：接口配置</li>
+<li>ip：网络接口统计信息</li>
+<li>netsat：多种网络栈和接口统计信息</li>
+<li>ifstat：接口网络流量监控工具</li>
+<li>netcat：快速构建网络连接</li>
+<li>tcpdump：抓包工具</li>
+<li>sar：统计信息历史</li>
+<li>traceroute：测试网络路由</li>
+<li>pathchar：确定网络路径特征</li>
+<li>dtrace：TCP/IP 栈跟踪</li>
+<li>iperf / netperf / netserver：网络性能测试工具</li>
+<li>perf ：性能分析神器</li>
+</ul>
+<p>本文先来看前面 7 个。</p>
+<h4 id="ping"><a href="#ping" class="headerlink" title="ping"></a><strong>ping</strong></h4><hr>
+<p>ping 发送 ICMP echo 数据包来探测网络的连通性，除了能直观地看出网络的连通状况外，还能获得本次连接的往返时间（RTT 时间），丢包情况，以及访问的域名所对应的 IP 地址（使用 DNS 域名解析），比如：</p>
+<center><img src="/images/linux/ping.jpg" alt=""></center>
+
+<p>我们 <code>ping baidu.com，-c</code>参数指定发包数。可以看到，解析到了 baidu 的一台服务器 IP 地址为 220.181.112.244。RTT 时间的最小、平均、最大和算术平均差分别是 40.732ms、40.762ms、40.791ms 和 0.248。</p>
+<h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a><strong>ifconfig</strong></h3><hr>
+<p>ifconfig 命令被用于配置和显示 Linux 内核中网络接口的统计信息。通过这些统计信息，我们也能够进行一定的网络性能调优。</p>
+<p><strong>1）ifconfig 显示网络接口配置信息</strong></p>
+<center><img src="/images/linux/ifconfig.jpg" alt=""></center>
+
+<p>其中，RX/TX packets 是对接收/发送数据包的情况统计，包括错误的包，丢掉多少包等。RX/TX bytes 是接收/发送数据字节数统计。其余还有很多参数，就不一一述说了，性能调优时可以重点关注 MTU（最大传输单元） 和 txqueuelen（发送队列长度），比如可以用下面的命令来对这两个参数进行微调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 txqueuelen 2000</span><br><span class="line">ifconfig eth0 mtu 1500</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）网络接口地址配置</strong></p>
+<p>ifconfig 还常用来配置网口的地址，比如：<br>为网卡配置和删除 IPv6 地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 add 33ffe:3240:800:1005::2/64    #为网卡eth0配置IPv6地址</span><br><span class="line">ifconfig eth0 del 33ffe:3240:800:1005::2/64    #为网卡eth0删除IPv6地址</span><br></pre></td></tr></table></figure></p>
+<p>修改MAC地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 hw ether 00:AA:BB:CC:dd:EE</span><br></pre></td></tr></table></figure></p>
+<p>配置IP地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.2.10</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0 broadcast 192.168.2.255</span><br></pre></td></tr></table></figure></p>
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a><strong>IP</strong></h4><hr>
+<p>ip 命令用来显示或设置 Linux 主机的网络接口、路由、网络设备、策略路由和隧道等信息，是 Linux 下功能强大的网络配置工具，旨在替代 ifconfig 命令，如下显示 IP 命令的强大之处，功能涵盖到 ifconfig、netstat、route 三个命令。</p>
+<center><img src="/images/linux/iptool.jpg" alt=""></center>
+
+<h4 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a><strong>netstat</strong></h4><hr>
+<p>netstat 可以查看整个 Linux 系统关于网络的情况，是一个集多钟网络工具于一身的组合工具。</p>
+<p>常用的选项包括以下几个：</p>
+<ul>
+<li>默认：列出连接的套接字</li>
+<li>-a：列出所有套接字的信息</li>
+<li>-s：各种网络协议栈统计信息</li>
+<li>-i：网络接口信息</li>
+<li>-r：列出路由表</li>
+<li>-l：仅列出有在 Listen 的服务状态</li>
+<li>-p：显示 PID 和进程名称</li>
+</ul>
+<p>各参数组合使用实例如下：</p>
+<ul>
+<li>netstat -at 列出所有 TCP 端口</li>
+<li>netstat -au 列出所有 UDP 端口</li>
+<li>netstat -lt 列出所有监听 TCP 端口的 socket</li>
+<li>netstat -lu 列出所有监听 UDP 端口的 socket</li>
+<li>netstat -lx 列出所有监听 UNIX 端口的 socket</li>
+<li>netstat -ap | grep ssh 找出程序运行的端口</li>
+<li>netstat -an | grep ‘:80’ 找出运行在指定端口的进程</li>
+</ul>
+<p><strong>1）netstat 默认显示连接的套接字数据</strong></p>
+<center><img src="/images/linux/netstat.jpg" alt=""></center>
+
+<p>整体上来看，输出结果包括两个部分：</p>
+<ul>
+<li>Active Internet connections ：有源 TCP 连接，其中 Recv-Q 和 Send-Q 指的是接收队列和发送队列，这些数字一般都是 0，如果不是，说明请求包和回包正在队列中堆积。</li>
+<li>Active UNIX domain sockets：有源 UNIX 域套接口，其中 proto 显示连接使用的协议，RefCnt 表示连接到本套接口上的进程号，Types 是套接口的类型，State 是套接口当前的状态，Path 是连接到套接口的进程使用的路径名。</li>
+</ul>
+<p><strong>2）netstat -i 显示网络接口信息</strong></p>
+<center><img src="/images/linux/netstati.png" alt=""></center>
+
+<p>接口信息包括网络接口名称（Iface）、MTU，以及一系列接收（RX-）和传输（TX-）的指标。其中 OK 表示传输成功的包，ERR 是错误包，DRP 是丢包，OVR 是超限包。</p>
+<p>这些参数有助于我们对网络收包情况进行分析，从而判断瓶颈所在。</p>
+<p><strong>3）netstat -s 显示所有网络协议栈的信息</strong></p>
+<center><img src="/images/linux/netstats.jpg" alt=""></center>
+
+<p>可以看到，这条命令能够显示每个协议详细的信息，这有助于我们针对协议栈进行更细粒度的分析。</p>
+<p><strong>4）netstat -r 显示路由表信息</strong></p>
+<center><img src="/images/linux/netstat.jpg" alt=""></center>
+
+<p>这条命令能够看到主机路由表的一个情况。当然查路由我们也可以用 ip route 和 route 命令，这个命令显示的信息会更详细一些。</p>
+<h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a><strong>ifstat</strong></h4><hr>
+<p>ifstat 主要用来监测主机网口的网络流量，常用的选项包括：</p>
+<ul>
+<li>-a：监测主机所有网口</li>
+<li>-i：指定要监测的网口</li>
+<li>-t：在每行输出信息前加上时间戳</li>
+<li>-b：以 Kbit/s 显示流量数据，而不是默认的 KB/s</li>
+<li>delay：采样间隔（单位是 s），即每隔 delay 的时间输出一次统计信息</li>
+<li>count：采样次数，即共输出 count 次统计信息</li>
+</ul>
+<p>比如，通过以下命令统计主机所有网口某一段时间内的流量数据：</p>
+<center><img src="/images/linux/ifstat.png" alt=""></center>
+
+<p>可以看出，分别统计了三个网口的流量数据，前面输出的时间戳，有助于我们统计一段时间内各网口总的输入、输出流量。</p>
+<h4 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a><strong>netcat</strong></h4><hr>
+<p>netcat，简称 nc，命令简单，但功能强大，在排查网络故障时非常有用，因此它也在众多网络工具中有着“瑞士军刀”的美誉。</p>
+<p>它主要被用来构建网络连接。可以以客户端和服务端的方式运行，当以服务端方式运行时，它负责监听某个端口并接受客户端的连接，因此可以用它来调试客户端程序；当以客户端方式运行时，它负责向服务端发起连接并收发数据，因此也可以用它来调试服务端程序，此时它有点像 Telnet 程序。</p>
+<p>常用的选项包括以下几种：</p>
+<ul>
+<li>-l：以服务端的方式运行，监听指定的端口。默认是以客户端的方式运行。</li>
+<li>-k：重复接受并处理某个端口上的所有连接，必须与 -l 一起使用。</li>
+<li>-n：使用 IP 地址表示主机，而不是主机名，使用数字表示端口号，而不是服务名称。</li>
+<li>-p：当以客户端运行时，指定端口号。</li>
+<li>-s：设置本地主机发出的数据包的 IP 地址。</li>
+<li>-C：将 CR 和 LF 两个字符作为结束符。</li>
+<li>-U：使用 UNIX 本地域套接字通信。</li>
+<li>-u：使用 UDP 协议通信，默认使用的是 TCP 协议。</li>
+<li>-w：如果 nc 客户端在指定的时间内未检测到任何输入，则退出。</li>
+<li>-X：当 nc 客户端与代理服务器通信时，该选项指定它们之间的通信协议，目前支持的代理协议包括 “4”（SOCKS v.4），“5”（SOCKS v.5）和 “connect” （HTTPs Proxy），默认使用 SOCKS v.5。</li>
+<li>-x：指定目标代理服务器的 IP 地址和端口号。</li>
+</ul>
+<p>下面举一个简单的例子，使用 nc 命令发送消息：<br>首先，启动服务端，用 nc -l 0.0.0.0 12345 监听端口 12345 上的所有连接。</p>
+<center><img src="/images/linux/netcat.png" alt=""></center>
+
+<p>然后，启动客户端，用 nc -p 1234 127.0.0.1 12345 使用 1234 端口连接服务器 127.0.0.1::12345。</p>
+<center><img src="/images/linux/netcatc.png" alt=""></center>
+
+<p>接着就可以在两端互发数据了。这里只是抛砖引玉，更多例子大家可以多实践。</p>
+<h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a><strong>tcpdump</strong></h4><hr>
+<p>最后是 tcpdump，强大的网络抓包工具。虽然有 wireshark 这样更易使用的图形化抓包工具，但 tcpdump 仍然是网络排错的必备利器。</p>
+<p>tcpdump 选项很多，我就不一一列举了，大家可以看文章末尾的引用来进一步了解。这里列举几种 tcpdump 常用的用法。</p>
+<p><strong>1）捕获某主机的数据包</strong></p>
+<p>比如想要捕获主机 200.200.200.100 上所有收到和发出的所有数据包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.100</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）捕获多个主机的数据包</strong></p>
+<p>比如要捕获主机 200.200.200.1 和主机 200.200.200.2 或 200.200.200.3 的通信，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.1 and \(200.200.200.2 or \)</span><br></pre></td></tr></table></figure></p>
+<p>同样要捕获主机 200.200.200.1 除了和主机 200.200.200.2 之外所有主机通信的 IP 包。使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump ip host 200.200.200.1 and ! 200.200.200.2</span><br></pre></td></tr></table></figure></p>
+<p><strong>3）捕获某主机接收或发出的某种协议类型的包</strong><br>比如要捕获主机 200.200.200.1 接收或发出的 Telnet 包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump tcp port 23 host 200.200.200.1</span><br></pre></td></tr></table></figure></p>
+<p><strong>4）捕获某端口相关的数据包</strong></p>
+<p>比如捕获在端口 6666 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump port 6666</span><br></pre></td></tr></table></figure></p>
+<p><strong>5）捕获某网口的数据包</strong><br>比如捕获在网口 eth0 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0</span><br></pre></td></tr></table></figure></p>
+<p>下面还是举个例子，抓取 TCP 三次握手的包：<br>首先，用 nc 启动一个服务端，监听端口 12345 上客户端的连接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v -l 0.0.0.0 12345</span><br></pre></td></tr></table></figure></p>
+<p>接着，启动 tcpdump 监听端口 12345 上通过的包：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i any &apos;port 12345&apos; -XX -nn -vv -S</span><br></pre></td></tr></table></figure></p>
+<p>然后，再用 nc 启动客户端，连接服务端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v 127.0.0.1 12345</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们看到 tcpdump 抓到包如下：</p>
+<center><img src="/images/linux/tcpdump.jpg" alt=""></center>
+
+<p>怎么分析是 TCP 的三次握手，就当做小作业留给大家吧，其实看图就已经很明显了。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
+<p>本文总结了几种初级的网络工具，一般的网络性能分析，通过组合以上几种工具，基本都能应付，但对于复杂的问题，以上工具可能就无能为力了。更多高阶的工具将在下文送上，敬请期待。</p>
+<p>Reference：</p>
+<ol>
+<li>ip 和 ipconfig：<br><a href="https://blog.csdn.net/freeking101/article/details/68939059" target="_blank" rel="noopener">https://blog.csdn.net/freeking101/article/details/68939059</a></li>
+<li>性能之巅：Linux网络性能分析工具<br><a href="http://www.infoq.com/cn/articles/linux-networking-performance-analytics" target="_blank" rel="noopener">http://www.infoq.com/cn/articles/linux-networking-performance-analytics</a></li>
+<li>抓包工具tcpdump用法说明<br><a href="https://www.cnblogs.com/f-ck-need-u/p/7064286.html" target="_blank" rel="noopener">https://www.cnblogs.com/f-ck-need-u/p/7064286.html</a></li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/20/tech/各种容器网络方案对比/">
+              
+                  各种容器网络方案对比
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-20
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>前面单主机容器网络和多主机容器网络两篇文章，咱们已经从原理上总结了多种容器网络方案，也通过这篇文章探讨了容器网络的背后原理。本文再基于一个宏观的视角，对比几种网络方案，让大家有个完整的认识。</p>
+<p>单主机网络就不多说了，因为也比较简单，我们重点对比几种多主机网络方案。</p>
+<p>对比的维度有以下几种：网络模型，IP 地址池管理（IP Address Management，IPAM），服务发现，连通与隔离，性能。</p>
+<p>网络模型指的是构成跨主机通信的网络结构和实现技术，比如是纯二层转发，还是纯三层转发；是 overlay 网络还是 underlay 网络等等。</p>
+<p>IPAM 指的是如何管理容器网络的 IP 池。当容器集群比较大，管理的主机比较多的时候，如何分配各个主机上容器的 IP 是一个比较棘手的问题。Docker 网络有个 subnet 的概念，通常一个主机分配一个 subnet，但也有多个主机共用一个 subnet 的情况，具体的网络方案有不同的考量。具体看下面的表格总结。</p>
+<p>服务发现本质上是一个分布式的 key-value 存储系统，用于跨主机通信时保存并同步各主机的网络信息，便于快速建立起各主机之间的网络连接。由于各网络方案实现上各有千秋，并不是所有的跨主机网络方案都要依据服务发现。</p>
+<p>连通与隔离指的是容器跨主机之间是否能够互相通信，以及容器与外网（外网不一定指 Internet）之间如何通信。</p>
+<p>性能具体指的是通信的时延，我们仅从各个网络方案的原理上来分析得出结论，所以这里的结论并不一定正确，因为不同的部署环境会对性能有一些影响，建议大家还是根据自己的环境动手实验验证为妙。</p>
+<p>从原理上说，underlay 网络性能要优于 overlay 网络，因为 overlay 网络存在封包和拆包操作，存在额外的 CPU 和网络开销，所以，几种方案中，macvlan、flannel host-gw、calico 的性能会优于 overlay、flannel vxlan 和 weave。但是这个也不能作为最终生产环境采用的标准，因为 overlay 网络采用 vxlan 作为隧道的话，能支持更多的二层网段，安全性也更高，所以，需要综合考虑。</p>
+<p>通过以上分析，我们可以得出以下的结论：</p>
+<center><img src="/images/docker/docker_net_com.jpg" alt=""></center>
+
+<p>参考：<br><a href="http://www.cnblogs.com/CloudMan6/p/7587532.html" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/7587532.html</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/04/18/tech/那么多容器网络的解决方案，其背后的原理到底是什么？/">
+              
+                  那么多容器网络的解决方案，其背后的原理到底是什么？
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-18
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>知其然而不知其所以然，不知也。老古人说得多好，学知识不懂得知识背后的原理，等于白学。</p>
+<p>通过前面两篇文章，我们知道了容器的单主机网络和多主机网络，对于这么多网络方案，我们看到对 Docker 的整体网络结构好像没有改动，都是水平扩展的，那 Docker 网络究竟是怎么集成这么多网络方案而不改变自身原有的结构呢？本文就来一探究竟。</p>
+<h3 id="1-Docker-的总体框架"><a href="#1-Docker-的总体框架" class="headerlink" title="1 Docker 的总体框架"></a>1 Docker 的总体框架</h3><hr>
+<p>要回答这个问题，得从 Docker 的总体框架说起。</p>
+<center><img src="/images/docker/docker_netarch.jpg" alt=""></center>
+
+<p>容器和虚拟机一样，都是虚拟化的产品，都包括计算虚拟化，存储虚拟化和 IO 虚拟化。容器作为轻量级的进程，不像虚拟机那般复杂，这三块分别靠三个 Driver 来完成的，execdriver 负责计算虚拟化，networkdriver 负责网络虚拟化，graphdriver 负责存储虚拟化。由此可见，Docker 靠 Driver 这种设计思想来支撑起它的基础平台，再往深了挖，它的每个子模块都随处可见这种设计思想，就网络这个子模块来看，也是如此。</p>
+<h3 id="2-Docker-的网络模型"><a href="#2-Docker-的网络模型" class="headerlink" title="2 Docker 的网络模型"></a>2 Docker 的网络模型</h3><hr>
+<h4 id="docker-engine-libcontainer"><a href="#docker-engine-libcontainer" class="headerlink" title="docker engine + libcontainer"></a>docker engine + libcontainer</h4><hr>
+<p>期初的 Docker 网络子模块的代码是分散在 docker daemon 和 libcontainer 中的，libcontainer 是一个独立的容器管理包，execdriver 和 networkdriver 都是通过 libcontainer 来实现对容器的具体操作。</p>
+<p>随着业务场景越来越复杂，这种内嵌的方式很难针对不同的网络场景进行扩展。后来，Docker 收购了一个做多主机网络解决方案的公司 SocketPlane，然后让那帮人专门来解决这个问题。这就是接下来要介绍的 libnetwork。</p>
+<h4 id="libnetwork-amp-amp-CNM"><a href="#libnetwork-amp-amp-CNM" class="headerlink" title="libnetwork &amp;&amp; CNM"></a>libnetwork &amp;&amp; CNM</h4><hr>
+<p>libnetwork 起初的做法很简单，就是将 docker engine 和 libcontainer 中网络相关的代码抽出来，合并成一个单独的库，做成网络抽象层，并对外提供 API。Docker 的愿景就是希望 libnetwork 能够做像 libcontainer 那样，成为一个多平台的容器网络基础包。</p>
+<p>后来受一个 GitHub issue ( <a href="https://github.com/moby/moby/issues/9983" target="_blank" rel="noopener">https://github.com/moby/moby/issues/9983</a>) 的启发，libnetwork 引入容器网络模型（Container Network Model，CNM），该模型进一步对 Docker 的网络结构进行了细分，提出了三个概念：network、sandbox 和 endpoint。</p>
+<h5 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h5><p>network 是一个抽象的概念，你可以把它理解成一个网络的插件，或者是网络的 Driver，比如说单主机网络的 Driver 就有 none、host、bridge，joined container 这四种，多主机网络就有 overlay、macvlan、flannel 这些。network 可以独立出去做，只需调用 Docker 对外提供的 API 就可以作为插件集成到 Docker 网络中使用。</p>
+<h5 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a><strong>sandbox</strong></h5><p>sandbox 实现了容器内部的网络栈，它定义容器的虚拟网卡，路由表和 DNS 等配置，其实就是一个标准的 linux network namespace 实现。</p>
+<h5 id="endpoint"><a href="#endpoint" class="headerlink" title="endpoint"></a><strong>endpoint</strong></h5><p>network 实现了一个第三方的网络栈，sandbox 则实现了容器内部的网络栈，那这两者怎么联系起来呢？答案就是通过 endpoint，endpoint 实现了 veth pair，一个 endpoint 就表示一对 veth pair，一端挂在容器中，另一端挂在 network 中。</p>
+<center><img src="/images/docker/cnm.jpg" alt=""></center>
+
+<p>network、sandbox 和 endpoint 三者之间的关系：<br>一个 network 可以包含多个 endpoint，自然也就包含多个 sandbox。<br>一个 sandbox 可以包含多个 endpoint，可以属于多个 network。<br>一个 endpoint 只可以属于一个 network，并且只属于一个 sandbox。</p>
+<p>如上图显示三个容器，每个容器一个 sandbox，除了第二个容器有两个 endpoint 分别接入 network1 和 network2 之外，其余 sandbox 都只有一个 endpoint 分别接入不同的 network。</p>
+<p>到此，我们就可以解答文章开篇提到的问题，“不同的网络方案如何集成到 Docker 网络模型中而不改变原有结构？”</p>
+<p>答案就是基于 libnetwork CNM，将各个网络模型以插件或 Driver 的形式集成到 Docker 网络中来，与 docker daemon 协同工作，实现容器网络。Docker 原生的 Driver 包括单主机的 none、bridge、joined container 和 多主机的 overlay、macvlan，第三方 Driver 就包括多主机的 flannel、weave、calico 等。</p>
+<center><img src="/images/docker/libnetwork.png" alt=""></center>
+
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><hr>
+<ol>
+<li>libnetwork 基于 CNM 模型将 Docker 网络结构从原生方案中抽离出来，增强了网络扩展性，以至于现在各种网络方案层出不穷，都可以轻松集成到 Docker 中。</li>
+<li>network，sandbox，endpoint 三个概念。</li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/libnetwork/"><i class="fas fa-hashtag fa-fw"></i>libnetwork</a>
+                
+                    <a href="/tags/CNM/"><i class="fas fa-hashtag fa-fw"></i>CNM</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
           <a href="/2018/04/16/tech/容器网络之多主机网络/">
               
                   容器网络之多主机网络
@@ -266,9 +1057,9 @@
                 
                     <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
                 
-                    <a href="/tags/overlay/"><i class="fas fa-hashtag fa-fw"></i>overlay</a>
-                
                     <a href="/tags/macvlan/"><i class="fas fa-hashtag fa-fw"></i>macvlan</a>
+                
+                    <a href="/tags/overlay/"><i class="fas fa-hashtag fa-fw"></i>overlay</a>
                 
                     <a href="/tags/flannel/"><i class="fas fa-hashtag fa-fw"></i>flannel</a>
                 
@@ -477,453 +1268,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/01/12/tech/Linux_网络体系结构全景分析/">
-              
-                  Linux 网络体系结构全景分析
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-12
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>Linux 是一个非常庞大的系统结构，模块众多，各个模块分工合作，共同运作着各自的任务，为 Linux 这个大家庭贡献着自己的力量。</p>
-<h3 id="Linux-网络子系统"><a href="#Linux-网络子系统" class="headerlink" title="Linux 网络子系统"></a>Linux 网络子系统</h3><hr>
-<p>其中，网络子系统是一个较为复杂的模块，如下图是 Linux 网络子系统的体系结构，自顶向下，可以分应用层、插口层（或协议无关层）、协议层和接口层（或设备驱动层），这个层级关系也分别对应着我们所熟悉的 OSI 七层模型（物理层、数据链路层、网络层、传输层、会话层、表示层和应用层）。</p>
-<center><img src="/images/linux/linux_net_level.jpg" alt=""></center>
-
-<p>Linux 所有用户态的应用程序要访问链接内核都要依赖系统调用，这是内核提供给用户态的调用接口，这通常是由标准的 C 库函数来实现的。对于网络应用程序，内核提供了一套通用的 socket 系统调用的接口。</p>
-<p>插口层，也叫协议无关层，它屏蔽了协议相关的操作，不论是什么协议（UDP，TCP），都提供一组通用的函数接口，也就是 socket 的实现。</p>
-<p>协议层，用于实现各种具体的网络协议族，包括 TCP/IP，OSI 和 Unix 域的实现，每个协议族都包含自己的内部结构，例如，对于 TCP/IP 协议族，IP 是最底层，TCP 和 UDP 层在 IP 层的上面。</p>
-<p>接口层，包括了通用设备接口，和网络设备通信的设备驱动程序，其中，包串口使用的 SLIP 驱动程序以及以太网使用的以太网驱动程序，以及环回口使用的都是这一层的设备。它对上提供了协议与设备驱动通信的通用接口，对下也提供了一组通用函数供底层网络设备驱动程序使用。具体的细节后面再开文章详细讲述。</p>
-<p>以上是从分层的体系结构来看，下面从数据传输的角度来说说，一个数据包是如何依赖这些层次关系被发送/接收的。</p>
-<p>首先，数据的发送过程，应用层组织好待发送的数据包，执行系统调用进入内核协议栈，按照层次关系分别进行包头的封装，如到达传输层，封装 TCP/UDP 的包头，进入网络层封装 IP 包头，进入接口层封装 MAC 帧，最后借助驱动将数据包从网卡发送出去。</p>
-<p>然后，数据的接收过程正好与发包过程相反，是一个拆包的过程。接口层借助网卡 DMA 硬件中断感知数据包的到来，拆解包头，识别数据，借助软中断机制告知上层进行相应的收包处理，最终用户态执行系统调用接收数据包。</p>
-<center><img src="/images/linux/linux_net_flow.jpg" alt=""></center>
-
-<p>继续细化这个过程，其内部在实现上都是通过具体的数据结构来完成每一层的过渡的，譬如说，应用层和内核之间通过 struct sock 结构实现协议无关的接口调用进行交互，传输层提供 struct proto 的结构来支持多种协议，网络层通过 struct sk_buff 来传递数据，接口层定义 struct net_device 来完成和驱动程序的交互。</p>
-<center><img src="/images/linux/linux_net_struct.jpg" alt=""></center>
-
-<p>Linux 网络体系结构还是比较博大精深的，尤其是这套自顶向下的分层设计方式对很多技术都有借鉴意义。更具体的函数调用和数据收发过程，后面的文章再进行讲述，敬请期待。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>Linux 网络子系统的分层模型，数据收发过程，以及核心数据结构。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/23/tech/OVS_总体架构、源码结构及数据流程全面解析/">
-              
-                  OVS 总体架构、源码结构及数据流程全面解析
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-23
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/OVS/">OVS</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>在前文「从 Bridge 到 OVS」中，我们已经对 OVS 进行了一番探索。本文决定从 OVS 的整体架构到各个组件都进行一个详细的介绍。</p>
-<h3 id="OVS-架构"><a href="#OVS-架构" class="headerlink" title="OVS 架构"></a>OVS 架构</h3><hr>
-<p>OVS 是产品级的虚拟交换机，大量应用在生产环境中，支撑整个数据中心虚拟网络的运转。OVS 基于 SDN 的思想，将整个核心架构分为控制面和数据面，数据面负责数据的交换工作，控制面实现交换策略，指导数据面工作。</p>
-<center><img src="/images/virt/ovs_arch.jpg" alt=""></center>
-
-<p>从整体上看，OVS 可以划分为三大块，管理面、数据面和控制面。</p>
-<p>数据面就是以用户态的 ovs-vswitchd 和内核态的 datapath 为主的转发模块，以及与之相关联的数据库模块 ovsdb-server，控制面主要是由 ovs-ofctl 模块负责，基于 OpenFlow 协议与数据面进行交互。而管理面则是由 OVS 提供的各种工具来负责，这些工具的提供也是为了方便用户对底层各个模块的控制管理，提高用户体验。下面就对这些工具进行一个逐一的阐述。</p>
-<p><strong>ovs-ofctl：</strong> 这个是控制面的模块，但本质上它也是一个管理工具，主要是基于 OpenFlow 协议对 OpenFlow 交换机进行监控和管理，通过它可以显示一个 OpenFlow 交换机的当前状态，包括功能、配置和表中的项。使用时，有很多参数，我们可以通过 ovs-ofctl –help 查看。</p>
-<p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ovs-ofctl show switch-name ：输出交换机信息，包括其流量表和端口信息。</span><br><span class="line"></span><br><span class="line">ovs-ofctl dump-ports switch-name：输出交换机的端口统计信息，包括收发包、丢包、错误包等数量。</span><br><span class="line"></span><br><span class="line">ovs-ofctl add-flow switch-name：为交换机配置流策略。</span><br></pre></td></tr></table></figure>
-<p><strong>ovs-dpctl：</strong> 用来配置交换机的内核模块 datapath，它可以创建，修改和删除 datapath，一般，单个机器上的 datapath 有 256 条（0-255）。一条 datapath 对应一个虚拟网络设备。该工具还可以统计每条 datapath 上的设备通过的流量，打印流的信息等，更过参数通过 ovs-dpctl –help 查看。</p>
-<p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ovs-dpctl show ：显示所有 datapath 的基本信息。</span><br><span class="line"></span><br><span class="line">ovs-dpctl dump-dps ：显示所有 datapath 的名字。</span><br><span class="line"></span><br><span class="line">ovs-dpctl dump-flows DP ：显示一条 datapath DP 上的流信息。</span><br></pre></td></tr></table></figure>
-<p><strong>ovs-appctl：</strong> 查询和控制运行中的 OVS 守护进程，包括 ovs-switchd，datapath，OpenFlow 控制器等，兼具 ovs-ofctl、ovs-dpctl 的功能，是一个非常强大的命令。ovs-vswitchd 等进程启动之后就以一个守护进程的形式运行，为了能够很好的让用户控制这些进程，就有了这个命令。详细可以 ovs-appctl –help 查看。</p>
-<p><strong>ovs-vsctl：</strong> 查询和更新 ovs-vswitchd 的配置，这也是一个很强大的命令，网桥、端口、协议等相关的命令都由它来完成。此外，还负责和 ovsdb-server 相关的数据库操作。</p>
-<p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ovs-vsctl show ：显示主机上已有的网桥及端口信息。</span><br><span class="line"></span><br><span class="line">ovs-vsctl add-br br0：添加网桥 br0。</span><br></pre></td></tr></table></figure>
-<p><strong>ovsdb-client：</strong> 访问 ovsdb-server 的客户端程序，通过 ovsdb-server 执行一些数据库操作。</p>
-<p>常用命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ovsdb-client dump：用来查看ovsdb内容。</span><br><span class="line"></span><br><span class="line">ovsdb-client transact ：用来执行一条类 sql。</span><br></pre></td></tr></table></figure></p>
-<p><strong>ovsdb-tool：</strong> 和 ovsdb-client 要借助 ovsdb-server 才能进行相关数据库操作不同，ovsdb-tool 可以直接操作数据库。</p>
-<h3 id="OVS-源码结构"><a href="#OVS-源码结构" class="headerlink" title="OVS 源码结构"></a>OVS 源码结构</h3><hr>
-<p>OVS 源码结构中，主要包含以下几个主要的模块，数据交换逻辑在 vswitchd 和 datapath 中实现，vswitchd 是最核心的模块，OpenFlow 的相关逻辑都在 vswitchd 中实现，datapath 则不是必须的模块。ovsdb 用于存储 vswitch 本身的配置信息，如端口、拓扑、规则等。控制面部分采用的是 OVS 自家实现的 OVN，和其他控制器相比，OVN 对 OVS 和 OpenStack 有更好的兼容性和性能。</p>
-<center><img src="/images/virt/ovs_module.jpg" alt=""></center>
-
-<p>从图中可以看出 OVS 的分层结构，最上层 vswitchd 主要与 ovsdb 通信，做配置下发和更新等，中间层是 ofproto ，用于和 OpenFlow 控制器通信，并基于下层的 ofproto provider 提供的接口，完成具体的设备操作和流表操作等工作。</p>
-<p>dpif 层实现对流表的操作。</p>
-<p>netdev 层实现了对网络设备（如 Ethernet）的抽象，基于 netdev provider 接口实现多种不同平台的设备，如 Linux 内核的 system, tap, internal 等，dpdk 系的 vhost, vhost-user 等，以及隧道相关的 gre, vxlan 等。</p>
-<h3 id="数据转发流程"><a href="#数据转发流程" class="headerlink" title="数据转发流程"></a>数据转发流程</h3><hr>
-<p>通过一个例子来看看 OVS 中数据包是如何进行转发的。</p>
-<center><img src="/images/virt/ovs_dataflow.jpg" alt=""></center>
-
-<p>1）ovs 的 datapath 接收到从 ovs 连接的某个网络端口发来的数据包，从数据包中提取源/目的 IP、源/目的 MAC、端口等信息。</p>
-<p>2）ovs 在内核态查看流表结构（通过 hash），如果命中，则快速转发。</p>
-<p>3）如果没有命中，内核态不知道如何处置这个数据包，所以，通过 netlink upcall 机制从内核态通知用户态，发送给 ovs-vswitchd 组件处理。</p>
-<p>4）ovs-vswitchd 查询用户态精确流表和模糊流表，如果还不命中，在 SDN 控制器接入的情况下，经过 OpenFlow 协议，通告给控制器，由控制器处理。</p>
-<p>5）如果模糊命中， ovs-vswitchd 会同时刷新用户态精确流表和内核态精确流表，如果精确命中，则只更新内核态流表。</p>
-<p>6）刷新后，重新把该数据包注入给内核态 datapath 模块处理。</p>
-<p>7）datapath 重新发起选路，查询内核流表，匹配；报文转发，结束。<br>总结</p>
-<p>OVS 为了方便用户操作，提供了很多管理工具，我们平常在使用过程中只需记住每个工具的作用，具体的命令可以使用 -h 或 –help 查看。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/OVS/"><i class="fas fa-hashtag fa-fw"></i>OVS</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/OpenFlow/"><i class="fas fa-hashtag fa-fw"></i>OpenFlow</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/17/tech/从_Bridge_到_OVS，探索虚拟交换机/">
-              
-                  从 Bridge 到 OVS，探索虚拟交换机
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-17
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/OVS/">OVS</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>和物理网络一样，虚拟网络要通信，必须借助一些交换设备来转发数据。因此，对于网络虚拟化来说，交换设备的虚拟化是很关键的一环。</p>
-<p>上文「网络虚拟化」已经大致介绍了 Linux 内核为了满足网络虚拟化的要求，实现了一套虚拟交换设备——Bridge。本文重点介绍下 Bridge 的加强版——Open vSwitch（OVS），并从 Bridge 过渡到 OVS 的缘由讲起，让大家有个全面的认识。</p>
-<p>借助 Linux Bridge 功能，同主机或跨主机的虚拟机之间能够轻松实现通信，也能够让虚拟机访问到外网，这就是我们所熟知的桥接模式，一般在装 VMware 虚拟机或者 VirtualBox 虚拟机的时候，都会提示我们要选择哪种模式，常用的两种模式是桥接和 NAT。</p>
-<p>NAT 也很好理解，可以简单理解为当虚拟机启用了 NAT 模式之后，宿主机便通过 DHCP 为其生成可以访问外网的 IP，当 VM 访问外网的时候，就可以用该 IP 访问，其实就是宿主机为其做了地址转换。更详细的内容请自行搜索了解。</p>
-<p>物理交换机有个重要的功能，就是虚拟局域网（VLAN），是对局域网（LAN）的软件化升级。一般，两台计算机通过一台交换机连接在一起就构成了一个 LAN。</p>
-<p>一个 LAN 表示一个广播域，这意味着这个 LAN 中的任何节点发的数据包，其他节点都能收到，这有两个问题，一个是容易形成广播风暴，造成网络拥塞，另一个是广播包无法隔离，比如节点 B 不想接收节点 A 的包，但节点 A 强行要发，这就有点说不过去了。</p>
-<p>解决这个问题的方案就是 VLAN，VLAN 能够对广播包进行有效隔离，它的做法是从软件上将交换机的端口虚拟出多个子端口，用 tag 来标记，相当于将交换机的端口划分多个 LAN，同一个 LAN 中的节点发出的数据包打上本 LAN 的 tag，这样，其他 LAN 中的节点就无法收到包，达到隔离的目的。</p>
-<p>Bridge 本身是支持 VLAN 功能的，如下图所示，通过配置，Bridge 可以将一个物理网卡设备 eth0 划分成两个子设备 eth0.10，eth0.20，分别挂到 Bridge 虚拟出的两个 VLAN 上，VLAN id 分别为 VLAN 10 和 VLAN 20。同样，两个 VM 的虚拟网卡设备 vnet0 和 vnet 1 也分别挂到相应的 VLAN 上。这样配好的最终效果就是 VM1 不能和 VM2 通信了，达到了隔离。</p>
-<center><img src="/images/virt/net_vlan.png" alt=""></center>
-
-<p>Linux Bridge + VLAN 便可以构成一个和物理交换机具备相同功能的虚拟交换机了。对于网络虚拟化来说，Bridge 已经能够很好地充当交换设备的角色了。</p>
-<p>但是为什么还有很多厂商都在做自己的虚拟交换机，比如比较流行的有 VMware virtual switch、Cisco Nexus 1000V，以及 Open vSwitch。究其原因，主要有以下几点（我们重点关注 OVS）：</p>
-<p><strong>1）</strong> 方便网络管理与监控。OVS 的引入，可以方便管理员对整套云环境中的网络状态和数据流量进行监控，比如可以分析网络中流淌的数据包是来自哪个 VM、哪个 OS 及哪个用户，这些都可以借助 OVS 提供的工具来达到。</p>
-<p><strong>2）</strong> 加速数据包的寻路与转发。相比 Bridge 单纯的基于 MAC 地址学习的转发规则，OVS 引入流缓存的机制，可以加快数据包的转发效率。</p>
-<p><strong>3）</strong> 基于 SDN 控制面与数据面分离的思想。上面两点其实都跟这一点有关，OVS 控制面负责流表的学习与下发，具体的转发动作则有数据面来完成。可扩展性强。</p>
-<p><strong>4）</strong> 隧道协议支持。Bridge 只支持 VxLAN，OVS 支持 gre/vxlan/IPsec 等。</p>
-<p><strong>5）</strong> 适用于 Xen、KVM、VirtualBox、VMware 等多种 Hypervisors。</p>
-<p>……</p>
-<p>除此之外，OVS 还有很多高级特性，详情可以查阅官网自行了解。</p>
-<p>下面简单看下 OVS 的整体架构，如下图所示，OVS 在 Linux 用户态和内核态都实现了相应的模块，用户态主要组件有数据库服务 ovsdb-server 和守护进程 ovs-vswitchd。内核态中实现了 datapath 模块。</p>
-<center><img src="/images/virt/ovs_path.jpg" alt=""></center>
-
-<p>其中， ovs-vswitchd 和 datapath 共同构成了 OVS 的数据面，控制面由 controller 模块来完成，controller 一般表示的是 OpenFlow 控制器，在 OVS 中，它可以借由第三方来完成，只要支持 OpenFlow 协议即可。</p>
-<p>这里额外提一点，很多的一些产品级的虚拟交换机都是自身集成了控制器，比如 Cisco 1000V 的 Virtual Supervisor Manager(VSM)，VMware 的分布式交换机中的 vCenter，而 OVS 是把这个事交由第三方去做，这么做的意义还是比较大的，可以让自己的产品很好地融入到各种解决方案中。</p>
-<h4 id="OpenFlow"><a href="#OpenFlow" class="headerlink" title="OpenFlow"></a><strong>OpenFlow</strong></h4><hr>
-<p>OpenFlow 是控制面和数据面通信的一套协议，我们常常把支持 OpenFlow 协议的交换机称为 OpenFlow 交换机，控制器称为 OpenFlow 控制器，业界比较知名的 OpenFlow 控制器有 OpenDaylight、ONOS 等。</p>
-<p>OpenFlow 是一个独立的完整的流表协议，不依赖于 OVS，OVS 只是支持 OpenFlow 协议，有了支持，就可以使用 OpenFlow 控制器来管理 OVS 中的流表。OpenFlow 不仅仅支持虚拟交换机，某些硬件交换机也支持 OpenFlow 协议。</p>
-<h4 id="ovs-vswitchd"><a href="#ovs-vswitchd" class="headerlink" title="ovs-vswitchd"></a><strong>ovs-vswitchd</strong></h4><hr>
-<p>ovs-vswitchd 是 OVS 的核心组件，它和内核模块 datapath 共同构成了 OVS 的数据面。它使用 OpenFlow 协议与 OpenFlow 控制器通信，使用 OVSDB 协议与 ovsdb-server 通信，使用 netlink 和 datapath 内核模块通信。</p>
-<h4 id="ovsdb-server"><a href="#ovsdb-server" class="headerlink" title="ovsdb-server"></a><strong>ovsdb-server</strong></h4><hr>
-<p>ovsdb-server 是 OVS 轻量级的数据库服务，用于整个 OVS 的配置信息，包括接口、交换内容、VLAN 等，ovs-vswitchd 根据这些配置信息工作。</p>
-<h4 id="OpenFlow-控制器"><a href="#OpenFlow-控制器" class="headerlink" title="OpenFlow 控制器"></a><strong>OpenFlow 控制器</strong></h4><hr>
-<p>OpenFlow 控制器可以通过 OpenFlow 协议连接到任何支持 OpenFlow 的交换机，比如 OVS 。控制器通过向交换机下发流表规则来控制数据流向。</p>
-<h4 id="Kernel-Datapath"><a href="#Kernel-Datapath" class="headerlink" title="Kernel Datapath"></a><strong>Kernel Datapath</strong></h4><hr>
-<p>datapath 内核模块和 ovs-vswitchd 是相互协作工作的，datapath 负责具体的收发包，而 ovs-vswitchd 通过 controller 下发的流表规则指导 datapath 如何转发包。</p>
-<p>举个例子，datapath 从主机物理网卡 NIC 或者 VM 的 虚拟网卡 vNIC 收到包，如果是第一次收到包，datapath 不知道怎么处理这个包，于是将其丢给  ovs-vswitchd ， ovs-vswitchd 决定该如何处理这个包之后又丢给 datapath，datapath 根据 ovs-vswitchd 的指示执行相应的动作，是丢弃还是从哪个口传出去。同时，ovs-vswitchd 会让 datapath 缓存好这个包的动作，下次再来就可以直接执行动作。</p>
-<p>如果不是第一次收到包，就是按照之前缓存好的动作执行，这样极大地提高了数据处理的速度。</p>
-<p>本文先对 OVS 有个初步印象，下文再详细介绍 OVS 的其他组件。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/OVS/"><i class="fas fa-hashtag fa-fw"></i>OVS</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
-                
-                    <a href="/tags/VLAN/"><i class="fas fa-hashtag fa-fw"></i>VLAN</a>
-                
-                    <a href="/tags/OpenFlow/"><i class="fas fa-hashtag fa-fw"></i>OpenFlow</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/14/tech/一文搞懂网络虚拟化/">
-              
-                  一文搞懂网络虚拟化
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-14
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>网络虚拟化相对计算、存储虚拟化来说是比较抽象的，以我们在学校书本上学的那点网络知识来理解网络虚拟化可能是不够的。</p>
-<p>在我们的印象中，网络就是由各种网络设备（如交换机、路由器）相连组成的一个网状结构，世界上的任何两个人都可以通过网络建立起连接。</p>
-<p>带着这样一种思路去理解网络虚拟化可能会感觉云里雾里——这样一个庞大的网络如何实现虚拟化？</p>
-<p>其实，网络虚拟化更多关注的是数据中心网络、主机网络这样比较「细粒度」的网络，所谓细粒度，是相对来说的，是深入到某一台物理主机之上的网络结构来谈的。</p>
-<p>如果把传统的网络看作「宏观网络」的话，那网络虚拟化关注的就是「微观网络」。网络虚拟化的目的，是要节省物理主机的网卡设备资源。从资源这个角度去理解，可能会比较好理解一点。</p>
-<h3 id="传统网络架构"><a href="#传统网络架构" class="headerlink" title="传统网络架构"></a>传统网络架构</h3><hr>
-<p>在传统网络环境中，一台物理主机包含一个或多个网卡（NIC），要实现与其他物理主机之间的通信，需要通过自身的 NIC 连接到外部的网络设施，如交换机上，如下图所示。</p>
-<center><img src="/images/virt/net_tran.jpg" alt=""><br>传统网络（图片来源于网络，侵权必删）<br></center>
-
-<p>这种架构下，为了对应用进行隔离，往往是将一个应用部署在一台物理设备上，这样会存在两个问题，1）是某些应用大部分情况可能处于空闲状态，2）是当应用增多的时候，只能通过增加物理设备来解决扩展性问题。不管怎么样，这种架构都会对物理资源造成极大的浪费。</p>
-<h3 id="虚拟化网络架构"><a href="#虚拟化网络架构" class="headerlink" title="虚拟化网络架构"></a>虚拟化网络架构</h3><hr>
-<p>为了解决这个问题，可以借助虚拟化技术对一台物理资源进行抽象，将一张物理网卡虚拟成多张虚拟网卡（vNIC），通过虚拟机来隔离不同的应用。</p>
-<p>这样对于上面的问题 1），可以利用虚拟化层 Hypervisor 的调度技术，将资源从空闲的应用上调度到繁忙的应用上，达到资源的合理利用；针对问题 2），可以根据物理设备的资源使用情况进行横向扩容，除非设备资源已经用尽，否则没有必要新增设备。这种架构如下所示。</p>
-<center><img src="/images/virt/net_virt.jpg" alt=""><br>虚拟化网络（图片来源于网络，侵权必删）<br></center>
-
-
-<p>其中虚拟机与虚拟机之间的通信，由虚拟交换机完成，虚拟网卡和虚拟交换机之间的链路也是虚拟的链路，整个主机内部构成了一个虚拟的网络，如果虚拟机之间涉及到三层的网络包转发，则又由另外一个角色——虚拟路由器来完成。</p>
-<p>一般，这一整套虚拟网络的模块都可以独立出去，由第三方来完成，如其中比较出名的一个解决方案就是 Open vSwitch（OVS）。</p>
-<p>OVS 的优势在于它基于 SDN 的设计原则，方便虚拟机集群的控制与管理，另外就是它分布式的特性，可以「透明」地实现跨主机之间的虚拟机通信，如下是跨主机启用 OVS 通信的图示。</p>
-<center><img src="/images/virt/net_dis.jpg" alt=""><br>分布式虚拟交换机（图片来源于网络，侵权必删）<br></center>
-
-
-<p>总结下来，网络虚拟化主要解决的是虚拟机构成的网络通信问题，完成的是各种网络设备的虚拟化，如网卡、交换设备、路由设备等。</p>
-<h3 id="Linux-下网络设备虚拟化的几种形式"><a href="#Linux-下网络设备虚拟化的几种形式" class="headerlink" title="Linux 下网络设备虚拟化的几种形式"></a>Linux 下网络设备虚拟化的几种形式</h3><hr>
-<p>为了完成虚拟机在同主机和跨主机之间的通信，需要借助某种“桥梁”来完成用户态到内核态（Guest 到 Host）的数据传输，这种桥梁的角色就是由虚拟的网络设备来完成，上面介绍了一个第三方的开源方案——OVS，它其实是一个融合了各种虚拟网络设备的集大成者，是一个产品级的解决方案。</p>
-<p>但 Linux 本身由于虚拟化技术的演进，也集成了一些虚拟网络设备的解决方案，主要有以下几种：</p>
-<h4 id="（1）TAP-TUN-VETH"><a href="#（1）TAP-TUN-VETH" class="headerlink" title="（1）TAP/TUN/VETH"></a>（1）TAP/TUN/VETH</h4><hr>
-<p>TAP/TUN 是 Linux 内核实现的一对虚拟网络设备，TAP 工作在二层，TUN 工作在三层。Linux 内核通过 TAP/TUN 设备向绑定该设备的用户空间程序发送数据，反之，用户空间程序也可以像操作物理网络设备那样，向 TAP/TUN 设备发送数据。</p>
-<p>基于 TAP 驱动，即可实现虚拟机 vNIC 的功能，虚拟机的每个 vNIC 都与一个 TAP 设备相连，vNIC 之于 TAP 就如同 NIC 之于 eth。</p>
-<p>当一个 TAP 设备被创建时，在 Linux 设备文件目录下会生成一个对应的字符设备文件，用户程序可以像打开一个普通文件一样对这个文件进行读写。</p>
-<p>比如，当对这个 TAP 文件执行 write 操作时，相当于 TAP 设备收到了数据，并请求内核接受它，内核收到数据后将根据网络配置进行后续处理，处理过程类似于普通物理网卡从外界收到数据。当用户程序执行 read 请求时，相当于向内核查询 TAP 设备是否有数据要发送，有的话则发送，从而完成 TAP 设备的数据发送。</p>
-<p>TUN 则属于网络中三层的概念，数据收发过程和 TAP 是类似的，只不过它要指定一段 IPv4 地址或 IPv6 地址，并描述其相关的配置信息，其数据处理过程也是类似于普通物理网卡收到三层 IP 报文数据。</p>
-<p>VETH 设备总是成对出现，一端连着内核协议栈，另一端连着另一个设备，一个设备收到内核发送的数据后，会发送到另一个设备上去，这种设备通常用于容器中两个 namespace 之间的通信。</p>
-<h4 id="（2）Bridge"><a href="#（2）Bridge" class="headerlink" title="（2）Bridge"></a>（2）Bridge</h4><hr>
-<p>Bridge 也是 Linux 内核实现的一个工作在二层的虚拟网络设备，但不同于 TAP/TUN 这种单端口的设备，Bridge 实现为多端口，本质上是一个虚拟交换机，具备和物理交换机类似的功能。</p>
-<p>Bridge 可以绑定其他 Linux 网络设备作为从设备，并将这些从设备虚拟化为端口，当一个从设备被绑定到 Bridge 上时，就相当于真实网络中的交换机端口上插入了一根连有终端的网线。</p>
-<p>如下图所示，Bridge 设备 br0 绑定了实际设备 eth0 和 虚拟设备设备 tap0/tap1，当这些从设备接收到数据时，会发送给 br0 ，br0 会根据 MAC 地址与端口的映射关系进行转发。</p>
-<center><img src="/images/virt/net_br.png" alt=""><br>Bridge 与 TAP/TUN 的关系<br></center>
-
-<p>因为 Bridge 工作在二层，所以绑定到它上面的从设备 eth0、tap0、tap1 均不需要设 IP，但是需要为 br0 设置 IP，因为对于上层路由器来说，这些设备位于同一个子网，需要一个统一的 IP 将其加入路由表中。</p>
-<p>这里有人可能会有疑问，Bridge 不是工作在二层吗，为什么会有 IP 的说法？其实 Bridge 虽然工作在二层，但它只是 Linux 网络设备抽象的一种，能设 IP 也不足为奇。</p>
-<p>对于实际设备 eth0 来说，本来它是有自己的 IP 的，但是绑定到 br0 之后，其 IP 就生效了，就和 br0 共享一个 IP 网段了，在设路由表的时候，就需要将 br0 设为目标网段的地址。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>传统网络架构到虚拟化的网络架构，可以看作是宏观网络到微观网络的过渡</p>
-<p>TAP/TUN/VETH、Bridge 这些虚拟的网络设备是 Linux 为了实现网络虚拟化而实现的网络设备模块，很多的云开源项目的网络功能都是基于这些技术做的，比如 Neutron、Docker network 等。</p>
-<p>OVS 是一个开源的成熟的产品级分布式虚拟交换机，基于 SDN 的思想，被大量应用在生产环境中。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/OVS/"><i class="fas fa-hashtag fa-fw"></i>OVS</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
-                
-                    <a href="/tags/TAP-TUN-VETH/"><i class="fas fa-hashtag fa-fw"></i>TAP/TUN/VETH</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -938,8 +1282,14 @@
                 </a>
             
             <p class="current">
-                2 / 2
+                2 / 3
             </p>
+            
+                <a class="next" rel="next" href="/tags/网络/page/3/">
+                    <section class="post next">
+                        &nbsp;下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </section>
+                </a>
             
 
         </div>
@@ -1027,7 +1377,7 @@
         
           <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(8)</div></a></li>
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(15)</div></a></li>
         
           <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
         
@@ -1047,7 +1397,7 @@
         
           <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(3)</div></a></li>
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
         
       </ul>
     </div>
@@ -1069,7 +1419,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 15.54px; color: #8f8f8f">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 16.31px; color: #898989">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.62px; color: #7a7a7a">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19.38px; color: #747474">Python</a> <a href="/tags/Qemu/" style="font-size: 17.85px; color: #7f7f7f">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/TAP-TUN-VETH/" style="font-size: 14px; color: #999">TAP/TUN/VETH</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 14px; color: #999">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.31px; color: #898989">tap</a> <a href="/tags/tun/" style="font-size: 16.31px; color: #898989">tun</a> <a href="/tags/veth-pair/" style="font-size: 14.77px; color: #949494">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 20.15px; color: #6f6f6f">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 16.86px; color: #868686">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.14px; color: #8a8a8a">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.71px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.43px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.43px; color: #6d6d6d">Docker</a> <a href="/tags/I-O/" style="font-size: 16.14px; color: #8a8a8a">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.29px; color: #7c7c7c">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.86px; color: #646464">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.71px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.29px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.43px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.14px; color: #8a8a8a">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.14px; color: #8a8a8a">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.71px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19px; color: #777">Python</a> <a href="/tags/Qemu/" style="font-size: 17.57px; color: #818181">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.71px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.43px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.71px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.71px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.43px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.86px; color: #868686">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 16.86px; color: #868686">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.43px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.71px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.71px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.71px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.71px; color: #727272">容器</a> <a href="/tags/容器网络/" style="font-size: 16.86px; color: #868686">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.57px; color: #818181">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.71px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.57px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.43px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 21.14px; color: #686868">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.71px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.71px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.43px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.43px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 

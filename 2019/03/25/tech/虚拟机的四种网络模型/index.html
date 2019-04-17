@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>一文带你全面了解虚拟机的四种网络模型 | 长亭的网志空间</title>
+  
+  
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  
+
+  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="material"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header material">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          长亭的网志空间
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            <article id="post" class="post white-box article-type-post" itemscope="" itemprop="blogPost">
+  
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      
+          <h1 class="title">一文带你全面了解虚拟机的四种网络模型</h1>
+      
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2019-03-25
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/06-网络/">06 网络</a>
+    </div>
+
+
+    
+
+    
+      
+        <div class="metatag browse busuanzi"><i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+          &nbsp;<span id="busuanzi_value_page_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span>
+        </div>
+      
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+      <div class="article-entry" itemprop="articleBody">
+        <blockquote>
+<p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p>
+</blockquote>
+<h2 id="01-从物理网络到虚拟网络"><a href="#01-从物理网络到虚拟网络" class="headerlink" title="01 从物理网络到虚拟网络"></a>01 从物理网络到虚拟网络</h2><p>著名的「六度分隔定理」说到，世界上任何两个互不相识的人，只需要最多六个人就能够建立起联系。这个定理成立的前提就是依托于庞大的网络结构。</p>
+<p>在虚拟化技术没出现之前，构成网络的元素都是实体的物理设备，比如交换机、路由器、网线等等，人们想要构建一个小型的局域网自己玩玩，都要买各种设备，成本高还不灵活。虚拟化技术普及之后，云计算开始大行其道，我们在自己的单机上就可以建各种虚拟机，想怎么玩就怎么玩。</p>
+<a id="more"></a>
+<p>随之而来的就是网络变得更复杂了，由以前看得见摸得着的物理网络一下变成玄乎的虚拟网络了，好不容易建了几台虚拟机，发现网络不通，或者网络通了，但并不知道是怎么通的，这难言的苦水哽在喉咙实在令人不适。</p>
+<p>这篇文章就来说说虚拟机世界里的几种网络模型，我们主要以 <code>VirtualBox</code> 和 <code>VMware Workstation</code> 这两款目前最主流的桌面虚拟化软件作为例子。</p>
+<p>总的来说，目前有四种常见的网络模型：</p>
+<ul>
+<li>桥接（Bridge Adapter）</li>
+<li>NAT</li>
+<li>主机（Host-only Adapter）</li>
+<li>内部网络（Internal）</li>
+</ul>
+<p>这也是 <code>VirtualBox</code> 支持的四种模型，对于 <code>VMware</code>，则只有前三种。</p>
+<p>下图显示了 <code>VirtualBox</code> 支持的几种网络模型：</p>
+<p><img src="/images/virt/virtualboxnet.png" alt="virtualboxnet"></p>
+<h2 id="02-桥接（Bridge-Adapter）"><a href="#02-桥接（Bridge-Adapter）" class="headerlink" title="02 桥接（Bridge Adapter）"></a>02 桥接（Bridge Adapter）</h2><p>虚拟机桥接网络模型就是使用虚拟交换机（Linux Bridge），将虚拟机和物理机连接起来，它们处于同一个网段，IP 地址是一样的。如下图所示：</p>
+<p><img src="/images/virt/bridgenet.png" alt=""></p>
+<p>在这种网络模型下，虚拟机和物理机都处在一个二层网络里面，所以有：</p>
+<ul>
+<li>虚拟机之间彼此互通</li>
+<li>虚拟机与主机彼此可以互通</li>
+<li>只要物理机可以上网，那么虚拟机也可以。我们来验证下：</li>
+</ul>
+<p><img src="/images/virt/bridgetointernet.jpeg" alt="bridgetointernet"></p>
+<p>桥接网络的好处是简单方便，但也有一个很明显的问题，就是一旦虚拟机太多，广播就会很严重。所以，桥接网络一般也只适用于桌面虚拟机或者小规模网络这种简单的形式。</p>
+<h2 id="03-NAT"><a href="#03-NAT" class="headerlink" title="03 NAT"></a>03 NAT</h2><p>另一种模型是 NAT，即网络地址转换（Network Address Translatation）。这种模型严格来讲，又可以分为 <code>NAT</code> 和 <code>NAT 网络</code>两种，我们看上面的图 1 也可以看到。</p>
+<p>根据 NAT 的原理，虚拟机所在的网络和物理机所在的网络不在同一个网段，虚拟机要访问物理所在网络必须经过一个地址转换的过程，也就是说在虚拟机网络内部需要内置一个虚拟的 NAT 设备来做这件事。</p>
+<p>但其中 <code>NAT</code> 和 <code>NAT 网络</code> 两者还有些许的不同：</p>
+<ul>
+<li><code>NAT</code>：主机上的虚拟机之间是互相隔离的，彼此不能通信（它们有独立的网络栈，独立的虚拟 NAT 设备）</li>
+<li><code>NAT 网络</code>：虚拟机之间共享虚拟 NAT 设备，彼此互通。</li>
+</ul>
+<p>如下图，展示了两者细微的差别：</p>
+<p><img src="/images/virt/natnet.jpeg" alt="natnet"></p>
+<p>PS：NAT 网络模式中一般还会内置一个虚拟的 DHCP 服务器来进行 IP 地址的管理。</p>
+<p>下面我们通过实验来验证一下两种模式的区别，首先是 <code>NAT</code> 模式：</p>
+<p>访问外网没问题：</p>
+<p><img src="/images/virt/nattointernet.png" alt="nattointernet"></p>
+<p>访问其他虚拟机：</p>
+<p><img src="/images/virt/nattovm.png" alt="nattovm"></p>
+<p>可以看到，两个虚拟机由于有隔离的网络栈，所以它们的 IP 地址并不在一个网段，所以 ping 不通。</p>
+<p>再来看 <code>NAT 网络</code>，访问外网同样没问题，我们来看下 VM 之间的互通：</p>
+<p><img src="/images/virt/natnettovm.jpeg" alt="natnettovm"></p>
+<p>可以看到，差别体现出来了，<code>NAT 网络</code> 虚拟机之间共享网络栈，它们的 IP 地址处于同一个网段，所以彼此是互通的。</p>
+<p>总结一下，以上两种 NAT 模式，如果不做其他配置，那么有：</p>
+<ul>
+<li>虚拟机可以访问主机，反之不行</li>
+<li>如果主机可以上外网，那么虚拟机也可以</li>
+<li>对于 <code>NAT</code>，同主机上的虚拟机之间不能互通</li>
+<li>对于 <code>NAT 网络</code>，虚拟机之间可以互通</li>
+</ul>
+<p>PS：如果做了 <strong>端口映射</strong> 配置，那么主机也可以访问虚拟机。</p>
+<h2 id="04-主机网络（Host-only-Adapter）"><a href="#04-主机网络（Host-only-Adapter）" class="headerlink" title="04 主机网络（Host-only Adapter）"></a>04 主机网络（Host-only Adapter）</h2><p>主机网络顾名思义，就是只限于主机内部访问的网络，虚拟机之间彼此互通，虚拟机与主机之间彼此互通。但是默认情况下虚拟机不能访问外网（注意：这里说的是默认情况下，如果稍作配置，也是可以的）。</p>
+<p>主机网络看似简单，其实它的网络模型是相对比较复杂的，可以说前面几种模式实现的功能，在这种模式下，都可以通过虚拟机和网卡的配置来实现，这得益于它特殊的网络模型。</p>
+<p>主机网络模型会在主机中模拟出一块虚拟网卡供虚拟机使用，所有虚拟机都连接到这块网卡上，这块网卡默认会使用网段 <code>192.168.56.x</code>（在主机的网络配置界面可以看到这块网卡），如下是基本的拓扑图示：</p>
+<p><img src="/images/virt/host-onlynet.png" alt="host-onlynet"></p>
+<p>默认情况下，虚拟机之间可以互通，虚拟机只能和主机上的虚拟网卡互通，不能和不同网段的网卡互通，更不能访问外网，如果想做到这样，那么需要如图中 <strong>红虚线</strong> 所示，将物理网卡和虚拟网卡桥接或共享。在主机上做如下设置即可：</p>
+<p><img src="/images/virt/hostonlyshare.png" alt="hostonlyshare"></p>
+<p>通过以上配置，我们来验证一下，虚拟机可以访问主机物理网卡和外网了：</p>
+<p><img src="/images/virt/hostonlytointernet.jpeg" alt="hostonlytointernet"></p>
+<h2 id="05-内部网络（internal）"><a href="#05-内部网络（internal）" class="headerlink" title="05 内部网络（internal）"></a>05 内部网络（internal）</h2><p>最后一种网络模型是内部网络，这种模型是相对最简单的一种，虚拟机与外部环境完全断开，只允许虚拟机之间互相访问，这种模型一般不怎么用，所以在 <code>VMware</code> 虚拟机中是没有这种网络模式的。这里我们就不多说了。</p>
+<h2 id="06-总结"><a href="#06-总结" class="headerlink" title="06 总结"></a>06 总结</h2><p>虚拟机的四种网络模型：桥接、NAT、主机和内网模型。</p>
+<p>下面以一张表来描述它们之间的通信行为：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Model</th>
+<th style="text-align:center">VM -&gt; host</th>
+<th style="text-align:center">host -&gt; VM</th>
+<th style="text-align:center">VM <-> VM</-></th>
+<th style="text-align:center">VM -&gt; Internet</th>
+<th style="text-align:center">Internet -&gt; VM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Bridged</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+</tr>
+<tr>
+<td style="text-align:center">NAT</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">Port Forwarding</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">Port Forwarding</td>
+</tr>
+<tr>
+<td style="text-align:center">NAT Network</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">Port Forwarding</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">Port Forwarding</td>
+</tr>
+<tr>
+<td style="text-align:center">Host-only</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">Internal</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">+</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>参考：</strong> </p>
+<p><a href="https://technology.amis.nl/2018/07/27/virtualbox-networking-explained/#prettyPhoto" target="_blank" rel="noopener">https://technology.amis.nl/2018/07/27/virtualbox-networking-explained/#prettyPhoto</a></p>
+<p><a href="https://blog.csdn.net/niqinwen/article/details/11761487" target="_blank" rel="noopener">https://blog.csdn.net/niqinwen/article/details/11761487</a></p>
+<p><a href="https://www.jianshu.com/p/5b8da7a1ad63" target="_blank" rel="noopener">https://www.jianshu.com/p/5b8da7a1ad63</a></p>
+<center>–END–</center>
+
+<hr>
+<p>后台回复「<font color="red">加群</font>」，带你进入高手如云交流群。</p>
+<hr>
+<blockquote>
+<p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有 <strong>10T</strong> 书籍和视频资源，后台回复 <strong>「1024」</strong> 即可免费领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p>
+<p><img src="/images/weichat.png" alt=""></p>
+</blockquote>
+
+      </div>
+        
+          <section class="meta" id="footer-meta">
+            
+              <time class="metatag time" itemprop="dateUpdated" datetime="2019-04-18T00:28:11+08:00" content="2019-04-18"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2019-04-18
+              </time>
+            
+            
+                
+                <div class="metatag tags"><a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Linux</a></div> <div class="metatag tags"><a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;网络</a></div> <div class="metatag tags"><a class="tag" href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;Bridge</a></div> <div class="metatag tags"><a class="tag" href="/tags/NAT/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>&nbsp;NAT</a></div>
+            
+            
+          </section>
+        
+
+        
+            <div class="prev-next">
+                
+                    <section class="prev">
+                        <span class="art-item-left">
+                            <h6><i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页</h6>
+                            <h4>
+                                <a href="/2019/04/01/tech/linux-macvlan/" rel="prev" title="Linux云网络基础之网卡虚拟化技术 macvlan 详解">
+                                  
+                                      Linux云网络基础之网卡虚拟化技术 macvlan 详解
+                                  
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Linux</a> <a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>网络</a> <a class="tag" href="/tags/macvlan/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>macvlan</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+                
+                    <section class="next">
+                        <span class="art-item-right" aria-hidden="true">
+                            <h6>下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i></h6>
+                            <h4>
+                                <a href="/2019/03/18/tech/ip隧道/" rel="prev" title="Linux云网络基础之 IP 隧道详解">
+                                    
+                                        Linux云网络基础之 IP 隧道详解
+                                    
+                                </a>
+                            </h4>
+                            
+                                
+                                <h6 class="tags">
+                                    <a class="tag" href="/tags/Linux/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>Linux</a> <a class="tag" href="/tags/网络/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>网络</a> <a class="tag" href="/tags/tunnel/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>tunnel</a> <a class="tag" href="/tags/ipip/"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>ipip</a>
+                                </h6>
+                            
+                        </span>
+                    </section>
+                
+            </div>
+        
+
+    </section>
+
+</article>
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+<br>
+
+<!-- 显示推荐文章和评论 -->
+
+
+
+  <article class="post white-box comments">
+    <section class="article typo">
+
+      
+        
+
+    <div class="recommended_posts">
+        <h4><i class="fas fa-bookmark fa-fw" aria-hidden="true"></i>&nbsp;相关文章</h4>
+        <ul>
+            
+                <li><a href="https://chambai.github.io/2019/04/11/tech/linux网络命令之tcpdump/">Linux网络命令必知必会之 tcpdump</a></li>
+            
+                <li><a href="https://chambai.github.io/2019/04/01/tech/linux-macvlan/">Linux云网络基础之网卡虚拟化技术 macvlan 详解</a></li>
+            
+                <li><a href="https://chambai.github.io/2019/03/18/tech/ip隧道/">Linux云网络基础之 IP 隧道详解</a></li>
+            
+                <li><a href="https://chambai.github.io/2019/03/14/tech/Linux路由功能/">Linux云网络基础之 Linux 虚拟路由</a></li>
+            
+        </ul>
+    </div>
+
+
+      
+
+      
+        <h4><i class="fas fa-comments fa-fw" aria-hidden="true"></i>&nbsp;评论</h4>
+        
+        
+        
+          
+            <section id="comments">
+              <div id="valine_container" class="valine_thread">
+                <i class="fas fa-spinner fa-spin fa-fw"></i>
+              </div>
+            </section>
+          
+        
+      
+    </section>
+  </article>
+
+
+
+<script>
+    window.subData = {
+        title: '一文带你全面了解虚拟机的四种网络模型',
+        tools: true
+    }
+</script>
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="material">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content material">
+    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content material">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：Linux云计算网络</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="material">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content material">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(15)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="material">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content material">
+      <a href="/tags/Bridge/" style="font-size: 16.86px; color: #868686">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.14px; color: #8a8a8a">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.71px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.43px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.43px; color: #6d6d6d">Docker</a> <a href="/tags/I-O/" style="font-size: 16.14px; color: #8a8a8a">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.29px; color: #7c7c7c">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.86px; color: #646464">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.71px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.29px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.43px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.14px; color: #8a8a8a">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.14px; color: #8a8a8a">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.71px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19px; color: #777">Python</a> <a href="/tags/Qemu/" style="font-size: 17.57px; color: #818181">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.71px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.43px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.71px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.71px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.43px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.86px; color: #868686">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 16.86px; color: #868686">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.43px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.71px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.71px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.71px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.71px; color: #727272">容器</a> <a href="/tags/容器网络/" style="font-size: 16.86px; color: #868686">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.57px; color: #818181">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.71px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.57px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.43px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 21.14px; color: #686868">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.71px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.71px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.43px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.43px; color: #8f8f8f">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-medal fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;精选项目</div>
+  
+    <a class="rightBtn" target="_blank" rel="external nofollow noopener noreferrer" href="https://xaoxuu.com/projects/" title="https://xaoxuu.com/projects/">
+    <i class="fas fa-arrow-right fa-fw"></i></a>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/axkit/" href="https://xaoxuu.com/wiki/axkit/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;AXKit
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/noticeboard/" href="https://xaoxuu.com/wiki/noticeboard/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;NoticeBoard
+          </div>
+          
+            <div class="badge">(iOS开源库)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/heartmate/" href="https://xaoxuu.com/heartmate/">
+          <div class="name">
+            
+              <i class="fas fa-heartbeat fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;HeartMate
+          </div>
+          
+            <div class="badge">(iOS应用程序)</div>
+          
+        </a></li>
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/wiki/material-x/" href="https://xaoxuu.com/wiki/material-x/">
+          <div class="name">
+            
+              <i class="fas fa-cube fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;Material X
+          </div>
+          
+            <div class="badge">(Hexo博客主题)</div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="https://xaoxuu.com/about/" href="https://xaoxuu.com/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+
+  <section class="music">
+    
+<header class="material">
+  <div><i class="fas fa-compact-disc fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;音乐来袭</div>
+  
+</header>
+
+    <div class="content material">
+      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css">
+  <div class="aplayer" data-theme="#1BCDFC" data-mode="circulation" data-server="netease" data-type="playlist" data-id="746319661" data-volume="0.7">
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script>
+
+
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="toc-wrapper">
+    
+<header class="material">
+  <div><i class="fas fa-list fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;文章目录</div>
+  
+    <div class="wrapper"><a class="s-toc rightBtn" rel="external nofollow noopener noreferrer" href="javascript:void(0)"><i class="fas fa-thumbtack fa-fw"></i></a></div>
+  
+</header>
+
+    <div class="content material">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#01-从物理网络到虚拟网络"><span class="toc-text">01 从物理网络到虚拟网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#02-桥接（Bridge-Adapter）"><span class="toc-text">02 桥接（Bridge Adapter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#03-NAT"><span class="toc-text">03 NAT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#04-主机网络（Host-only-Adapter）"><span class="toc-text">04 主机网络（Host-only Adapter）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#05-内部网络（internal）"><span class="toc-text">05 内部网络（internal）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#06-总结"><span class="toc-text">06 总结</span></a></li></ol>
+    </div>
+  </section>
+
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+    
+      
+      
+      
+        
+          <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+          
+            
+              <script src="https://cdn.jsdelivr.net/gh/xaoxuu/volantis@1/js/volantis.min.js"></script>
+            
+          
+          <script>
+          var GUEST_INFO = ['nick','mail','link'];
+          var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+            return GUEST_INFO.indexOf(item) > -1
+          });
+          var notify = 'false' == true;
+          var verify = 'false' == true;
+          var valine = new Valine();
+          valine.init({
+            el: '#valine_container',
+            notify: notify,
+            verify: verify,
+            guest_info: guest_info,
+            
+            appId: "YKimc4VTkSp7UMdEBOiXetqa-gzGzoHsz",
+            appKey: "swRaTvf3t6ihlCowdCVBNzVA",
+            placeholder: "快来评论吧~",
+            pageSize:'10',
+            avatar:'mp',
+            lang:'zh-cn',
+            highlight:''
+          })
+          </script>
+        
+      
+    
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
