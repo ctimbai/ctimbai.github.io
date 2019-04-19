@@ -199,7 +199,7 @@
 </blockquote>
 <p>前面这篇文章介绍了 tap/tun 设备之后，大家应该对虚拟网络设备有了一定的了解，本文来看另外一种虚拟网络设备 veth-pair。</p>
 <h2 id="01-veth-pair-是什么"><a href="#01-veth-pair-是什么" class="headerlink" title="01 veth-pair 是什么"></a>01 veth-pair 是什么</h2><p>顾名思义，veth-pair 就是一对的虚拟设备接口，和 tap/tun 设备不同的是，它都是成对出现的。一端连着协议栈，一端彼此相连着。如下图所示：</p>
-<p><img src="/images/net/veth.jpeg" alt="veth"></p>
+<p><img src="/images/net/veth.png" alt="veth"></p>
 <a id="more"></a>
 <p>正因为有这个特性，它常常充当着一个桥梁，连接着各种虚拟网络设备，典型的例子像“两个 namespace 之间的连接”，“Bridge、OVS 之间的连接”，“Docker 容器之间的连接” 等等，以此构建出非常复杂的虚拟网络结构，比如 OpenStack Neutron。</p>
 <h2 id="02-veth-pair-的连通性"><a href="#02-veth-pair-的连通性" class="headerlink" title="02 veth-pair 的连通性"></a>02 veth-pair 的连通性</h2><p>我们给上图中的 veth0 和 veth1 分别配上 IP：10.1.1.2 和 10.1.1.3，然后从 veth0 ping 一下 veth1。理论上它们处于同网段，是能 ping 通的，但结果却是 ping 不通。</p>
@@ -268,8 +268,8 @@
         
           <section class="meta" id="footer-meta">
             
-              <time class="metatag time" itemprop="dateUpdated" datetime="2019-04-18T00:27:57+08:00" content="2019-04-18"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
-                &nbsp;2019-04-18
+              <time class="metatag time" itemprop="dateUpdated" datetime="2019-04-19T13:23:25+08:00" content="2019-04-19"><i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>
+                &nbsp;2019-04-19
               </time>
             
             
