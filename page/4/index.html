@@ -411,123 +411,6 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/07/20/tech/Linux探秘之_I:O_效率/">
-              
-                  Linux探秘之 I/O 效率
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-07-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="文章来由"><a href="#文章来由" class="headerlink" title="文章来由"></a>文章来由</h3><hr>
-<p>最近看了《UNIX环境高级编程》，以前一些比较模糊的知识又清晰了一步，特别是前两章讲到不带缓冲的文件 I/O 和带缓冲的标准 I/O，对 read、write、fread、fwrite、printf 等等这些函数又有了新的认识。</p>
-<p>一个很大的感受是，我们很多时候开发都只注重上层逻辑，虽然一个项目接一个项目，看上去做了不少事，但是夜深人静掐指一想，究竟我们是否真正掌握了这些知识点，对于每一个知识点实现的机制我们是否能完整地说出来？这些东西最能体现一个人的基础知识是否扎实，我发现互联网公司的面试中最喜欢问这些基础知识，由一个很基本的函数层层递进引申出很多的问题。</p>
-<p>很多时候我们内心可能会很排斥，甚至不屑于这些基础知识，想着等用到的时候，再来查，现在专注上层逻辑就好了，这样有助于提升我的开发效率。这样的想法貌似也没什么错，但是往往这就是瓶颈的来源，程序员最可怕的就是遇到瓶颈了。因为瓶颈这个东西是很难意识到的，一味追求实践而放弃理论学习，很容易就遇到瓶颈。（个人见解，不喜勿喷）</p>
-<p>本文算是自己看完《UNIX 环境高级编程》文件 I/O 和标准 I/O 两章的读书笔记，文件 I/O 一章说不带缓冲，但后面又出现可带缓冲，搞得人有点晕，特意记下自己对此的理解。如果有什么不对的，欢迎指出，如果觉得本文对你有帮助，就动动手指推荐下，或者是粉我下，你的支持是我分享的最大动力。^_^</p>
-<h3 id="缓冲机制"><a href="#缓冲机制" class="headerlink" title="缓冲机制"></a>缓冲机制</h3><hr>
-<p>众所周知，CPU 和内存的数据交换要远大于磁盘，通过缓存机制，可以减少磁盘读写的次数，提高并发处理程序的效率，因此，缓存是一种提高任务存储和处理效率的有效方法。我们很多时候可以看到，缓存不仅在操作系统方面被采用，更是在 Web 技术、服务器端、分布式系统等领域发挥着及其重要的作用。</p>
-<p>从宏观上看，Linux 操作系统分为用户态和内核态，在处理 I/O 操作的时候，两者都提供了缓存。用户态的称为标准 I/O 缓存，也称为用户空间缓存，而内核态的称为缓冲区高速缓存，也叫页面高速缓存。既然都提供了缓存，那为什么这本书上却分不带 I/O 的缓存和带 I/O 的缓存，原因其实是“不带 I/O缓存”指的是用户空间中不为这些 I/O 操作设有缓冲，而内核是带缓冲的，这样来看，就不会糊涂了。</p>
-<h3 id="系统-I-O-和标准-I-O"><a href="#系统-I-O-和标准-I-O" class="headerlink" title="系统 I/O 和标准 I/O"></a>系统 I/O 和标准 I/O</h3><hr>
-<p>系统 I/O，又称文件 I/O，或是内核态 I/O，引用文件的方式是通过文件描述符 fd，一个文件对应一个文件描述符。一个文件描述符用一个非负整数表示，0、1、2 系统默认表示标准输入、标准输出、标准错误。</p>
-<p>某些 UNIX 系统规定了描述符的上限值 OPEN_MAX，这些常量都定义在头文件&lt;unistd.h&gt;中。当读或写一个文件时，使用 open 或 create 系统调用返回的文件描述符标识该文件，并将其作为参数传递给 read 或 write 系统调用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">ssize_t read(int filedes, void *buf, size_t nbytes);</span><br><span class="line">ssize_t write(int filedes, const void *buf, size_t nbytes);</span><br></pre></td></tr></table></figure>
-<p>标准 I/O，又叫用户态 I/O，引用文件的方式则是通过文件流（stream），一般用 fopen 和 freopen 函数打开一个流，返回一个指向 FILE 对象的指针，其他函数如果要引用这个流，就将 FILE 指针作为参数传递。</p>
-<p>一个进程预定义了三个流，并且这三个流自动被进程使用，它们是标准输入流、标准输出流和标准出错流。这三个流和系统 I/O 所规定的三个文件描述符所引用的文件相同。</p>
-<p>当读或写一个文件时，不像系统 I/O，仅定义了 read 和 write 两个系统调用函数，标准 I/O 定义了多个函数，程序员可以根据自己的需求灵活使用。这些函数可以分为每次一个字符的 I/O，每次一行的 I/O 和直接 I/O（或者二进制 I/O、一次一个对象 I/O、面向记录的 I/O、面向结构的 I/O）。</p>
-<p><strong>1）每次一个字符的 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">int getc(FILE *fp) //-&gt; 宏</span><br><span class="line">int fgetc(FILE *fp) //-&gt; 函数</span><br><span class="line">int getchar(void) //等价于getc(stdin)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int putc(int c, FILE *fp)</span><br><span class="line">int fputc(int c, FILE *fp)</span><br><span class="line">int putchar(int c) //等效于putc(c, stdout)</span><br></pre></td></tr></table></figure></p>
-<p><strong>2）每次一行 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">char *fgets(char *restrict buf, int n, FILE *restrict fp)</span><br><span class="line">char *gets(char *buf)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int fputs(cont char *restrict str, FILE *restrict fp)</span><br><span class="line">int puts(const char *str)</span><br></pre></td></tr></table></figure></p>
-<p><strong>3）直接I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br><span class="line">size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br></pre></td></tr></table></figure></p>
-<p>到此，我们大概了解了系统 I/O 和标准 I/O 引用文件的方法，以及一些常用的 I/O 函数。下面通过一个图来详细看下当用户调用一个 I/O 函数时，用户态和内核态的一个执行流程是什么样的，进一步了解缓存在 I/O 操作中的作用，以及用户态 I/O 和内核态 I/O 在执行效率上的区别。</p>
-<h3 id="I-O-操作的流程"><a href="#I-O-操作的流程" class="headerlink" title="I/O 操作的流程"></a>I/O 操作的流程</h3><hr>
-<center><img src="/images/linux/linuxio.png" alt=""></center>
-
-<p>如上图所示，用户进程空间和内核进程空间读写磁盘的操作都要经过缓冲区缓存，缓存的作用前面提到过，是为了减少磁盘读写的次数，提高 I/O 的效率。（来源于公众号：aLinux云计算网络，此处是防那些无脑SB抄袭，如影响阅读，还请大家见谅）当读写一个文件时，首先看系统 I/O 的操作流程。</p>
-<p><strong>1、系统I/O：</strong>  属于内核系统调用，没有涉及用户态的参与。以图中标号为例：</p>
-<p>③ 调用 write 函数向文件中写数据，buf 中存放的就是要写入的数据，如write(fd, ‘abc’, 3)。调用前需要先设置 BUFFSIZE。不同的 BUFFSIZE 会影响I/O 效率，后面再来说这个问题。</p>
-<p>⑤ 延迟写：当缓存区高速缓存满或者内核要重写缓冲区的时候，才将数据写入输出队列，等数据到队列首部的时候，才真正触发磁盘的写操作。</p>
-<p>⑥ 预读：当检测到正进行顺序读取时，内核就试图读入比应用程序所要求更多的数据，并假想应用程序很快就会读到这些数据。这样，当缓冲区没有数据时，能够快速填充下次要读取的数据。</p>
-<p>④ 调用 read 从缓冲区高速缓存读取所需数据到逻辑单元中进行处理。</p>
-<p>以上，就是系统 I/O 所涉及到的四步操作。</p>
-<p><strong>2、标准 I/O：</strong> 属于 ISO C 实现的标准库函数，调用的是底层的系统调用。</p>
-<p>① 将逻辑单元中的数据写入文件，根据需求，有三种函数类型可以调用，以fputc、fputs、fwrite 为例，这些函数不用人为去控制缓冲区的大小，而是系统自动申请的，当用户定义了相应的 I/O 函数之后，根据不同的缓存类型（是全缓冲、行缓冲还是无缓冲），系统自动调用 malloc 等函数申请缓冲区，即标准 I/O 缓存。</p>
-<p>③⑤ 当用户缓冲区满了之后，如系统 I/O 操作一般，此时调用 write 从标准I/O 缓存中复制数据到内核缓冲区，再写入磁盘。</p>
-<p>④⑥ 同系统 I/O 操作，从内核缓冲区调用 read 读入到用户缓冲区。</p>
-<p>② 同样有三种函数类型可以调用，以 fgetc、fgets、fread 为例，读入逻辑单元进行后续的处理。</p>
-<p>可见，标准 I/O 实现的机制就是基于系统 I/O，这样看来，标准 I/O 在效率上肯定不如系统 I/O，但事实是标准 I/O 与系统 I/O 相比并不慢很多，而且还有很多其他的优点，下面一一述说（本篇文章最重要的就是下一小节）。</p>
-<h3 id="I-O-效率"><a href="#I-O-效率" class="headerlink" title="I/O 效率"></a>I/O 效率</h3><hr>
-<center><img src="/images/linux/ioperf.jpg" alt=""></center>
-
-<p>从图中可以看出，系统 I/O 效率受限于 read、write 系统调用的次数，而系统调用次数又受限于内核缓冲区的大小，即 BUFFSIZE，通过设置不同的 BUFFSIZE，得到的系统 CPU 时间是不同的，其最小值出现在 BUFFSIZE=4096 处，原因是该测试所采用的是 Linux ext2 文件系统，其块长为 4096 字节，也即缓冲区所能申请到的最大缓冲区大小，我们把 4096 字节看做是本次最佳 I/O 长度。</p>
-<p>如果继续扩大缓冲区大小，对此时间几乎没有影响。所以，对于系统 I/O 操作，一个最大的问题就是：需要人为控制缓存的大小及最佳 I/O 长度的选择，另外就是系统调用与普通函数调用相比通常需要花费更多的时间，因为系统调用具体内核要执行这样的操作：1）内核捕获调用，2）检查系统调用参数的有效性，3）在用户空间和内核空间之间传输数据。</p>
-<p>因此，引入标准 I/O 的目的就是为了通过标准 I/O 缓存来避免 BUFFSIZE 选择不当而带来的频繁的系统调用。根据用户不同的需求，选择不同的 I/O 函数，然后根据不同的缓存类型，自动调用 malloc 等缓存分配函数分配合适的缓存，等分配的缓存满之后，再调用系统 I/O 从标准 I/O 缓存向内核缓存拷贝数据，这样就进一步减少了系统调用的次数。</p>
-<center><img src="/images/linux/ionum.png" alt=""></center>
-
-<p>但是不同的标准 I/O 函数，不同的缓存类型也会带来不同的效率。如上图，当选择系统最佳 I/O 长度，即 BUFFSIZE 的大小和文件系统的块长一致，可以得到最佳的时间。</p>
-<p>当选用标准 I/O 函数时，每次一个字符函数 fgetc、fputc 和每次一行函数 fgets、fputs 函数相比要花费较多的 CPU 时间，而每次单个字节调用系统 I/O 则花费更多的时间，如果是一个 100M 的文件，则要执行大概 2亿 次函数调用，也就引起 2亿 次系统调用（从用户缓冲区到内核缓冲区，再到磁盘），而 fgetc 版本也执行了 2亿 次函数调用，但只引起了大约 25222 次系统调用，所以，时间就大大减少了。</p>
-<p>综合以上，标准 I/O 函数虽然基于系统 I/O 实现，但很大程度上减少了系统调用的次数，而且不用人为关心缓冲区大小的选择，整体上提高了 I/O 的效率。另外，标准 I/O 提供了多种缓存类型，方便程序员根据不同的应用需求选择不同的缓存要求，提高了编程的灵活性，当选择无缓存时，就相当于直接调用系统 I/O。</p>
-<p>OK，大概的内容就以上这些，当然关于 I/O 操作这块还有很多需要注意的点，而且还有很多更加高级的 I/O 函数，这些在后面遇到再来做总结。最后，如果你觉得这篇文章对你有帮助就点赞转发支持下我吧，还是那句话，你的支持是我分享的最大动力。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
           <a href="/2018/07/06/tech/Linux探秘之用户态与内核态/">
               
                   Linux探秘之用户态与内核态
@@ -1410,6 +1293,132 @@
         </div>
       
     
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/05/03/tech/CPU拓扑从SMP谈到NUMA（理论篇）/">
+              
+                  CPU 拓扑：从 SMP 谈到 NUMA （理论篇）
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-03
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>随着计算机技术（特别是以芯片为主的硬件技术）的快速发展，CPU 架构逐步从以前的单核时代进阶到如今的多核时代，在多核时代里，多颗 CPU 核心构成了一个小型的“微观世界”。每颗 CPU 各司其职，并与其他 CPU 交互，共同支撑起了一个“物理世界”。从这个意义上来看，我们更愿意称这样的“微观世界”为 CPU 拓扑，就像一个物理网络一样，各个网络节点通过拓扑关系建立起连接来支撑起整个通信系统。</p>
+<center><img src="/images/linux/processor.jpg" alt=""></center>
+
+<h3 id="单核-or-多核-or-多-CPU-or-超线程"><a href="#单核-or-多核-or-多-CPU-or-超线程" class="headerlink" title="单核 or 多核 or 多 CPU or 超线程 ?"></a>单核 or 多核 or 多 CPU or 超线程 ?</h3><hr>
+<p>在单核时代，为了提升 CPU 的处理能力，普遍的做法是提高 CPU 的主频率，但一味地提高频率对于 CPU 的功耗也是影响很大的（CPU 的功耗正比于主频的三次方）。</p>
+<p>另外一种做法是提高 IPC （每个时钟周期内执行的指令条数），这种做法要么是提高指令的并行度，要么是增加核数。显然，后一种方法更具有可扩展性，这也是摩尔定律的必然性。</p>
+<p>CPU 的性能到底是如何体现的呢？为了弄清楚这个问题，我们结合单核 CPU 和多核 CPU 的结构来进一步剖析。</p>
+<p>首先，对于一个单核结构，即一颗物理 CPU 封装里只集成了一个物理核心，其主要组件可以简化为：CPU 寄存器集合、中断逻辑、执行单元和 Cache，如下图：</p>
+<center><img src="/images/linux/one_core.jpg" alt=""></center>
+
+<p>对于一个多线程程序，主要通过时间片轮转的方式来获得 CPU 的执行权，从内部来看，这其实是串行执行的，性能自然并不怎么高。</p>
+<p>其次，对于多核结构，则是在一颗物理 CPU 封装里集成了多个对等的物理核心，所谓对等，就是每个核心都有相同的内部结构。多个核心之间通过芯片内部总线来完成通信。随着 CPU 制造工艺的提升，每颗 CPU 封装中集成的物理核心也在不断提高。</p>
+<center><img src="/images/linux/multi_core.jpg" alt=""></center>
+
+<p>对于一个多线程程序，这种情况能够实现真正的并发，但线程在不同核之间切换会存在一定的开销，但由于走的是芯片内部总线，开销相对会比较小。</p>
+<p>除了上述两种结构，还有另外一种结构是多 CPU 结构，也就是多颗单独封装的 CPU 通过外部总线相连，构成的一个统一的计算平台。每个 CPU 都需要独立的电路支持，有自己的 Cache。它们之间的通信通过主板上的总线来完成。</p>
+<center><img src="/images/linux/multi_cpu.jpg" alt=""></center>
+
+<p>同样对于一个多线程程序，不同于上一种情况的是，线程间的切换走的是外部总线，延迟较大，开销自然较大，而且对于有共享的数据还会因 Cache 一致性带来一定的开销（关于 Cache 下一小节说明）。</p>
+<p>上述结构，一个 CPU 核心同一时间内只能执行一个线程，效率低下，为了提高 CPU 的利用率，CPU 芯片厂商又推出超线程（Hyper-Thread-ing）技术，即让一个物理核心同时执行多个线程，使整体性能得到提升。虽然物理上只有一个核心，但逻辑上被划分了多个逻辑核心，它们之间是完全隔离的。</p>
+<center><img src="/images/linux/ht.jpg" alt=""></center>
+
+<p>对于每个逻辑核心，拥有完整独立的寄存器集合和中断逻辑，共享执行单元和 Cache。由于是共享执行单元，所以对高 IPC 的应用，其性能提升有限。</p>
+<h3 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h3><hr>
+<p>Cache 是一种 SRAM （Static Random Access Memory，静态访问随机存储器）。出于成本和生产工艺考虑，一般将 Cache 分为三级。一级（L1）访问速度最快，但是容量最小，一般只有几十 KB；二级（L2）次之，一般有几百 KB 到几 MB 不等，三级（LLC，Last Level Cache）最慢，但是容量也最大，一般有几 MB 到几十 MB。</p>
+<p>一级 Cache 又分为数据 Cache 和指令 Cache，顾名思义，数据 Cache 用来存数据，指令 Cache 用来存指令。下图是一个简单的 Cache 系统逻辑示意图。</p>
+<center><img src="/images/linux/cache.jpg" alt=""></center>
+
+<p>在多核结构中，每个物理核心都拥有独立的一级 Cache 和二级 Cache，而三级 Cache 是所有核心共享。这种共享需要解决的一个问题是公平地为每个核心分配 Cache 大小，避免 Cache 命中率低的问题。</p>
+<p>对于现代计算机系统，说到 Cache，不得不提 TLB（Translation Look-aside Buffer） Cache。简单理解，如果说 Cache 存放的是内存中的内容，那么 TLB Cache 存放的是页表项。</p>
+<p>为什么页表项需要用 Cache 存，原因当然是快。你可能觉得用三级 Cache 存就行了，为什么还要专门上 TLB Cache。</p>
+<p>这里有两点考虑，一点是 TLB 采用基于内容的访问存储器 CAM，这种存储器能做到根据虚拟地址查询直接返回物理地址，效率极高，不需要像传统方式那样采用多级页表查询。另外一点是 Cache 的“淘汰”机制决定，Cache 会根据算法淘汰掉那些不常使用的内容，这对于页表这种需要频繁访问（每次程序寻址都要访问页表）的特性显然是矛盾的，所以就需要专门为页表提供一种特殊的 Cache，即 TLB Cache。</p>
+<h3 id="SMP-or-NUMA-or-MPP"><a href="#SMP-or-NUMA-or-MPP" class="headerlink" title="SMP or NUMA or MPP?"></a>SMP or NUMA or MPP?</h3><hr>
+<p>如果说前面咱们讨论的是 CPU 内部的“微观世界”，那么本节将跳出来，探讨一个系统级的“宏观世界”。</p>
+<p>首先是 SMP，对称多处理器系统，指的是一种多个 CPU 处理器共享资源的电脑硬件架构，其中，每个 CPU 没有主从之分，地位平等，它们共享相同的物理资源，包括总线、内存、IO、操作系统等。每个 CPU 访问内存所用时间都是相同的，因此这种系统也被称为一致存储访问结构（UMA，Uniform Memory Access）。</p>
+<center><img src="/images/linux/smp.jpg" alt=""></center>
+
+<p>这种系统由于共享资源，不可避免地要加锁来解决资源竞争的问题，带来一定的性能开销，另外，扩展能力还非常有限，实验证明，SMP 系统最好的情况是有 2-4 个 CPU，适用于 PC、笔记本电脑和小型服务器等。</p>
+<p>tips: 查看系统是否是 SMP 结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/devices/system/node/     # 如果只看到一个 node0 那就是 SMP 架构</span><br></pre></td></tr></table></figure></p>
+<p>为了应对大规模的系统要求（特别是云计算环境），就研制出了 NUMA 结构，即非一致存储访问结构。</p>
+<p>这种结构引入了 CPU 分组的概念，用 Node 来表示，一个 Node 可能包含多个物理 CPU 封装，从而包含多个 CPU 物理核心。每个 Node 有自己独立的资源，包括内存、IO 等。每个 Node 之间可以通过互联模块总线（QPI）进行通信，所以，也就意味着每个 Node 上的 CPU 都可以访问到整个系统中的所有内存，但很显然，访问远端 Node 的内存比访问本地内存要耗时很多，这也是 NUMA 架构的问题所在，我们在基于 NUMA 架构开发上层应用程序要尽可能避免跨 Node 内存访问。</p>
+<center><img src="/images/linux/numaarch.jpg" alt=""></center>
+
+<p>NUMA 架构在 SMP 架构的基础上通过分组的方式增强了可扩展性，但从性能上看，随着 CPU 数量的增加，并不能线性增加系统性能，原因就在于跨 Node 内存访问的问题。所以，一般 NUMA 架构最多支持几百个 CPU 就不错了。</p>
+<p>但对于很多大型计算密集型的系统来说，NUMA 显然有些吃力，所以，后来又出现了 MPP 架构，即海量并行处理架构。这种架构也有分组的概念，但和 NUMA 不同的是，它不存在异地内存访问的问题，每个分组内的 CPU 都有自己本地的内存、IO，并且不与其他 CPU 共享，是一种完全无共享的架构，因此它的扩展性最好，可以支持多达数千个 CPU 的量级。</p>
+<center><img src="/images/linux/mpp.jpg" alt=""></center>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>1、在芯片技术已然发展成熟的今天，性能低，上核不是问题，但上核就一定能提高性能吗，另外上核怎么很好地利用多核来完成自身进化，这些问题都值得深思。</p>
+<p>2、NUMA 架构算是多核时代应用较大的一种 CPU 架构，本文从核心谈到系统，让大家有个全面的了解，下文会特别针对 NUMA 架构做一些实验验证。</p>
+<p>Reference：<br>1.《深入浅出 DPDK》</p>
+<ol start="2">
+<li>SMP、NUMA、MPP体系结构介绍：<br><a href="https://www.cnblogs.com/yubo/archive/2010/04/23/1718810.html" target="_blank" rel="noopener">https://www.cnblogs.com/yubo/archive/2010/04/23/1718810.html</a></li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/NUMA/"><i class="fas fa-hashtag fa-fw"></i>NUMA</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
 </section>
 
 
@@ -1514,7 +1523,7 @@
         
           <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(10)</div></a></li>
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
         
           <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
         
@@ -1528,7 +1537,7 @@
         
           <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(10)</div></a></li>
         
           <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
         
@@ -1562,7 +1571,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 16.86px; color: #868686">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.14px; color: #8a8a8a">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.71px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.43px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.43px; color: #6d6d6d">Docker</a> <a href="/tags/I-O/" style="font-size: 16.14px; color: #8a8a8a">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.29px; color: #7c7c7c">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.86px; color: #646464">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.71px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.29px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.43px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.14px; color: #8a8a8a">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.14px; color: #8a8a8a">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.71px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19px; color: #777">Python</a> <a href="/tags/Qemu/" style="font-size: 17.57px; color: #818181">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.71px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.43px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.71px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.71px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.43px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.86px; color: #868686">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 16.86px; color: #868686">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.43px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.71px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.71px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.71px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.71px; color: #727272">容器</a> <a href="/tags/容器网络/" style="font-size: 16.86px; color: #868686">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.57px; color: #818181">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.71px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.57px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.43px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 21.14px; color: #686868">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.71px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.71px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.43px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.43px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 

@@ -397,130 +397,7 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/07/20/tech/Linux探秘之_I:O_效率/">
-              
-                  Linux探秘之 I/O 效率
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-07-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="文章来由"><a href="#文章来由" class="headerlink" title="文章来由"></a>文章来由</h3><hr>
-<p>最近看了《UNIX环境高级编程》，以前一些比较模糊的知识又清晰了一步，特别是前两章讲到不带缓冲的文件 I/O 和带缓冲的标准 I/O，对 read、write、fread、fwrite、printf 等等这些函数又有了新的认识。</p>
-<p>一个很大的感受是，我们很多时候开发都只注重上层逻辑，虽然一个项目接一个项目，看上去做了不少事，但是夜深人静掐指一想，究竟我们是否真正掌握了这些知识点，对于每一个知识点实现的机制我们是否能完整地说出来？这些东西最能体现一个人的基础知识是否扎实，我发现互联网公司的面试中最喜欢问这些基础知识，由一个很基本的函数层层递进引申出很多的问题。</p>
-<p>很多时候我们内心可能会很排斥，甚至不屑于这些基础知识，想着等用到的时候，再来查，现在专注上层逻辑就好了，这样有助于提升我的开发效率。这样的想法貌似也没什么错，但是往往这就是瓶颈的来源，程序员最可怕的就是遇到瓶颈了。因为瓶颈这个东西是很难意识到的，一味追求实践而放弃理论学习，很容易就遇到瓶颈。（个人见解，不喜勿喷）</p>
-<p>本文算是自己看完《UNIX 环境高级编程》文件 I/O 和标准 I/O 两章的读书笔记，文件 I/O 一章说不带缓冲，但后面又出现可带缓冲，搞得人有点晕，特意记下自己对此的理解。如果有什么不对的，欢迎指出，如果觉得本文对你有帮助，就动动手指推荐下，或者是粉我下，你的支持是我分享的最大动力。^_^</p>
-<h3 id="缓冲机制"><a href="#缓冲机制" class="headerlink" title="缓冲机制"></a>缓冲机制</h3><hr>
-<p>众所周知，CPU 和内存的数据交换要远大于磁盘，通过缓存机制，可以减少磁盘读写的次数，提高并发处理程序的效率，因此，缓存是一种提高任务存储和处理效率的有效方法。我们很多时候可以看到，缓存不仅在操作系统方面被采用，更是在 Web 技术、服务器端、分布式系统等领域发挥着及其重要的作用。</p>
-<p>从宏观上看，Linux 操作系统分为用户态和内核态，在处理 I/O 操作的时候，两者都提供了缓存。用户态的称为标准 I/O 缓存，也称为用户空间缓存，而内核态的称为缓冲区高速缓存，也叫页面高速缓存。既然都提供了缓存，那为什么这本书上却分不带 I/O 的缓存和带 I/O 的缓存，原因其实是“不带 I/O缓存”指的是用户空间中不为这些 I/O 操作设有缓冲，而内核是带缓冲的，这样来看，就不会糊涂了。</p>
-<h3 id="系统-I-O-和标准-I-O"><a href="#系统-I-O-和标准-I-O" class="headerlink" title="系统 I/O 和标准 I/O"></a>系统 I/O 和标准 I/O</h3><hr>
-<p>系统 I/O，又称文件 I/O，或是内核态 I/O，引用文件的方式是通过文件描述符 fd，一个文件对应一个文件描述符。一个文件描述符用一个非负整数表示，0、1、2 系统默认表示标准输入、标准输出、标准错误。</p>
-<p>某些 UNIX 系统规定了描述符的上限值 OPEN_MAX，这些常量都定义在头文件&lt;unistd.h&gt;中。当读或写一个文件时，使用 open 或 create 系统调用返回的文件描述符标识该文件，并将其作为参数传递给 read 或 write 系统调用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">ssize_t read(int filedes, void *buf, size_t nbytes);</span><br><span class="line">ssize_t write(int filedes, const void *buf, size_t nbytes);</span><br></pre></td></tr></table></figure>
-<p>标准 I/O，又叫用户态 I/O，引用文件的方式则是通过文件流（stream），一般用 fopen 和 freopen 函数打开一个流，返回一个指向 FILE 对象的指针，其他函数如果要引用这个流，就将 FILE 指针作为参数传递。</p>
-<p>一个进程预定义了三个流，并且这三个流自动被进程使用，它们是标准输入流、标准输出流和标准出错流。这三个流和系统 I/O 所规定的三个文件描述符所引用的文件相同。</p>
-<p>当读或写一个文件时，不像系统 I/O，仅定义了 read 和 write 两个系统调用函数，标准 I/O 定义了多个函数，程序员可以根据自己的需求灵活使用。这些函数可以分为每次一个字符的 I/O，每次一行的 I/O 和直接 I/O（或者二进制 I/O、一次一个对象 I/O、面向记录的 I/O、面向结构的 I/O）。</p>
-<p><strong>1）每次一个字符的 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">int getc(FILE *fp) //-&gt; 宏</span><br><span class="line">int fgetc(FILE *fp) //-&gt; 函数</span><br><span class="line">int getchar(void) //等价于getc(stdin)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int putc(int c, FILE *fp)</span><br><span class="line">int fputc(int c, FILE *fp)</span><br><span class="line">int putchar(int c) //等效于putc(c, stdout)</span><br></pre></td></tr></table></figure></p>
-<p><strong>2）每次一行 I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">/* 输入函数 */</span><br><span class="line">char *fgets(char *restrict buf, int n, FILE *restrict fp)</span><br><span class="line">char *gets(char *buf)</span><br><span class="line"></span><br><span class="line">/* 输出函数 */</span><br><span class="line">int fputs(cont char *restrict str, FILE *restrict fp)</span><br><span class="line">int puts(const char *str)</span><br></pre></td></tr></table></figure></p>
-<p><strong>3）直接I/O</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br><span class="line">size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp)</span><br></pre></td></tr></table></figure></p>
-<p>到此，我们大概了解了系统 I/O 和标准 I/O 引用文件的方法，以及一些常用的 I/O 函数。下面通过一个图来详细看下当用户调用一个 I/O 函数时，用户态和内核态的一个执行流程是什么样的，进一步了解缓存在 I/O 操作中的作用，以及用户态 I/O 和内核态 I/O 在执行效率上的区别。</p>
-<h3 id="I-O-操作的流程"><a href="#I-O-操作的流程" class="headerlink" title="I/O 操作的流程"></a>I/O 操作的流程</h3><hr>
-<center><img src="/images/linux/linuxio.png" alt=""></center>
-
-<p>如上图所示，用户进程空间和内核进程空间读写磁盘的操作都要经过缓冲区缓存，缓存的作用前面提到过，是为了减少磁盘读写的次数，提高 I/O 的效率。（来源于公众号：aLinux云计算网络，此处是防那些无脑SB抄袭，如影响阅读，还请大家见谅）当读写一个文件时，首先看系统 I/O 的操作流程。</p>
-<p><strong>1、系统I/O：</strong>  属于内核系统调用，没有涉及用户态的参与。以图中标号为例：</p>
-<p>③ 调用 write 函数向文件中写数据，buf 中存放的就是要写入的数据，如write(fd, ‘abc’, 3)。调用前需要先设置 BUFFSIZE。不同的 BUFFSIZE 会影响I/O 效率，后面再来说这个问题。</p>
-<p>⑤ 延迟写：当缓存区高速缓存满或者内核要重写缓冲区的时候，才将数据写入输出队列，等数据到队列首部的时候，才真正触发磁盘的写操作。</p>
-<p>⑥ 预读：当检测到正进行顺序读取时，内核就试图读入比应用程序所要求更多的数据，并假想应用程序很快就会读到这些数据。这样，当缓冲区没有数据时，能够快速填充下次要读取的数据。</p>
-<p>④ 调用 read 从缓冲区高速缓存读取所需数据到逻辑单元中进行处理。</p>
-<p>以上，就是系统 I/O 所涉及到的四步操作。</p>
-<p><strong>2、标准 I/O：</strong> 属于 ISO C 实现的标准库函数，调用的是底层的系统调用。</p>
-<p>① 将逻辑单元中的数据写入文件，根据需求，有三种函数类型可以调用，以fputc、fputs、fwrite 为例，这些函数不用人为去控制缓冲区的大小，而是系统自动申请的，当用户定义了相应的 I/O 函数之后，根据不同的缓存类型（是全缓冲、行缓冲还是无缓冲），系统自动调用 malloc 等函数申请缓冲区，即标准 I/O 缓存。</p>
-<p>③⑤ 当用户缓冲区满了之后，如系统 I/O 操作一般，此时调用 write 从标准I/O 缓存中复制数据到内核缓冲区，再写入磁盘。</p>
-<p>④⑥ 同系统 I/O 操作，从内核缓冲区调用 read 读入到用户缓冲区。</p>
-<p>② 同样有三种函数类型可以调用，以 fgetc、fgets、fread 为例，读入逻辑单元进行后续的处理。</p>
-<p>可见，标准 I/O 实现的机制就是基于系统 I/O，这样看来，标准 I/O 在效率上肯定不如系统 I/O，但事实是标准 I/O 与系统 I/O 相比并不慢很多，而且还有很多其他的优点，下面一一述说（本篇文章最重要的就是下一小节）。</p>
-<h3 id="I-O-效率"><a href="#I-O-效率" class="headerlink" title="I/O 效率"></a>I/O 效率</h3><hr>
-<center><img src="/images/linux/ioperf.jpg" alt=""></center>
-
-<p>从图中可以看出，系统 I/O 效率受限于 read、write 系统调用的次数，而系统调用次数又受限于内核缓冲区的大小，即 BUFFSIZE，通过设置不同的 BUFFSIZE，得到的系统 CPU 时间是不同的，其最小值出现在 BUFFSIZE=4096 处，原因是该测试所采用的是 Linux ext2 文件系统，其块长为 4096 字节，也即缓冲区所能申请到的最大缓冲区大小，我们把 4096 字节看做是本次最佳 I/O 长度。</p>
-<p>如果继续扩大缓冲区大小，对此时间几乎没有影响。所以，对于系统 I/O 操作，一个最大的问题就是：需要人为控制缓存的大小及最佳 I/O 长度的选择，另外就是系统调用与普通函数调用相比通常需要花费更多的时间，因为系统调用具体内核要执行这样的操作：1）内核捕获调用，2）检查系统调用参数的有效性，3）在用户空间和内核空间之间传输数据。</p>
-<p>因此，引入标准 I/O 的目的就是为了通过标准 I/O 缓存来避免 BUFFSIZE 选择不当而带来的频繁的系统调用。根据用户不同的需求，选择不同的 I/O 函数，然后根据不同的缓存类型，自动调用 malloc 等缓存分配函数分配合适的缓存，等分配的缓存满之后，再调用系统 I/O 从标准 I/O 缓存向内核缓存拷贝数据，这样就进一步减少了系统调用的次数。</p>
-<center><img src="/images/linux/ionum.png" alt=""></center>
-
-<p>但是不同的标准 I/O 函数，不同的缓存类型也会带来不同的效率。如上图，当选择系统最佳 I/O 长度，即 BUFFSIZE 的大小和文件系统的块长一致，可以得到最佳的时间。</p>
-<p>当选用标准 I/O 函数时，每次一个字符函数 fgetc、fputc 和每次一行函数 fgets、fputs 函数相比要花费较多的 CPU 时间，而每次单个字节调用系统 I/O 则花费更多的时间，如果是一个 100M 的文件，则要执行大概 2亿 次函数调用，也就引起 2亿 次系统调用（从用户缓冲区到内核缓冲区，再到磁盘），而 fgetc 版本也执行了 2亿 次函数调用，但只引起了大约 25222 次系统调用，所以，时间就大大减少了。</p>
-<p>综合以上，标准 I/O 函数虽然基于系统 I/O 实现，但很大程度上减少了系统调用的次数，而且不用人为关心缓冲区大小的选择，整体上提高了 I/O 的效率。另外，标准 I/O 提供了多种缓存类型，方便程序员根据不同的应用需求选择不同的缓存要求，提高了编程的灵活性，当选择无缓存时，就相当于直接调用系统 I/O。</p>
-<p>OK，大概的内容就以上这些，当然关于 I/O 操作这块还有很多需要注意的点，而且还有很多更加高级的 I/O 函数，这些在后面遇到再来做总结。最后，如果你觉得这篇文章对你有帮助就点赞转发支持下我吧，还是那句话，你的支持是我分享的最大动力。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
     
       
         <div class="post-wrapper">
@@ -668,224 +545,6 @@
         </div>
       
     
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/06/tech/I:O_虚拟化的三种形式/">
-              
-                  I/O 虚拟化的三种形式
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-06
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>上文「I/O 虚拟化」简单介绍了 I/O 虚拟化的做法，本文重点关注一下三种 I/O 虚拟化的分类——全虚拟化、半虚拟化和 I/O 直通（透传）。</p>
-<h3 id="I-O-全虚拟化"><a href="#I-O-全虚拟化" class="headerlink" title="I/O 全虚拟化"></a>I/O 全虚拟化</h3><hr>
-<p>这种方式比较好理解，简单来说，就是通过纯软件的形式来模拟虚拟机的 I/O 请求。以 qemu-kvm 来举例，内核中的 kvm 模块负责截获 I/O 请求，然后通过事件通知告知给用户空间的设备模型 qemu，qemu 负责完成本次 I/O 请求的模拟。更具体的内容可以翻阅前文。</p>
-<center><img src="/images/virt/iofull.jpg" alt=""></center>
-
-<p><strong>优点：</strong>  </p>
-<p>不需要对操作系统做修改，也不需要改驱动程序，因此这种方式对于多种虚拟化技术的「可移植性」和「兼容性」比较好。</p>
-<p><strong>缺点：</strong></p>
-<p>纯软件形式模拟，自然性能不高，另外，虚拟机发出的 I/O 请求需要虚拟机和 VMM 之间的多次交互，产生大量的上下文切换，造成巨大的开销。</p>
-<h3 id="I-O-半虚拟化"><a href="#I-O-半虚拟化" class="headerlink" title="I/O 半虚拟化"></a>I/O 半虚拟化</h3><hr>
-<p>针对 I/O 全虚拟化纯软件模拟性能不高这一点，I/O 半虚拟化前进了一步。它提供了一种机制，使得 Guest 端与 Host 端可以建立连接，直接通信，摒弃了截获模拟这种方式，从而获得较高的性能。</p>
-<p>值得注意的有两点：1）采用 I/O 环机制，使得 Guest 端和 Host 端可以共享内存，减少了虚拟机与 VMM 之间的交互；2）采用事件和回调的机制来实现 Guest 与 Host VMM 之间的通信。这样，在进行中断处理时，就可以直接采用事件和回调机制，无需进行上下文切换，减少了开销。</p>
-<p>要实现这种方式， Guest 端和 Host 端需要采用类似于 C/S 的通信方式建立连接，这也就意味着要修改 Guest 和 Host 端操作系统内核相应的代码，使之满足这样的要求。为了描述方便，我们统称 Guest 端为前端，Host 端为后端。</p>
-<center><img src="/images/virt/iohalf.png" alt=""></center>
-
-<p>前后端通常采用的实现方式是驱动的方式，即前后端分别构建通信的驱动模块，前端实现在内核的驱动程序中，后端实现在 qemu 中，然后前后端之间采用共享内存的方式传递数据。关于这方面一个比较好的开源实现是 virtio，后面会有专门的文章来讲述之。</p>
-<p><strong>优点：</strong></p>
-<p>性能较 I/O 全虚拟化有了较大的提升</p>
-<p><strong>缺点：</strong></p>
-<p>要修改操作系统内核以及驱动程序，因此会存在移植性和适用性方面的问题，导致其使用受限。</p>
-<h3 id="I-O-直通或透传技术"><a href="#I-O-直通或透传技术" class="headerlink" title="I/O 直通或透传技术"></a>I/O 直通或透传技术</h3><hr>
-<p>上面两种虚拟化方式，还是从软件层面上来实现，性能自然不会太高。最好的提高性能的方式还是从硬件上来解决。如果让虚拟机独占一个物理设备，像宿主机一样使用物理设备，那无疑性能是最好的。</p>
-<p>I/O 直通技术就是提出来完成这样一件事的。它通过硬件的辅助可以让虚拟机直接访问物理设备，而不需要通过 VMM 或被 VMM 所截获。</p>
-<p>由于多个虚拟机直接访问物理设备，会涉及到内存的访问，而内存又是共享的，那怎么来隔离各个虚拟机对内存的访问呢，这里就要用到一门技术——IOMMU，简单说，IOMMU 就是用来隔离虚拟机对内存资源访问的。</p>
-<p>I/O 直通技术需要硬件支持才能完成，这方面首选是 Intel 的 VT-d 技术，它通过对芯片级的改造来达到这样的要求，这种方式固然对性能有着质的提升，不需要修改操作系统，移植性也好。</p>
-<p>但该方式也是有一定限制的，这种方式仅限于物理资源丰富的机器，因为这种方式仅仅能满足一个设备分配给一个虚拟机，一旦一个设备被虚拟机占用了，其他虚拟机时无法使用该设备的。</p>
-<center><img src="/images/virt/iommu.png" alt=""></center>
-
-<p>为了解决这个问题，使一个物理设备能被更多的虚拟机所共享。学术界和工业界都对此作了大量的改进，PCI-SIG 发布了 SR-IOV  (Single Root I/O Virtualizmion) 规范，其中详细阐述了硬件供应商在多个虚拟机中如何共享单个 I/O 设备硬件。</p>
-<p>SR-IOV标准定义了设备原生共享所需的「软硬件支持」。硬件支持包括芯片组对 SR-IOV 设备的识别，为保证对设备的安全、隔离访问还需要北桥芯片的 VT-d 支持，为保证虚拟机有独立的内存空间，CPU 要支持 IOMMU。软件方面，VMM 将驱动管理权限交给 Guest，Guest 操作系统必须支持 SR-IOV 功能。</p>
-<p>SR-IOV 单独引入了两种软件实体功能：</p>
-<ul>
-<li><p>PF（physical function）：包含轻量级的 PCIe 功能，负责管理 SR-IOV 设备的特殊驱动，其主要功能是为 Guest 提供设备访问功能和全局贡献资源配置的功能。</p>
-</li>
-<li><p>VF（virtual function）：包含轻量级的 PCIe 功能。其功能包含三个方面：向虚拟机操作系统提供的接口；数据的发送、接收功能；与 PF 进行通信，完成全局相关操作。</p>
-</li>
-</ul>
-<p>每个 SR-IOV 设备都可有一个物理功能 PF，并且每个 PF 最多可有 64,000 个与其关联的虚拟功能  VF。</p>
-<p>一般，Guest 通过物理功能 PF 驱动发现设备的 SR-IOV 功能后将包括发送、接收队列在内的物理资源依据 VF 数目划分成多个子集，然后 PF 驱动将这些资源子集抽象成 VF 设备，这样，VF 设备就可以通过某种通信机制分配给虚拟机了。</p>
-<center><img src="/images/virt/iosriov.jpg" alt=""></center>
-
-<p>尽管 I/O 直通技术消除了虚拟机 I/O 中 VMM 干预引起的额外开销，但在 I/O 操作中 I/O 设备会产生大量的中断，出于安全等因素考虑，虚拟机无法直接处理中断，因此中断请求需要由 VMM 安全、隔离地路由至合适的虚拟机。所以，其实实际使用中，都是软硬件虚拟化方式结合使用的。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-                    <a href="/tags/SR-IOV/"><i class="fas fa-hashtag fa-fw"></i>SR-IOV</a>
-                
-                    <a href="/tags/IOMMU/"><i class="fas fa-hashtag fa-fw"></i>IOMMU</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/02/tech/I:O_虚拟化/">
-              
-                  I/O 虚拟化
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-02
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>I/O 虚拟化在虚拟化技术中算是比较复杂，也是最重要的一部分。从整体上看，I/O 虚拟化也包括基于软件的虚拟化和硬件辅助的虚拟化，软件虚拟化部分又可以分为全虚拟化和半虚拟化，如果根据设备类型再细分的话，又可以分为字符设备 I/O 虚拟化（键盘、鼠标、显示器）、块设备 I/O 虚拟化（磁盘、光盘）和网络设备 I/O 虚拟化（网卡）等。</p>
-<p>我们先看下在没有虚拟机存在的情况下，I/O 设备请求是怎样的。某个应用或进程发出 I/O 请求，通过系统调用等方式进入内核，调用相应的驱动程序，请求到具体的 I/O 设备，然后再将结果返回到调用者进行回显。</p>
-<p>那么存在虚拟机的情况下，又是怎样的呢。按理说，虚拟机是宿主机上的一个进程，应该可以以类似的 I/O 请求方式访问到宿主机上的 I/O 设备，但别忘了，虚拟机处在非 Root 的虚拟化模式下，请求无法直接下发到宿主机，必须借助于 VMM 来截获并模拟虚拟机的 I/O 请求。</p>
-<p>至于怎么截获并模拟，每一种 VMM 的实现方案都不一样，像 qemu-kvm ，截获操作是由内核态的 kvm 来完成，模拟操作是由用户态的 qemu 来完成的，这也是 kvm 不同于其他 VMM 实现方案的地方。kvm 这样做也是为了提升性能和保持内核的纯净性，关于这块的知识不清楚的可以查阅前文。</p>
-<p>从层次上看，虚拟机发出 I/O 请求到完成相应的 I/O 操作，中间要经过虚拟机的设备驱动，到 VMM 的设备模型，再到宿主机的设备驱动，最终才到真正的 I/O 设备。</p>
-<p>那什么是设备模型，设备模型就是 VMM 中进行设备模拟，并处理所有设备请求和响应的逻辑模块，对于 qemu-kvm，qemu 其实就可以看做是一个设备模型。</p>
-<center><img src="/images/virt/io_virt.png" alt=""></center>
-
-<p>上图显示的就是设备模型的逻辑层次关系，对于不同构造的虚拟机，其逻辑层次是类似的：VMM 截获虚拟机的 I/O 操作，将这些操作传递给设备模型进行处理，设备模型运行在一个特定的环境下，这可以是宿主机，可以是 VMM 本身，也可以是另一个虚拟机。</p>
-<p>下图显示的就是在宿主机中设备模型的实现，也就是 qemu-kvm 的实现方案，在这个例子中，VMM 主要部分实现为内核模块，设备模型实现为一个用户态进程，当虚拟机发生 I/O 之后，VMM 作为内核模块将其截获后，会通过内核态-用户态接口传递给用户态的设备模型处理，设备模型运行与宿主机操作系统之上，可以使用相应的系统调用和所有运行时库，宿主机操作系统就是设备模型的运行环境。</p>
-<center><img src="/images/virt/io_module.png" alt=""></center>
-
-<p>所以，设备模型在这里起着一个桥梁的作用，由虚拟机设备驱动发出的 I/O 请求先通过设备模型转化为物理 I/O 设备的请求，再通过调用物理设备驱动来完成相应的 I/O 操作。反过来，设备驱动将 I/O 操作结果通过设备模型，返回给虚拟机的虚拟设备驱动程序。</p>
-<p>上面说的这种方式是纯软件模拟的，或者说得再专业一点就是全虚拟化，全虚拟化就是 VMM 完全虚拟出一套宿主机的设备模型，宿主机有什么就虚拟出什么，这样，虚拟机发出的任何 I/O 请求都是无感知的，也是说虚拟机认为自己在“直接”使用物理的 I/O 设备，其实不是，全是虚拟出来的。</p>
-<p>有了全虚拟化，自然就有半虚拟化，半虚拟化的提出就是解决全虚拟化的性能问题的。通过上面的分析，不难看出，这种截获再模拟的方式导致一次 I/O 请求要经过多次的内核态和用户态的切换，性能肯定不理想。半虚拟化就是尽量避免这种情况发生。</p>
-<p>半虚拟化中，虚拟机能够感知到自己是处于虚拟化状态，虚拟机和宿主机之间通过某种机制来达成这种感知，也就是两者之间需要建立一套通信接口，虚拟机的 I/O 请求走这套接口，而不是走截获模拟那种方式，这样就可以提升性能。这套接口一个比较好的实现就是 virtio，Linux 2.6.30 版本之后就被集成到了 Linux 内核模块中。</p>
-<p>半虚拟化虽然提升了性能，但是还是基于软件模拟的方式，性能上还是无法与直接访问物理 I/O 设备相抗衡，那能不能做到呢，答案是一定的，那就是从硬件上去入手了。</p>
-<p>以 Intel VT-d 为首的技术就是硬件辅助的 I/O 虚拟化技术，但是业界一般不是直接使用硬件，而是配合相应的软件技术来完成，比较常用的两门技术是 PCI Pass-Through 和 SR-IOV。</p>
-<p>本文仅是简单总结下 I/O 虚拟化的方式，分类，以及存在的技术问题。后面会针对具体的类别或问题进行展开。</p>
-<p>PS：如果你觉得本文对你有一点帮助，点赞，转发，不胜感激。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
 </section>
 
 
@@ -964,7 +623,7 @@
         
           <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(10)</div></a></li>
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
         
           <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
         
@@ -978,7 +637,7 @@
         
           <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(11)</div></a></li>
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(10)</div></a></li>
         
           <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
         
@@ -1012,7 +671,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 16.86px; color: #868686">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.14px; color: #8a8a8a">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.71px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.43px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.43px; color: #6d6d6d">Docker</a> <a href="/tags/I-O/" style="font-size: 16.14px; color: #8a8a8a">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/IOMMU/" style="font-size: 14px; color: #999">IOMMU</a> <a href="/tags/KVM/" style="font-size: 18.29px; color: #7c7c7c">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.86px; color: #646464">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.71px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.29px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.43px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.14px; color: #8a8a8a">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.14px; color: #8a8a8a">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.71px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 19px; color: #777">Python</a> <a href="/tags/Qemu/" style="font-size: 17.57px; color: #818181">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/SR-IOV/" style="font-size: 14px; color: #999">SR-IOV</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.71px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.43px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.71px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.71px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.43px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 16.86px; color: #868686">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 16.86px; color: #868686">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.43px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.71px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.71px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.71px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.71px; color: #727272">容器</a> <a href="/tags/容器网络/" style="font-size: 16.86px; color: #868686">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.57px; color: #818181">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.71px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.57px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.43px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 21.14px; color: #686868">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.71px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.71px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.43px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.43px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
     </div>
   </section>
 
