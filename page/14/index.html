@@ -178,466 +178,6 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/11/26/tech/CPU_虚拟化/">
-              
-                  CPU 虚拟化
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-26
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>前面「虚拟化技术总览」中从虚拟平台 VMM 的角度，将虚拟化分为 Hypervisor 模型和宿主模型，如果根据虚拟的对象（资源类型）来划分，虚拟化又可以分为计算虚拟化、存储虚拟化和网络虚拟化，再细一些，又有中断虚拟化，内存虚拟化，字符/块设备虚拟化，网络功能虚拟化等。</p>
-<p>我会将此作为一个系列来写，本文先看 CPU 虚拟化。在这之前，我们先来笼统看下虚拟化的本质是什么，它到底是如何做到将 Host 的硬件资源虚拟化给 Guest 用，我这里用两个词来定义，<strong>intercept</strong> 和 <strong>virtualize</strong>，中文翻译成截获和模拟比较恰当一点，这两个词基本上是虚拟化的终极定义了，带着这两个词去看每一种虚拟化类型，会发现很容易理解和记忆。</p>
-<h3 id="CPU-软件虚拟化"><a href="#CPU-软件虚拟化" class="headerlink" title="CPU 软件虚拟化"></a>CPU 软件虚拟化</h3><hr>
-<p>基于软件的 CPU 虚拟化，故名思议，就是通过软件的形式来模拟每一条指令。通过前面的文章我们知道常用的软件虚拟化技术有两种：优先级压缩和二进制代码翻译。这两种是通用技术，可以用在所有虚拟化类型中。我们就结合 intercept 和 virtualize 来看看 CPU 软件虚拟化是怎么做的。</p>
-<p>首先，一些必须的硬件知识要知道，X86 体系架构为了让上层的软件（操作系统、应用程序）能够访问硬件，提供了四个 CPU 特权级别，Ring 0 是最高级别，Ring 1 次之，Ring 2 更次之，Ring 3 是最低级别。</p>
-<p>一般，操作系统由于要直接访问硬件和内存，因此它的代码需要运行在最高级别 Ring 0 上，而应用程序的代码运行在最低级别 Ring 3 上，如果要访问硬件和内存，比如设备访问，写文件等，就要执行相关的系统调用，CPU 的运行级别发生从 Ring 3 到 Ring 0 的切换，当完成之后，再切换回去，我们熟悉的用户态和内核态切换的本质就来自这里。</p>
-<p>虚拟化的实现也是基于这个思想，VMM 本质上是个 Host OS，运行在 Ring 0 上，Guest OS 运行在 Ring 1 上，再往上是相应层次的应用程序运行在 Ring 2 和 Ring 3 上。</p>
-<p>当 Guest OS 或上层应用在执行相关的特权指令时，就会发生越权访问，触发异常，这个时候 VMM 就截获（intercept）这个指令，然后模拟（virtualize）这个指令，返回给 Guest OS，让其以为自己的特权指令可以正常工作，继续运行。整个过程其实就是优先级压缩和二进制代码翻译的体现。</p>
-<center><img src="/images/virt/cpu_soft.jpg" alt=""></center>
-
-
-<h3 id="CPU-硬件虚拟化"><a href="#CPU-硬件虚拟化" class="headerlink" title="CPU 硬件虚拟化"></a>CPU 硬件虚拟化</h3><hr>
-<p>上面的这种截获再模拟的纯软件的虚拟化方式，势必是性能非常低的。那怎么样提高性能呢，有一种改进的方式是修改 Guest OS 中关于特权指令的相关操作，将其改为一种函数调用的方式，让 VMM 直接执行，而不是截获和模拟，这样就能在一定程度上提高性能。</p>
-<p>但这种方式并不通用，要去改 Guest OS 的代码，只能看作是一种定制。为了能够通用，又能够提高性能，就只能从硬件上去做文章了。所以，后来，以 Intel 的 VT-x 和 AMD 的 AMD-V 为主的硬件辅助的 CPU 虚拟化就被提出来（Intel VT 包括 VT-x （支持 CPU 虚拟化）、EPT（支持内存虚拟化）和 VT-d（支持 I/O 虚拟化））。</p>
-<center><img src="/images/virt/cpu_hard.jpg" alt=""></center>
-
-<p>CPU 硬件辅助虚拟化在 Ring 模式的基础上引入了一种新的模式，叫 VMX 模式。它包括根操作模式（VMX Root Operation）和非根操作模式（VMX Non-Root Operation）。</p>
-<p>这两种模式都有 Ring 0 - Ring 3 的特权级。所以，在描述某个应用程序时，除了描述其属于哪个特权级，还要指明其处于根模式还是非根模式。</p>
-<p>引入这种模式的好处就在于，Guest OS 运行在 Ring 0 上，就意味着它的核心指令可以直接下达到硬件层去执行，而特权指令等敏感指令的执行则是由硬件辅助，直接切换到 VMM 执行，这是自动执行的，应用程序是感知不到的，性能自然就提高了。</p>
-<p>这种切换 VT-x 定义了一套机制，称为 VM-entry 和 VM-exit。从非根模式切换到根模式，也就是从 Guest 切换到 Host VMM，称为 VM-exit，反之称为 VM-entry。</p>
-<ul>
-<li><p>VM-exit ： 如果 Guest OS 运行过程中遇到需要 VMM 处理的事件，比如中断或缺页异常，或者主动调用 VMCALL 指令调用 VMM 服务的时候（类似于系统调用），硬件自动挂起 Guest OS，切换到根模式，VMM 开始执行。</p>
-</li>
-<li><p>VM-entry： VMM 通过显示调用 VMLAUNCH 或 VMRESUME 指令切换到非根模式，硬件自动加载 Guest OS 的上下文，Guest OS 开始执行。</p>
-</li>
-</ul>
-<center><img src="/images/virt/vm_exit.png" alt=""></center>
-
-<h3 id="KVM-CPU-虚拟化"><a href="#KVM-CPU-虚拟化" class="headerlink" title="KVM CPU 虚拟化"></a>KVM CPU 虚拟化</h3><hr>
-<p>KVM 是一种硬件辅助的虚拟化技术，支持 Intel VT-x 和 AMD-v 技术，怎么知道 CPU 是否支持 KVM 虚拟化呢？可以通过如下命令查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># grep -E &apos;(vmx|svm)&apos; /proc/cpuinfo</span><br></pre></td></tr></table></figure></p>
-<p>如果输出是 vmx 或 svm，则表明当前 CPU 支持 KVM，Intel 是 vmx，AMD 是svm。</p>
-<p>从本质上看，一个 KVM 虚拟机对应 Host 上的一个 qemu-kvm 进程，它和其他 Linux 进程一样被调度，而 qemu-kvm 进程中的一个线程就对应虚拟机的虚拟 CPU （vCPU），虚拟机中的任务线程就被 vCPU 所调度。</p>
-<p>比如下面这个例子，Host 机有两个物理 CPU，上面起了两个虚拟机 VM1 和 VM2，VM1 有两个 vCPU，VM2 有 3 个 vCPU，VM1 和 VM2 分别有 2 个 和 3 个线程在 2 个物理 CPU 上调度。VM1 和 VM2 中又分别有 3 个任务线程在被 vCPU 调度。</p>
-<p>所以，这里有两级的 CPU 调度，Guest OS 中的 vCPU 负责一级调度，Host VMM 负责另一级调度，即 vCPU 在物理 CPU 上的调度。</p>
-<center><img src="/images/virt/cpu_over.png" alt=""></center>
-
-<p>我们也可以看到，vCPU 的个数，可以超过物理 CPU 的个数，这个叫 CPU 「超配」，这正是 CPU 虚拟化的优势所在，这表明了虚拟机能够充分利用 Host 的 CPU 资源，进行相应的业务处理，运维人员也可以据此控制 CPU 资源使用，达到灵活调度。</p>
-<p>OK，CPU 虚拟化就到这里，下篇文章将讲述内存虚拟化。觉得写得凑合可以给个赞，谢谢大家的支持。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/20/tech/KVM_初探/">
-              
-                  KVM 初探
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>KVM 是业界最为流行的 Hypervisor，全称是 Kernel-based Virtual Machine。它是作为 Linux kernel 中的一个内核模块而存在，模块名为 kvm.ko，也可以看作是一个进程，被内核调度并管理，从 Linux 2.6.20 版本开始被完全正式加入到内核的主干开发和正式发布代码中。 KVM 主要用于管理 CPU 和内存的虚拟化，IO 设备的虚拟化则是由 Qemu 来完成。为什么会有这样的分工，请继续往下看。</p>
-<h3 id="KVM-与-Qemu-的前世今生"><a href="#KVM-与-Qemu-的前世今生" class="headerlink" title="KVM 与 Qemu 的前世今生"></a>KVM 与 Qemu 的前世今生</h3><hr>
-<p>Qemu 是一个纯软件实现的开源「模拟」软件，它能够模拟整套虚拟机的实现，包括 CPU、内存、各种 IO 设备、鼠标、键盘、USB 、网卡、声卡等等，基本上没有它不能模拟的。有人可能会比较疑惑它跟 KVM 之间到底有何关系，我们可以把它们看成是合作关系，好基友，谁都离不开彼此。</p>
-<p>KVM 离不开 Qemu。KVM 实现初期，为了简化开发和代码重用，在 Qemu 的基础上进行了修改，主要是将比较耗性能的 CPU 虚拟化和内存虚拟化部分移到了内核中实现，保留 IO 虚拟化模块在用户空间实现。这样的做法主要是考虑到性能的原因，CPU 和 内存虚拟化是非常复杂的虚拟化模块，而且使用非常频繁，如果实现在用户空间的话，用户态和内核态的频繁切换势必会对性能造成很大的影响。那为什么要单独保留 IO 虚拟化在用户空间呢，这个也是权衡之下的结果，首先 IO 设备太多了，其次 IO 虚拟化相对其他两个模块使用不是很频繁，开销会小一些，所以，为了尽可能保持内核的纯净性，才有了这样的分配。</p>
-<p>Qemu 离不开 KVM。上面也说了，Qemu 是一个纯软件的实现，运行在用户空间，性能非常低下，所以，从 Qemu 的角度，可以说是 Qemu 使用了 KVM 的虚拟化功能，为自身虚拟机提供加速。</p>
-<p>早期两者还没有区分（没有同居），KVM 修改的模块叫 qemu-kvm，到 Qemu1.3 版本之后，两者就合二为一了（同居啦），如果我们在用 Qemu 创建虚拟机时，要加载 KVM 模块，需要为其指定参数 <code>--enable-kvm</code>。</p>
-<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>KVM 与 Qemu 的关系（图片来源于网络，侵权必删）</center>
-
-<h3 id="KVM-架构"><a href="#KVM-架构" class="headerlink" title="KVM 架构"></a>KVM 架构</h3><hr>
-<p>KVM 是基于硬件虚拟化（Intel VT 或 AMD-V）实现的一套虚拟化解决方案，通过以上一个与 Qemu 关系的分析，我们基本上知道它在虚拟化领域处在一个什么样的地位。它其实只负责 CPU 和内存的虚拟化，不负责任何设备的模拟，而是提供接口给用户空间的 Qemu 来模拟。这个接口是 /dev/kvm，<br>Qemu 通过 /dev/kvm 接口设置一个虚拟机的地址空间，然后向它提供模拟好的 I/O 设备，并将相关的设备回显操作映射到宿主机，完成整个 I/O 设备的虚拟化操作。</p>
-<center><img src="/imagesss/virt/kvm_arch.png" alt=""><br>KVM 架构</center>
-
-
-<p>/dev/kvm 接口是 Qemu 和 KVM 交互的“桥梁”，基本的原理是：/dev/kvm 本身是一个设备文件，这就意味着可以通过 ioctl 函数来对该文件进行控制和管理，从而可以完成用户空间与内核空间的数据交互。在 KVM 与 Qemu 的通信过程主要就是一系列针对该设备文件的 ioctl 调用。</p>
-<p>我就拿创建虚拟机举个例子，虚拟机本质上是宿主机的一个进程，包括用户态数据结构和内核态数据结构，用户态部分由 Qemu 创建并初始化，内核态部分则由 KVM 来完成，完成后会返回一个文件句柄来代表所创建的虚拟机，针对该文件句柄的 ioctl 调用就可以对虚拟机进行相应的管理，比如建立虚拟机地址空间和宿主机地址空间的映射关系，创建多个线程（虚拟处理器，vCPU）来供虚拟机使用等，对于创建出的 vCPU，也会生成相应的文件句柄，同样，对 vCPU 的文件句柄的 ioctl 调用就可以对 vCPU 进行管理。</p>
-<p>关于这块的具体细节，后面会有文章来专门讨论。</p>
-<h3 id="VMM-管理工具-——-libvirt"><a href="#VMM-管理工具-——-libvirt" class="headerlink" title="VMM 管理工具 —— libvirt"></a>VMM 管理工具 —— libvirt</h3><hr>
-<p>目前，虚拟化这个领域可以说是百花齐放，针对不同的场景提出了很多的虚拟化解决方案，KVM、Xen、VMware、VirtualBox、Hyper-V 等等，具体的这些方案有什么特点，可以看前文「虚拟化技术总览」。这么多方案势必有很多通用的模块，不同之处可能在于，与不同硬件厂商的适配上，为了支持更多厂商，以及应用更多的领域，有很多 IaaS 解决方案需要融合多种虚拟化技术。这个时候如果有一个平台类的管理工具就会非常方便，libvirt 就是这样一个工具。</p>
-<center><img src="/imagesss/virt/kvm_qemu.png" alt=""><br>libvirt 架构（图片来源于网络，侵权必删）</center>
-
-<p>libvirt 除了能够支持多种虚拟化方案之外，还支持 OpenVZ、LXC 等容器虚拟化系统。它提供一套完善的虚拟机管理工具，支持 GUI 和命令行的形式，如 virsh、virt-install、virt-manager。由于它的通用性和易管理，很多云计算框架平台都在底层使用 libvirt 的 API 来管理虚拟机，比如 OpenStack、OpenNebula、Eucalyptus 等。这个工具我们仅仅提一下，有兴趣的可以装个玩玩。</p>
-<p>下面给出 KVM 和 Qemu 的 git 路径，有兴趣的可以把源码下下来研究下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kvm.git：</span><br><span class="line">git clone git://git.kernel.org/pub/scm/virt/kvm/kvm.git</span><br><span class="line">qemu.git（包括了 kvm）:</span><br><span class="line">git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure></p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/imagesss/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/19/tech/一文读懂_Qemu_模拟器/">
-              
-                  一文读懂 Qemu 模拟器
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-19
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="Qemu-架构"><a href="#Qemu-架构" class="headerlink" title="Qemu 架构"></a>Qemu 架构</h3><hr>
-<p>Qemu  是纯软件实现的虚拟化模拟器，几乎可以模拟任何硬件设备，我们最熟悉的就是能够模拟一台能够独立运行操作系统的虚拟机，虚拟机认为自己和硬件打交道，但其实是和 Qemu 模拟出来的硬件打交道，Qemu 将这些指令转译给真正的硬件。</p>
-<p>正因为 Qemu 是纯软件实现的，所有的指令都要经 Qemu 过一手，性能非常低，所以，在生产环境中，大多数的做法都是配合 KVM 来完成虚拟化工作，因为 KVM 是硬件辅助的虚拟化技术，主要负责 比较繁琐的 CPU 和内存虚拟化，而 Qemu 则负责 I/O 虚拟化，两者合作各自发挥自身的优势，相得益彰。</p>
-<center><img src="/images/virt/qemu.png" alt=""><br>Qemu 总结结构</center>
-
-
-
-
-<p>从本质上看，虚拟出的每个虚拟机对应 host 上的一个 Qemu 进程，而虚拟机的执行线程（如 CPU 线程、I/O 线程等）对应 Qemu 进程的一个线程。下面通过一个虚拟机启动过程看看 Qemu 是如何与 KVM 交互的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 第一步，获取到 KVM 句柄</span><br><span class="line">kvmfd = open(&quot;/dev/kvm&quot;, O_RDWR);</span><br><span class="line">// 第二步，创建虚拟机，获取到虚拟机句柄。</span><br><span class="line">vmfd = ioctl(kvmfd, KVM_CREATE_VM, 0);</span><br><span class="line">// 第三步，为虚拟机映射内存，还有其他的 PCI，信号处理的初始化。</span><br><span class="line">ioctl(kvmfd, KVM_SET_USER_MEMORY_REGION, &amp;mem);</span><br><span class="line">// 第四步，将虚拟机镜像映射到内存，相当于物理机的 boot 过程，把镜像映射到内存。</span><br><span class="line">// 第五步，创建 vCPU，并为 vCPU 分配内存空间。</span><br><span class="line">ioctl(kvmfd, KVM_CREATE_VCPU, vcpuid);</span><br><span class="line">vcpu-&gt;kvm_run_mmap_size = ioctl(kvm-&gt;dev_fd, KVM_GET_VCPU_MMAP_SIZE, 0);</span><br><span class="line">// 第五步，创建 vCPU 个数的线程并运行虚拟机。</span><br><span class="line">ioctl(kvm-&gt;vcpus-&gt;vcpu_fd, KVM_RUN, 0);</span><br><span class="line">// 第六步，线程进入循环，并捕获虚拟机退出原因，做相应的处理。</span><br><span class="line">for (;;) &#123;</span><br><span class="line">ioctl(KVM_RUN)</span><br><span class="line">switch (exit_reason) &#123;</span><br><span class="line">case KVM_EXIT_IO:  /* ... */</span><br><span class="line">case KVM_EXIT_HLT: /* ... */</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">// 这里的退出并不一定是虚拟机关机，</span><br><span class="line">// 虚拟机如果遇到 I/O 操作，访问硬件设备，缺页中断等都会退出执行，</span><br><span class="line">// 退出执行可以理解为将 CPU 执行上下文返回到 Qemu。</span><br></pre></td></tr></table></figure>
-<h3 id="Qemu-源码结构"><a href="#Qemu-源码结构" class="headerlink" title="Qemu 源码结构"></a>Qemu 源码结构</h3><hr>
-<p>Qemu 软件虚拟化实现的思路是采用二进制指令翻译技术，主要是提取 guest 代码，然后将其翻译成 TCG 中间代码，最后再将中间代码翻译成 host 指定架构的代码，如 x86 体系就翻译成其支持的代码形式，ARM 架构同理。</p>
-<center><img src="/images/virt/qemu_src.png" alt=""></center>
-
-<p>所以，从宏观上看，源码结构主要包含以下几个部分：</p>
-<ul>
-<li>/vl.c：最主要的模拟循环，虚拟机环境初始化，和 CPU 的执行。</li>
-<li>/target-arch/translate.c：将 guest 代码翻译成不同架构的 TCG 操作码。</li>
-<li>/tcg/tcg.c：主要的 TCG 代码。</li>
-<li>/tcg/arch/tcg-target.c：将 TCG 代码转化生成主机代码。</li>
-<li>/cpu-exec.c：主要寻找下一个二进制翻译代码块，如果没有找到就请求得到下一个代码块，并且操作生成的代码块。</li>
-</ul>
-<p>其中，涉及的主要几个函数如下：</p>
-<center><img src="/images/virt/qemu_dir.png" alt=""></center>
-
-<p>知道了这个总体的代码结构，再去具体了解每一个模块可能会相对容易一点。</p>
-<h3 id="Qemu-的使用"><a href="#Qemu-的使用" class="headerlink" title="Qemu 的使用"></a>Qemu 的使用</h3><hr>
-<h4 id="1-源码下载"><a href="#1-源码下载" class="headerlink" title="1. 源码下载"></a>1. 源码下载</h4><hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">centos：sudo apt-get install qemu</span><br><span class="line">ubuntu：sudo yum install qemu -y</span><br><span class="line">安装包：</span><br><span class="line">$wget http://wiki.qemu-project.org/download/qemu-2.0.0.tar.bz2</span><br><span class="line">$tar xjvf qemu-2.0.0.tar.bz2</span><br><span class="line">Git：</span><br><span class="line">$git clone git://git.qemu-project.org/qemu.git</span><br></pre></td></tr></table></figure>
-<h4 id="2-编译及安装"><a href="#2-编译及安装" class="headerlink" title="2. 编译及安装"></a>2. 编译及安装</h4><hr>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$cd qemu-2.0.0 //如果使用的是git下载的源码，执行cd qemu</span><br><span class="line">$./configure --enable-kvm --enable-debug --enable-vnc --enable-werror  --target-list=&quot;x86_64-softmmu&quot;</span><br><span class="line">$make -j8</span><br><span class="line">$sudo make install</span><br></pre></td></tr></table></figure>
-<p>configure 脚本用于生成 Makefile，其选项可以用 ./configure –help 查看。</p>
-<p>这里使用到的选项含义如下：</p>
-<ul>
-<li>–enable-kvm：编译 KVM 模块，使 Qemu 可以利用 KVM 来访问硬件提供的虚拟化服务。</li>
-<li>–enable-vnc：启用 VNC。</li>
-<li>–enalbe-werror：编译时，将所有的警告当作错误处理。</li>
-<li>–target-list：选择目标机器的架构。默认是将所有的架构都编译，但为了更快的完成编译，指定需要的架构即可。</li>
-</ul>
-<p>安装好之后，会生成如下应用程序：</p>
-<center><img src="/images/virt/qemu_app.png" alt=""></center>
-
-
-<ul>
-<li>ivshmem-client/server：这是一个 guest 和 host 共享内存的应用程序，遵循 C/S 的架构。</li>
-<li>qemu-ga：这是一个不利用网络实现 guest 和 host 之间交互的应用程序（使用 virtio-serial），运行在 guest 中。</li>
-<li>qemu-io：这是一个执行 Qemu I/O 操作的命令行工具。</li>
-<li>qemu-system-x86_64：Qemu 的核心应用程序，虚拟机就由它创建的。</li>
-<li>qemu-img：创建虚拟机镜像文件的工具，下面有例子说明。</li>
-<li>qemu-nbd：磁盘挂载工具。</li>
-</ul>
-<p>下面通过创建虚拟机操作来对这些工具有个初步的认识。</p>
-<h4 id="3-创建虚拟机"><a href="#3-创建虚拟机" class="headerlink" title="3. 创建虚拟机"></a>3. 创建虚拟机</h4><hr>
-<ul>
-<li>使用qemu-img创建虚拟机镜像</li>
-</ul>
-<p>虚拟机镜像用来模拟虚拟机的硬盘，在启动虚拟机之前需要创建镜像文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create -f qcow2 test-vm-1.qcow2 10G</span><br></pre></td></tr></table></figure></p>
-<p>-f 选项用于指定镜像的格式，qcow2 格式是 Qemu 最常用的镜像格式，采用来写时复制技术来优化性能。test-vm-1.qcow2 是镜像文件的名字，10G是镜像文件大小。镜像文件创建完成后，可使用 qemu-system-x86 来启动x86 架构的虚拟机：</p>
-<ul>
-<li>使用 qemu-system-x86 来启动 x86 架构的虚拟机<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 test-vm-1.qcow2</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>因为 test-vm-1.qcow2 中并未给虚拟机安装操作系统，所以会提示 “No bootable device”，无可启动设备。</p>
-<ul>
-<li>启动 VM 安装操作系统镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2 -cdrom ./Centos-Desktop-x86_64-20-1.iso</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>-m 指定虚拟机内存大小，默认单位是 MB， -enable-kvm 使用 KVM 进行加速，-cdrom 添加 fedora 的安装镜像。可在弹出的窗口中操作虚拟机，安装操作系统，安装完成后重起虚拟机便会从硬盘 ( test-vm-1.qcow2 ) 启动。之后再启动虚拟机只需要执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 -m 2048 -enable-kvm test-vm-1.qcow2</span><br></pre></td></tr></table></figure></p>
-<p>qemu-img 支持非常多种的文件格式，可以通过 qemu-img -h 查看<br>其中 raw 和 qcow2 是比较常用的两种，raw 是 qemu-img 命令默认的，qcow2 是 qemu 目前推荐的镜像格式，是功能最多的格式。这些知识后面会有文章来专门讲述。</p>
-<p>这篇文章写得有点长，可能是 Qemu 唯一一篇文章，这并不是说 Qemu 不重要，而是我们平时在使用过程中主要把它当工具用，遇到不懂的查就行了，当然，如果你觉得看代码爽一点，非常鼓励，如果看了有什么心得，我们可以一起交流交流。好了，老铁们，看在我深夜一点还在写干货给你们，就给我点个赞吧。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/18/tech/虚拟化技术总览/">
-              
-                  虚拟化技术总览
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-18
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>说起虚拟化，相信大家应该都不陌生，像虚拟内存、Java 虚拟机、Android 模拟器这些都是虚拟化技术的体现，为什么这样说，这个就要回到虚拟化技术的本质上——<strong>虚拟化就是由位于下层的软件模块，根据上层的软件模块的期待，抽象（虚拟）出一个虚拟的软件或硬件模块，使上一层软件直接运行在这个与自己期待完全一致的虚拟环境上</strong>。从这个意义上来看，虚拟化既可以是软件层的抽象，又可以是硬件层的抽象。</p>
-<center><img src="/images/virt/virt_abs.png" alt=""><br>虚拟化技术本质上是软/硬件层的抽象</center>
-
-
-<p>所以说，像虚拟内存、Java 虚拟机、Android 模拟器这些都属于是软件虚拟化技术，而硬件虚拟化技术更多的应用就是在云计算领域。从提出至今，虚拟化技术已经出现了多种实现方式，这些不同的方式其实就是软件和硬件的不同组合。本文主要就是对这些实现方式进行一个总览，形成一个总体认识，方便后面的学习。</p>
-<h3 id="VMM"><a href="#VMM" class="headerlink" title="VMM"></a>VMM</h3><hr>
-<p>VMM 全称是 Virtual Machine Monitor，虚拟机监控系统，也叫 Hypervisor，是虚拟化层的具体实现。主要是以软件的方式，实现一套和物理主机环境完全一样的虚拟环境，物理主机有的所有资源，包括 CPU、内存、网络 IO、设备 IO等等，它都有。这样的方式相当于 VMM 对物理主机的资源进行划分和隔离，使其可以充分利用资源供上层使用。虚拟出的资源以虚拟机的形式提供服务，一个虚拟机本质上和一台物理机没有什么区别，可以跑各种操作系统，在之上再跑各种应用。这种方式无疑是计算机历史上非常里程碑的一步，你想想，以前可能要买多台服务器才能解决的事，现在只用一台就解决了。</p>
-<p>虚拟机通常叫做客户机（guest），物理机叫宿主机（host），VMM 处在中间层，既要负责对虚拟资源的管理，包括虚拟环境的调度，虚拟机之间的通信以及虚拟机的管理等，又要负责物理资源的管理，包括处理器、中断、内存、设备等的管理，此外，还要提供一些附加功能，包括定时器、安全机制、电源管理等。</p>
-<center><img src="/images/virt/vmm.png" alt=""><br>VMM</center>
-
-<h3 id="VMM-分类"><a href="#VMM-分类" class="headerlink" title="VMM 分类"></a>VMM 分类</h3><hr>
-<p>VMM 根据平台类型和实现结构有两种不同的分类，按平台类型可以分为完全虚拟化和类虚拟化，完全虚拟化就是 VMM 完全模拟出一个跟物理主机完全一样的环境。但是这个是非常困难的，首先，这需要硬件的支持，而硬件在初期设计的时候，没有那么远的前瞻性，可以预想到为虚拟化提供支持，前次，指令的复杂性，即使通过模拟的方式也很难做到全部指令都模拟。所以，就需要借助其他的一些技术来辅助虚拟化。</p>
-<center><img src="/images/virt/vmm_type.png" alt=""><br>VMM 分类</center>
-
-<p>软件辅助虚拟化是通过优先级压缩（Ring Compression）和二进制代码翻译（Binary Translation）这两个技术来完成的。简单讲，RC 基于 CPU 特权级的原理，也就是 guest、VMM 和 host 分别处于不同的特权级上（这个后面讲 CPU 虚拟化的时候会详述），guest 要访问 host 就属于越级访问，会抛异常，这时 VMM 会截获这个异常，并模拟出其可能的行为，从而进行相应处理。但这个问题很明显，就是由于硬件设计的缺陷，有些指令并不能截获，从而导致“漏洞”。</p>
-<p>BT 可以弥补这个缺陷，它通过去扫描 guest 的二进制的代码，将难以虚拟化的指令转为支持虚拟化的指令，从而可以配合 VMM 完成虚拟化功能。这两种方式都是通过「打补丁」的方式来辅助虚拟化，很难再架构上保证完整性。</p>
-<p>所以，后期的硬件厂商就在硬件上对虚拟化提供了支持，有了硬件辅助的虚拟化。通过对硬件本身加入更多的虚拟化功能，就可以截获更多的敏感指令，填补上漏洞。在这一块，Intel 的 VT-x/d 技术和 AMD 的 AMD-V 技术是其中的代表。</p>
-<p>而类虚拟化则是另外一种通过软件来避免漏洞的方式，就是通过修改 guest 操作系统内核代码（API 级）来避免漏洞，这种方式好处就是可以自定义内核的执行行为，某种程度上对性能进行优化。</p>
-<p>上面这种分类仅供了解即可，重点掌握下面这种分类，就是根据 VMM 的实现结构分类，主要分类 Hypervisor 模型（1 型）和宿主模型（2 型）。</p>
-<p>Hypervisor 模型中 VMM 既是操作系统，也是虚拟化软件，也就是集成了虚拟化功能的操作系统，对上为 guest 提供虚拟化功能，对下管理着所有物理资源，它的优点就是效率高，虚拟机的安全性只依赖于 VMM，缺点就是管理所有的物理资源，意味着 VMM 要承担很多的开发工作，特别是驱动层面的开发，我们知道硬件的 I/O 设备是很多的，这些设备都要有对应的驱动来设配才能为虚拟机提供功能。</p>
-<center><img src="/images/virt/hyper.png" alt=""><br>Hypervisor 模型或 1 型模型</center>
-
-<p>宿主模型剥离了管理功能和虚拟化功能，虚拟化功能只是作为内核的一个模块来加载，比如 KVM 技术就是其中的佼佼者，KVM 技术可以说是云计算最核心的技术了，后面会经常用到。一般 KVM 只负责 CPU 和内存的虚拟化，I/O 的虚拟化则由另外一个技术来完成，即 Qemu。这些技术都是后面的重点，在这里只是提一下。</p>
-<center><img src="/images/virt/hyper1.png" alt=""><br>宿主模型或 2 型模型</center>
-
-
-<h3 id="典型的虚拟化产品"><a href="#典型的虚拟化产品" class="headerlink" title="典型的虚拟化产品"></a>典型的虚拟化产品</h3><hr>
-<ul>
-<li><strong>VMware</strong></li>
-</ul>
-<p>VMware 可以说是虚拟化的鼻祖，现在很多公司都是在模仿 VMware 的产品，相应用过 VMware 虚拟机的朋友应该不陌生了，VMware 提供了很多的虚拟化产品，从服务器到桌面都有很多应用。主要有面向企业级应用的 ESX Server，面向服务端的入门级产品 VMware Server，面向桌面的主打产品 VMware Workstation（这个相信大家经常用），面向苹果系统的桌面产品 VMware Fusion，还有提供整套虚拟应用产品的 VMware vSphere，细分的话还有 VMware vStorage（虚拟存储），VMware vNet（虚拟网络）等。</p>
-<ul>
-<li><strong>Xen</strong></li>
-</ul>
-<p>Xen 是一款开源虚拟机软件，Xen 结合了 Hypervisor 模型和宿主模型，属于一种混合的虚拟化模型，基于 Xen 的虚拟化产品也有很多，比如 Ctrix、VirtualIron、RedHat 和 Novell 等都有相应的产品。这个一般是研究机构用得多一些，生产环境中大部分用的是 KVM。</p>
-<ul>
-<li><strong>KVM</strong></li>
-</ul>
-<p>KVM 也是一款开源软件，于 2007 年 2 月被集成到了 Linux 2.6.20 内核中，成为了内核的一部分。KVM 采用的是基于 Intel VT 的硬件辅助虚拟化技术，以及结合 Qemu 来提供设备虚拟化，从实现上看，属于宿主模型。使用 KVM 的厂商很多啊，像我们比较熟悉 VMware Workstation 和 VirtualBox 都在使用，在此就不一一列举了。</p>
-<p>OK，有了这些基本认识，对于学后面的高深内容可能会好理解一些，大家如果觉得写得不错，可以给我个赞，你的鼓励是我不断输出好内容的动力。现在我开始写公众号，才发现这种看上去很虚的东西其实蛮鼓励人的，我现在看到那些坚持原创的作者都会感同身受，都会忍不住想给他们赞。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
           <a href="/2017/11/17/tech/云计算技能图谱/">
               
                   计算技能图谱
@@ -698,6 +238,289 @@
         </div>
       
     
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/16/tech/初识云计算/">
+              
+                  初识云计算
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-16
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/cloud/2.png" alt=""></p>
+<blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="云计算的发展历史"><a href="#云计算的发展历史" class="headerlink" title="云计算的发展历史"></a>云计算的发展历史</h3><hr>
+<p>我们主要从用户对云计算的认知角度来谈云计算的发展史，至于它从提出到发扬光大的那些大事件，网上搜下就知道了，而且我觉得去谈那些发展事件意义也不大，
+        
+            <div class="readmore">
+                <a href="/2017/11/16/tech/初识云计算/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/11/15/tech/云计算术语扫盲/">
+              
+                  云计算术语扫盲
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-15
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><img src="/images/cloud/1.png" alt=""></p>
+<blockquote>
+<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><hr>
+<p>在云计算中，资源和服务本质上是一样的，服务可能更泛一些，资源一般特指 CPU（计算）、Mem（存储）和 IO （网络）三大资源，
+        
+            <div class="readmore">
+                <a href="/2017/11/15/tech/云计算术语扫盲/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/">
+              
+                  Hexo 不同电脑/终端同步方法
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-01-08
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p>问题描述：  </p>
+<blockquote>
+<p>在Linux系统上搭建了博客，现想在windows上写博客，如何在两个系统进行文章的同步？</p>
+</blockquote>
+<p>上面是在同一台电脑的不同终端上操作，同样这个问题也适用于不同电脑上，所以这个问题可以扩展成一个比较通用的问题：  </p>
+<blockquote>
+<p>不同电脑，或终端上如何同步Hexo？</p>
+</blockquote>
+<p>Google一下，网友已经给了很好的解决方案，大体上有以下两种方案：<strong>利用分支</strong>和<strong>新建仓库</strong>。<br>
+        
+            <div class="readmore">
+                <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/hexo/"><i class="fas fa-hashtag fa-fw"></i>hexo</a>
+                
+            </div>
+        
+    </p></section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/">
+              
+                  Git学习笔记——来自廖雪峰的博客
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-12-29
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <h2 id="Git-简介"><a href="#Git-简介" class="headerlink" title="Git 简介"></a>Git 简介</h2><p>Git是目前世界上最先进的开源的<strong>分布式</strong>版本控制系统。<br>和<strong>集中式</strong>的版本控制系统，如CVS、SVN等相比，Git有几大优点：<br>1、不像集中式版本控制系统一样，需要联网才能工作；<br>2、安全性较高，避免了单点失效的问题，不会因为某台电脑坏了，文件就丢失了；<br>3、具有强大的分支管理功能。</p>
+<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><pre><code>Linux：sudo apt-get install git
+centos: sudo yum install git-core
+windows: git bash
+</code></pre><p>安装完成后，需要配置机器的Git仓库，即：  </p>
+<pre><code>git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;email@example.com&quot;
+</code></pre>
+        
+            <div class="readmore">
+                <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/git/"><i class="fas fa-hashtag fa-fw"></i>git</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
 </section>
 
 
@@ -712,7 +535,7 @@
                 </a>
             
             <p class="current">
-                14 / 23
+                14 / 18
             </p>
             
                 <a class="next" rel="next" href="/page/15/">
@@ -800,7 +623,7 @@
         
           <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
         
@@ -824,11 +647,11 @@
         
           <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(0)</div></a></li>
         
       </ul>
     </div>
@@ -850,7 +673,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 14px; color: #999">雾计算</a>
     </div>
   </section>
 

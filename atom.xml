@@ -234,32 +234,6 @@
   </entry>
   
   <entry>
-    <title>未来幸存者</title>
-    <link href="https://ctimbai.github.io/2019/03/09/life/%E6%9C%AA%E6%9D%A5%E5%B9%B8%E5%AD%98%E8%80%85/"/>
-    <id>https://ctimbai.github.io/2019/03/09/life/未来幸存者/</id>
-    <published>2019-03-09T05:16:14.000Z</published>
-    <updated>2019-04-17T14:48:52.552Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p></blockquote><p>《未来世界的幸存者》是知名 IT 博主阮一峰的专栏作品，书中深刻剖析了随着 IT 技术的发展，未来人们的生活将会受到如何的冲击和颠覆，整体上作者是偏悲观的，但是他也给出了一些建议，值得一读。</p><p><strong>01</strong></p><p>作者有一个比较悲观的预感：未来只有两种途径可以改变人生，一种是学习技术，另一种是购买彩票。</p><p>虽然很悲观，但也不无道理。</p><a id="more"></a><p>技术确确实实正在悄然改变人们的衣食住行。现在，一个人足不出户，仅凭一部手机就可以解决所有的问题。将来，会更夸张，随着人工智能、虚拟现实（VR/AR）、机器人技术、纳米技术、基因工程等技术的发展，人们基本上都要依赖机器人才能生存。就像美国科幻电视剧《西部世界》（West World）中描述的那样：</p><blockquote><p>这是一个大乐园，里面都是 3D 打印出来的智能机器人陪着游客玩。游客分辨不出谁是真人，谁是机器人，除非事前知道。</p></blockquote><p>这看似挺遥远，但其实已有现实的影子。比如无人驾驶、机器人驾驶，书中举了一个有趣的例子：</p><blockquote><p>由于人类不如机器可靠，将被规定不得驾驶汽车，只能由机器驾驶，如果你想开车过过瘾，必须去专门的游乐场，就好像现在骑马只能去马场一样。</p></blockquote><p>类似的还有一些针对不同场景的机器人，比如为家庭服务的家居机器人、扫地机器人，负责企业安保工作的安保机器人，应用在农业灌溉方面的飞行机器人等等。这些都在不同程度上冲击着人类的生活，而你不太可能拒绝使用它们，只会更加依赖它们。</p><p><strong>02</strong></p><p>技术带来了现代化的生活，但也带来了前所未有的危机。</p><p>首先，蓝领白领的界限会逐渐消失。蓝领代表着那些做着重复体力活的人，比如售货员、服务员、打字员、装配工、出纳、保安……（你可以列出一大串职业），由于他们的工作偏低技能，所以会被自动化替代，他们将会面临失业甚至无法再就业的局面。</p><p>而白领则代表了那些依靠智力的办公室一族，比如税务顾问、银行职员、信贷员、财务会计等等，随着办公自动化的出现，他们的饭碗也将会不保。</p><p>其次，技术将会动摇人类社会结构，将整个社会一分为二：懂技术的人和不懂技术的人。懂技术的人会变得越来越有钱，而不懂技术的人收入根本不增长，贫富差距会越来越大。最终这些不懂技术的人将会沦为：</p><blockquote><p>清贫青年，流沙中年，下流老人</p></blockquote><p><strong>03</strong></p><p>那么，有没有技术不能取代的工作，所需要的技能是依靠技术也无法学会的。作家吴晓波把这种技术难以替代的能力，称为“柔软的能力”。</p><p>书中举了三种这样的能力：</p><ul><li>人性化和人格魅力</li><li>创意</li><li>决策和领导力</li></ul><p>这三种能力并非一朝一夕能够练就的，不管处于哪个年龄层的人，都应该时刻保持“自主、跨界、终身学习”的心态，才不至于让自己沦为替代品。</p><p>世界上没有安全的工作，即使有这些能力的人，也不免会遇到什么天灾人祸。书中谈到任何人都有必要给自己的人生制定一份 B 计划，来应对各种各样的危机。</p><p>对于没有这些能力的人，从现在开始，就应该多努力培养自己这方面的能力。那普通人该怎么培养这些能力呢？最好的方法就是学习<strong>编程技术</strong>，因为编程技术可能是这个世界上最有创意的工作了，但这也不适合每个人，而且普通人要学好编程，需要比常人付出更多的努力才行。</p><p>技术不是万能的，技术也是有边界的。对技术的妄加使用，最终也会对人类造成毁灭性的打击。</p><p>最终更悲观的结果就是世界上将会没有幸存者。</p><center>–END–</center><hr><blockquote><p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有大量书籍和视频资源，后台回复 <strong>「1024」</strong> 即可领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p><p><img src="/images/weichat.png" alt=""></p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;本文首发于我的公众号 &lt;strong&gt;「Linux云计算网络」(id: cloud_dev)&lt;/strong&gt; ，专注于干货分享，号内有大量书籍和视频资源，后台回复&lt;strong&gt;「1024」&lt;/strong&gt;即可领取，欢迎大家关注，二维码文末可以扫。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;《未来世界的幸存者》是知名 IT 博主阮一峰的专栏作品，书中深刻剖析了随着 IT 技术的发展，未来人们的生活将会受到如何的冲击和颠覆，整体上作者是偏悲观的，但是他也给出了一些建议，值得一读。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;01&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;作者有一个比较悲观的预感：未来只有两种途径可以改变人生，一种是学习技术，另一种是购买彩票。&lt;/p&gt;
-&lt;p&gt;虽然很悲观，但也不无道理。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="读书" scheme="https://ctimbai.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
-    
-    
-  </entry>
-  
-  <entry>
     <title>一文总结虚拟网络设备 eth, tap/tun, veth-pair</title>
     <link href="https://ctimbai.github.io/2019/03/08/tech/eth-taptun-vethpair%E6%80%BB%E7%BB%93/"/>
     <id>https://ctimbai.github.io/2019/03/08/tech/eth-taptun-vethpair总结/</id>
@@ -416,30 +390,6 @@
       <category term="tap" scheme="https://ctimbai.github.io/tags/tap/"/>
     
       <category term="tun" scheme="https://ctimbai.github.io/tags/tun/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>小趋势解构</title>
-    <link href="https://ctimbai.github.io/2019/01/15/life/%E5%B0%8F%E8%B6%8B%E5%8A%BF%E8%A7%A3%E6%9E%84/"/>
-    <id>https://ctimbai.github.io/2019/01/15/life/小趋势解构/</id>
-    <published>2019-01-15T05:16:14.000Z</published>
-    <updated>2019-04-16T16:00:18.682Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p></blockquote><p>这篇文章是年初听完罗振宇的跨年演讲写的，算是笔记吧，当时只是发在简书上，因为是非技术文，所以就没发在这里。今天看到有网友喜欢，想着文章应该多多少少有点用，干脆就搬过来给大家看看，如果掉粉多，我后面就多发点技术文吧。</p><p>今年罗振宇的跨年演讲还是有些干货的。在演讲开始，罗胖就开宗明义，说今晚的演讲只关注「大环境下小个体的命运」，这对于我们这种小人物来说也许是莫大的福音。</p><a id="more"></a><p>确实，整个过程中，都能感受到那种认知的碰撞升级。但说实话，就像一句话说的，听过太多的大道理，仍然过不好这一生，这里的问题我觉得是出在我们没有将这些新的认知转化成自己的思想体系。</p><p>趁着演讲刚过去的这点余温，我想尝试着解构一下「小趋势」，这也是全篇演讲最核心的一点。通过这次解构，真正将「小趋势」化为己用。</p><p>我打算采用「5W+1H 法」进行解构，也就是 What、Where、When、Who、Why 和 How 问题分析法。</p><h2 id="01-What"><a href="#01-What" class="headerlink" title="01 What"></a>01 What</h2><p>首先，我们得知道，「小趋势」是什么？</p><p>从字面上看，有两层含义，第一是“小”，第二这是个“趋势”。</p><p>“小”说明很难察觉，它不在我们熟悉的领域内，超出我们的认知范围。</p><p>“趋势”说明它的存在影响了周围的事物，它带动了周围事物往良性的方向发展。所以，罗胖才说「小趋势」是：</p><blockquote><p>影响趋势的趋势，带来改变的改变。</p></blockquote><p>知道了这一点，基本上没什么卵用。没有实际的例子，很难形成共鸣。</p><p>罗胖举了两个非常典型的例子：移动支付和猫砂。怎么理解这两个例子呢，紧扣小趋势的定义，其实不难理解。</p><p>移动支付对于互联网人来说，是比较显现的趋势，比如前几年滴滴打车和快的打车的疯狂烧钱，那是微信和支付宝在互相较量，抢占移动支付的入口，对于我们做这一行的人来说，能不觉得它是个大趋势吗？</p><p>我们虽然看清了，但是有很多人看不清啊，特别是传统行业的人。对于这些人来说，移动支付就是个小趋势。</p><p>移动支付还有人看得出它是个趋势，猫砂就完全没人能够察觉。我们来看看它是不是个趋势？</p><p>没有猫砂之前，猫和人类的关系很疏远，有了猫砂之后，解决了猫咪臭臭的异味，于是猫和人类成为了好朋友，紧接着围绕猫、猫粮、猫玩具等产业开始蓬勃发展，进而影响到了互联网行业，很多公司以猫作为原型设计品牌 logo，带来了巨大流量。在将来，借助一些大趋势，这又将会带来疯狂扩张，比如借助人工智能的机器猫。</p><p>说到这里，我相信你应该比较清楚小趋势的定义了吧。我再举几个例子，这几个例子即使是同行，你也许也很难看得清它是个趋势。</p><p>一个是视频，一直以来，视频都是刚需，这是现代人娱乐的神器，也是学习的利器。但就是一直不温不火，人们已经习以为常，像吃饭穿衣那么平常。近两年却突然大火，特别是以直播、短视频为首的视频形式。我想这是因为我们已经进入一个个性化+信息泛滥的时代，任何「短平快」的东西都会特别容易受到重视。由此看来，当下环境的变化是个大趋势，视频只是个小趋势。</p><p>另一个是微信公众号，刚推出时有多少人能看得清它是个趋势，今天回看，这已然成为了一个内容红海，带动了自由职业、内容创业等多种个性化产业的发展。未来随着人工智能发展，很多人都说最没有可能被淘汰的工种就是内容创作，所以说将来仍有很多发展空间，这仍然是一个小趋势。</p><h2 id="02-Where"><a href="#02-Where" class="headerlink" title="02 Where"></a>02 Where</h2><p>第二点想聊聊小趋势的适用场景，也就是它一般出现在什么地方。我觉得小趋势可以出现在任何地方。上到中央政府，下到街边小商小贩。中央政府基本上是趋势的仲裁者，任何想要发展的趋势都必须经过这一关。但反过来，中央政府也是趋势的受益者，很多来自地方的新鲜想法可以带动地方经济发展，但政策不允许，迫于舆情的压力，中央政府也会适当调整，适应当下的趋势。</p><p>小商小贩就更不用说了，看看现在街边一个要饭的人都懂得用二维码支付。很多农村的人纷纷用上网络，淘宝，微商，代购，干起的买卖丝毫不亚于城里。很多大学生利用所学纷纷回到农村进行科技养殖、科技种植、人工智能养猪，等等，这样的例子太多了。</p><p>所以，小趋势适用于任何场合，在一个场合是大趋势，但在另一个场合兴许就是小趋势。</p><h2 id="03-Who"><a href="#03-Who" class="headerlink" title="03 Who"></a>03 Who</h2><p>有适用场景，自然就有适用人群。小趋势并不适用于所有人，只适用于那些不甘平凡，想要进步的人。这很好理解，一个自甘堕落，或者是甘于平凡、得过且过的人，你跟他说这件事是将来的一个趋势，好好做，他肯定只会用看病人的眼神看你。</p><p>另外，已经在大趋势中游走的人，也没必要关注小趋势，你只要把当下的事做好，就比大多数人赢得了先机。当下科技圈最火的技术当属人工智能了吧，这个巨无霸将会指导未来几十年甚至上百年的发展。很多人很幸运已经踏入这个领域，也有很多人想踏入，但因为门槛太高，一直在边缘游走，绝大多数人则是一直在观望。后面两类人即使没有第一类人幸运，但也挺好的，起码意识到了趋势，只要用心耕耘好自己的一亩三分地，找准时机，蹭也能蹭到。别忘了小趋势蝴蝶效应的威力。</p><h2 id="04-When"><a href="#04-When" class="headerlink" title="04 When"></a>04 When</h2><p>这一点想聊聊小趋势出现的时间。像猫砂这种，我们基本上是没人能感知，因为对我们来说太平常不过了。那我们该怎么样才能把握小趋势出现的时机呢？别想了，这个世上我相信没几个人能把握准确。</p><p>但是它既然是个趋势，我们就有办法去把握，即便准确率不高，那也比什么都不做要强。</p><p>办法就是把握大趋势的时机。这个应该比较容易的，今天的传播媒介多得让人抓狂，只要一有什么热点新闻，巴不得让你第一时间知道。</p><p>举一个杨超越的例子，这是一个超级颠覆我认知的例子。起初我怎么也想不通，一个五音不全，肢体僵硬的人，却受到那么多人喜欢。直到转发锦鲤这个事件出来，我才明白，噢，原来大家都需要一种幸运的寄托，就像我们拜观世音菩萨一样的道理。</p><p>那这个事件说明什么呢，是不是能说明这是个让人焦虑的时代，快节奏的生活让人们都来不及处理所有不幸的遭遇，只能寄托于那些被公认能带来好运的事与人身上。</p><p>其实这也没什么不好，这是一个趋势带动一个趋势逐步形成的，快节奏就是一个趋势，看到趋势的人，就推出很多快节奏的产品，也有人反其道而行之，推出慢节奏的产品。</p><p>这个例子可能不够接地气，但我想说的是小趋势你也许看不到，但大趋势你肯定看得清，我们的目的不是要进入大趋势的阵地（当然你能进入更好），而是吸取新观点，引用到自己的阵地。有朝一日，大趋势成熟时，你也能分到一杯羹。</p><h2 id="05-Why"><a href="#05-Why" class="headerlink" title="05 Why"></a>05 Why</h2><p>这一点想聊聊为什么会有小趋势？罗胖在讲小趋势前，讲了一个大背景。简单说就是 2018 年科技圈风云变幻，扎堆上市的很多，遗憾出局的也不少，更有裁员、停招等等令人忧伤的事。</p><p>在这样的一个节骨眼上，很多人焦虑已经跟不上时代了，每天都担心面临被淘汰的风险。罗胖引出小趋势，我觉得就是告诉这些人大可不必焦虑，因为对于一个「做事」的人来说，</p><blockquote><p>永远都不会有末班车，只有下一班车。</p></blockquote><p>专注做好当下事，才能有精力去感知自己身边的小趋势，否则自乱阵脚，最后难以控制。</p><h2 id="06-How"><a href="#06-How" class="headerlink" title="06 How"></a>06 How</h2><p>最后一点聊聊作为一个普通小人物的我们，该如何去感知小趋势，让自己的人生之路走得更加顺畅一些。我觉得可以参考以下几点：</p><ol><li>关注大趋势，时常看看自己从事的领域能不能沾到大趋势的光。</li><li>以百岁人生为目标而过活，如果不这样，一点小小的人生变动都会让你觉得人生完了。</li><li>多元化发展，能够让我们感知到不熟悉领域的小趋势。</li><li>做好当下的事，剩下的事交给上天安排吧。</li></ol><p>以上，第一次以这种方式来解构一个知识点，完了发现，这次演讲没有白听，停留在耳边的大道理终于吸收进去了。</p><center>–END–</center><hr><blockquote><p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有大量书籍和视频资源，后台回复 <strong>「1024」</strong> 即可领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p><p><img src="/images/weichat.png" alt=""></p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;本文首发于我的公众号 &lt;strong&gt;「Linux云计算网络」(id: cloud_dev)&lt;/strong&gt; ，专注于干货分享，号内有大量书籍和视频资源，后台回复&lt;strong&gt;「1024」&lt;/strong&gt;即可领取，欢迎大家关注，二维码文末可以扫。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;这篇文章是年初听完罗振宇的跨年演讲写的，算是笔记吧，当时只是发在简书上，因为是非技术文，所以就没发在这里。今天看到有网友喜欢，想着文章应该多多少少有点用，干脆就搬过来给大家看看，如果掉粉多，我后面就多发点技术文吧。&lt;/p&gt;
-&lt;p&gt;今年罗振宇的跨年演讲还是有些干货的。在演讲开始，罗胖就开宗明义，说今晚的演讲只关注「大环境下小个体的命运」，这对于我们这种小人物来说也许是莫大的福音。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="杂谈" scheme="https://ctimbai.github.io/categories/%E6%9D%82%E8%B0%88/"/>
-    
     
   </entry>
   
@@ -608,6 +558,62 @@
 &lt;/blockquote&gt;
 &lt;p&gt;Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 10 篇。&lt;/p&gt;
 &lt;p&gt;通常，我们在执行任务时，会启用多个服务，有些任务需要长时间运行，全天 24 小时不中断，所以一般会启用 Daemon 类的 服务；而有些任务则只需要短暂执行，任务执行完，服务就没有存在的必要了。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/categories/Kubernetes/"/>
+    
+    
+      <category term="云计算" scheme="https://ctimbai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+    
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/tags/Kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kubernetes 笔记 09 DaemonSet 我是一只看门狗</title>
+    <link href="https://ctimbai.github.io/2018/09/19/tech/Kubernetes_%E7%AC%94%E8%AE%B0_09_DaemonSet_%E6%88%91%E6%98%AF%E4%B8%80%E5%8F%AA%E7%9C%8B%E9%97%A8%E7%8B%97/"/>
+    <id>https://ctimbai.github.io/2018/09/19/tech/Kubernetes_笔记_09_DaemonSet_我是一只看门狗/</id>
+    <published>2018-09-19T05:16:14.000Z</published>
+    <updated>2019-04-11T16:00:32.410Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文首发于我的公众号 <strong>「Linux云计算网络」</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p></blockquote><p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 9 篇。</p><p>和上文中的 Deployment 一样，DaemonSet 也是一种副本管理机制，和 Deployment 可以在每个 Node 上运行好几个 Pod 副本不同的是，DaemonSet 始终保证每个 Node 最多只会运行一个副本，就像它的名称一样，作为一只看门狗（Daemon）守护在主人家里。</p><a id="more"></a><p>那么，哪些应用适合用 DaemonSet 的方式来部署呢？</p><p>主要有以下几类：</p><ul><li>监控类的，比如 Prometheus，collectd，New Relic agent，Ganglia gmond 等。</li><li>系统管理类的，比如 kube-proxy, kube-flannel 等。</li><li>日志收集类的，比如 fluentd，logstash 等。</li><li>数据存储类的，比如 glusterd, ceph 等。</li><li>……</li></ul><p>其中，系统管理类的应用主要是 K8S 自身的一些系统组件，我们可以通过 <code>kubectl get daemonset --namespace=kube-system</code> 查看到：  </p><center><img src="/images/k8s/daemon-sys.png" alt=""></center><p>DaemonSet <code>kube-proxy</code> 和 <code>kube-flannel-ds</code> 有 3 个副本，分别负责在每个节点上运行 kube-proxy 和 flannel 组件。</p><p>kube-proxy 前面的文章讲过，它有负载均衡的功能，主要将外部对 Service 的访问导向后端的 Pod 上。显然，一个 Node 运行一个负载均衡器足矣。</p><p>我们可以通过 <code>kubectl edit daemonset kube-proxy --namespace=kube-system</code> 来查看 kube-proxy 的 yaml 配置文件。</p><center><img src="/images/k8s/kube-proxy-dae.png" alt=""></center><p>可以看到它的 kind 是 DaemonSet。</p><p>接着再来看 kube-flannel-ds，这是一个网络插件组件，主要用于构建 K8S 的集群网络，这里大家不懂可以跳过，不影响本文的理解，后面在讲到 K8S 网络的时候会重点讲这个网络方案。</p><p>这里我们只需要知道，各个 Pod 间的网络连通就是 flannel 来实现的。</p><p>这是一个第三方的插件，我们可以直接下载它的 yaml 文件进行安装，执行下面的命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure><p>得到 kube-flannel.yml 文件：</p><center><img src="/images/k8s/kube-flannel-dae.png" alt=""></center><p>这里只列出了一部分内容，kind 类型是 DaemonSet。</p><p>其实 DaemonSet 配置文件的语法和结构和 Deployment 几乎完全一样，不同就在于将 kind 设为 DaemonSet。</p><p>OK，DaemonSet 的探讨就到这里，下文我们继续讨论另外一种 Controller：Job。</p><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>我的公众号 <strong>「Linux云计算网络」</strong> ，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，分享的内容包括但不限于云计算虚拟化、容器、OpenStack、K8S、雾计算、网络、工具、SDN、OVS、DPDK、Linux、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p><p><img src="/images/weichat.png" alt=""></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文首发于我的公众号 &lt;strong&gt;「Linux云计算网络」&lt;/strong&gt; ，专注于干货分享，号内有大量书籍和视频资源，后台回复&lt;strong&gt;「1024」&lt;/strong&gt;即可领取，欢迎大家关注，二维码文末可以扫。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 9 篇。&lt;/p&gt;
+&lt;p&gt;和上文中的 Deployment 一样，DaemonSet 也是一种副本管理机制，和 Deployment 可以在每个 Node 上运行好几个 Pod 副本不同的是，DaemonSet 始终保证每个 Node 最多只会运行一个副本，就像它的名称一样，作为一只看门狗（Daemon）守护在主人家里。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/categories/Kubernetes/"/>
+    
+    
+      <category term="云计算" scheme="https://ctimbai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+    
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/tags/Kubernetes/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Kubernetes 笔记 08 Deployment 副本管理 重新招一个员工来填坑</title>
+    <link href="https://ctimbai.github.io/2018/09/16/tech/Kubernetes_%E7%AC%94%E8%AE%B0_08_Deployment_%E5%89%AF%E6%9C%AC%E7%AE%A1%E7%90%86_%E9%87%8D%E6%96%B0%E6%8B%9B%E4%B8%80%E4%B8%AA%E5%91%98%E5%B7%A5%E6%9D%A5%E5%A1%AB%E5%9D%91/"/>
+    <id>https://ctimbai.github.io/2018/09/16/tech/Kubernetes_笔记_08_Deployment_副本管理_重新招一个员工来填坑/</id>
+    <published>2018-09-16T05:16:14.000Z</published>
+    <updated>2019-04-11T16:01:03.442Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文首发于我的公众号 <strong>「Linux云计算网络」</strong> ，专注于干货分享，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，欢迎大家关注，二维码文末可以扫。</p></blockquote><p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 8 篇。</p><p>Deployment 是 K8S v1.2 引入的概念，与之一起引入还有 ReplicaSet。这两个概念是等同的，准确说是 Deployment 内部调用 ReplicaSet 来实现。</p><a id="more"></a><p>之前这个概念是由 Replication Controller 来实现的，但由于和 K8S 代码中的模块重名，所以就改成 Deployment + ReplicaSet 的组合。</p><p>Deployment 实现了 Pod 的副本管理，使得应用的表现形态和用户期望的状态保持一致。比如用户期望应用部署为 3 副本，如果在运行过程中有一个副本挂了，那么 Deployment 会自动拉起一个副本。</p><p>Deployment 对于应用的编排、自动扩容和缩容、升级回滚等功能都是至关重要的。</p><p>下面我们通过一个例子来看看 Deployment 是如何工作的。</p><p>定义一个 <code>nginx.yaml</code> 文件（对 yaml 文件不熟悉的可以查阅这篇文章）：   </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1   </span><br><span class="line">kind: Deployment </span><br><span class="line">metadata:  </span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2  </span><br><span class="line">  template:  </span><br><span class="line">    metadata:</span><br><span class="line">      labels:  </span><br><span class="line">        app: web-server</span><br><span class="line">    spec: </span><br><span class="line">      containers:  </span><br><span class="line">      - name: nginx  </span><br><span class="line">        images: nginx:1.12.1     </span><br><span class="line">        ports:  </span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure><p>这个文件定义了一个 nginx 容器应用，两个 Pod 副本。也就是每个 Pod 中会跑一个 nginx 应用。</p><p>执行<code>kubectl create -f nginx.yaml</code>创建 Deployment 对象，在执行 <code>kubectl get deploy</code> 查看创建的 Deployment。</p><center><img src="/images/k8s/deploy-yaml.png" alt=""></center><p>可以看到，其中两个参数 <code>desired</code>（期待副本数）和 <code>current</code>（当前副本数）都为 2，保持一致，我们再执行 <code>kubectl get pod -o wide</code> 查看当前 Pod 的情况：</p><center><img src="/images/k8s/deploy-pod.png" alt=""></center><p>可以看到，创建了两个 Pod 自动调度到了 Node1 和 Node2 上。这说明每个 Pod 副本是由 Deployment 统一创建并维护的。</p><p>为了一探究竟，我们继续深挖 Deployment。</p><p>执行 <code>kubectl describe deployment nginx-deployment</code> 查看该 Deployment 的详细信息。</p><center><img src="/images/k8s/deploy-replica.png" alt=""></center><p>图中圈住的地方告诉我们，这里创建了一个 ReplicaSet，也就是说 Deployment 内部是调用 ReplicaSet 来完成 Pod 副本的创建的。是否是这样，我们继续验证。</p><p>执行 <code>kubeclt get replicaset</code> 显示创建的 ReplicaSet 对象：</p><center><img src="/images/k8s/deploy-get-replica.png" alt=""></center><p>可以看到这里的 ReplicaSet 名称和上面 Deployment 信息里显示的是一样的，同样，执行 <code>kubectl describe replicaset xxx</code> 显示该 ReplicaSet 的详细信息。</p><center><img src="/images/k8s/deploy-replica-events.png" alt=""></center><p>图中，有两处地方值得注意。一处是 <code>Controlled By</code>，表明 ReplicaSet 是由谁创建并控制的，显然这里显示是 Deployment。第二处是 <code>Events</code>，Events 记录了 K8S 中每一种对象的日志信息，这里的信息有助于排错查问题。我们可以看到这里记录了两个 Pod 副本的创建，Pod 的名称和我们在上面执行 <code>kubectl get pod</code> 看到的结果是一样的。</p><p>继续执行 <code>kubectl describe pod xxx</code> 查看其中一个 Pod 的详细信息：</p><center><img src="/images/k8s/deploy-pod-des.png" alt=""></center><p>可以看到这个 Pod 是由 ReplicaSet 创建的。</p><p>到此，我们不难得出下面这幅图：</p><center><img src="/images/k8s/deploy-pod1.png" alt=""></center><p>用户通过 kubeclt 创建 Deployment，Deployment 又创建 ReplicaSet，最终由 ReplicaSet 创建 Pod。</p><p>从命名上我们也可以看出，子对象的名字 = 父对象的名字 + 随机字符串。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文我们从实践上剖析了 Deployment 创建 Pod，实际上经过 ReplicaSet 进行创建。Deployment 最主要是对 Pod 进行副本管理，这样可以进行很多自动化管理的复杂操作，后面我们逐步从实践上去剖析 Pod 的各种操作。</p><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>我的公众号 <strong>「Linux云计算网络」</strong> ，号内有大量书籍和视频资源，后台回复<strong>「1024」</strong>即可领取，分享的内容包括但不限于云计算虚拟化、容器、OpenStack、K8S、雾计算、网络、工具、SDN、OVS、DPDK、Linux、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p><p><img src="/images/weichat.png" alt=""></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文首发于我的公众号 &lt;strong&gt;「Linux云计算网络」&lt;/strong&gt; ，专注于干货分享，号内有大量书籍和视频资源，后台回复&lt;strong&gt;「1024」&lt;/strong&gt;即可领取，欢迎大家关注，二维码文末可以扫。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 8 篇。&lt;/p&gt;
+&lt;p&gt;Deployment 是 K8S v1.2 引入的概念，与之一起引入还有 ReplicaSet。这两个概念是等同的，准确说是 Deployment 内部调用 ReplicaSet 来实现。&lt;/p&gt;
     
     </summary>
     

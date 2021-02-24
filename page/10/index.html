@@ -178,314 +178,6 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/04/10/tech/DPDK_入门最佳指南/">
-              
-                  DPDK 入门最佳指南
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-10
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/DPDK/">DPDK</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="01-写在前面"><a href="#01-写在前面" class="headerlink" title="01 写在前面"></a>01 写在前面</h3><hr>
-<p>我的读者当中应该有一部分人是做 DPDK 相关的，我自己虽然现在已经不做 DPDK 了，但对这块仍然有兴趣，今天这篇文章就来总结下 DPDK 的技术栈。注意：这篇文章是小白文，不适合大神哦。</p>
-<p>文章从 DPDK 的产生背景，到核心技术，再到应用场景，都进行了阐述，有可能是你见过的讲得最全面的文章了，当然，讲得全面自然会少了深度，你如果不屑忽略就好了。</p>
-<p>其实，本文之前已经发过，但在整理的时候不小心删了，索性就重发一次，但这一次多了一些内容，文末我还会推荐一些学习资料，有需要的可以拉到最下面查看获取方法。</p>
-<h3 id="02-高性能网络技术"><a href="#02-高性能网络技术" class="headerlink" title="02 高性能网络技术"></a>02 高性能网络技术</h3><hr>
-<p>随着云计算产业的异军突起，网络技术的不断创新，越来越多的网络设备基础架构逐步向基于通用处理器平台的架构方向融合，从传统的物理网络到虚拟网络，从扁平化的网络结构到基于 SDN 分层的网络结构，无不体现出这种创新与融合。</p>
-<p>这在使得网络变得更加可控制和成本更低的同时，也能够支持大规模用户或应用程序的性能需求，以及海量数据的处理。究其原因，其实是高性能网络编程技术随着网络架构的演进不断突破的一种必然结果。</p>
-<h3 id="03-C10K-到-C10M-问题的演进"><a href="#03-C10K-到-C10M-问题的演进" class="headerlink" title="03 C10K 到 C10M 问题的演进"></a>03 C10K 到 C10M 问题的演进</h3><hr>
-<p>说到高性能网络编程，一定逃不过 C10K 问题（即单机 1 万个并发连接问题），不过这个问题已经成为历史了，很多技术可以解决它，如常用的 I/O 多路复用模型，select, poll, epoll 等。在此基础上也出了很多优秀的框架，比如 Nginx 基于事件驱动的 Web 服务框架，以及基于 Python 开发的 Tornado 和 Django 这种非阻塞的 Web 框架。</p>
-<p>如今，关注的更多是 C10M 问题（即单机 1 千万个并发连接问题）。很多计算机领域的大佬们从硬件上和软件上都提出了多种解决方案。从硬件上，比如说，现在的类似很多 40Gpbs、32-cores、256G RAM 这样配置的 X86 服务器完全可以处理 1 千万个以上的并发连接。</p>
-<p>但是从硬件上解决问题就没多大意思了，首先它成本高，其次不通用，最后也没什么挑战，无非就是堆砌硬件而已。所以，抛开硬件不谈，我们看看从软件上该如何解决这个世界难题呢？</p>
-<p>这里不得不提一个人，就是 Errata Security 公司的 CEO Robert Graham，他在 Shmoocon 2013 大会上很巧妙地解释了这个问题。有兴趣可以查看其 YouTube 的演进视频： C10M Defending The Internet At Scale。</p>
-<center><img src="/images/sdn/c10m.jpg" alt=""></center>
-
-<p>他提到了 UNIX 的设计初衷其实为电话网络的控制系统而设计的，而不是一般的服务器操作系统，所以，它仅仅是一个负责数据传送的系统，没有所谓的控制层面和数据层面的说法，不适合处理大规模的网络数据包。最后他得出的结论是：</p>
-<blockquote>
-<p>OS 的内核不是解决 C10M 问题的办法，恰恰相反 OS 的内核正式导致 C10M 问题的关键所在。</p>
-</blockquote>
-<h3 id="04-为什么这么说？基于-OS-内核的数据传输有什么弊端？"><a href="#04-为什么这么说？基于-OS-内核的数据传输有什么弊端？" class="headerlink" title="04 为什么这么说？基于 OS 内核的数据传输有什么弊端？"></a>04 为什么这么说？基于 OS 内核的数据传输有什么弊端？</h3><hr>
-<p><strong>1、中断处理：</strong> 当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。</p>
-<p><strong>2、内存拷贝：</strong> 正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.1%。</p>
-<p><strong>3、上下文切换：</strong> 频繁到达的硬件中断和软中断都可能随时抢占系统调用的运行，这会产生大量的上下文切换开销。另外，在基于多线程的服务器设计框架中，线程间的调度也会产生频繁的上下文切换开销，同样，锁竞争的耗能也是一个非常严重的问题。</p>
-<p><strong>4、局部性失效：</strong> 如今主流的处理器都是多个核心的，这意味着一个数据包的处理可能跨多个 CPU 核心，比如一个数据包可能中断在 cpu0，内核态处理在 cpu1，用户态处理在 cpu2，这样跨多个核心，容易造成 CPU 缓存失效，造成局部性失效。如果是 NUMA 架构，更会造成跨 NUMA 访问内存，性能受到很大影响。</p>
-<p><strong>5、内存管理：</strong> 传统服务器内存页为 4K，为了提高内存的访问速度，避免 cache miss，可以增加 cache 中映射表的条目，但这又会影响 CPU 的检索效率。</p>
-<p>综合以上问题，可以看出内核本身就是一个非常大的瓶颈所在。那很明显解决方案就是想办法绕过内核。</p>
-<h3 id="05-解决方案探讨"><a href="#05-解决方案探讨" class="headerlink" title="05 解决方案探讨"></a>05 解决方案探讨</h3><hr>
-<p>针对以上弊端，分别提出以下技术点进行探讨。</p>
-<p><strong>1、控制层和数据层分离：</strong> 将数据包处理、内存管理、处理器调度等任务转移到用户空间去完成，而内核仅仅负责部分控制指令的处理。这样就不存在上述所说的系统中断、上下文切换、系统调用、系统调度等等问题。</p>
-<p><strong>2、多核技术：</strong> 使用多核编程技术代替多线程技术，并设置 CPU 的亲和性，将线程和 CPU 核进行一比一绑定，减少彼此之间调度切换。</p>
-<p><strong>3、NUMA 亲和性：</strong> 针对 NUMA 系统，尽量使 CPU 核使用所在 NUMA 节点的内存，避免跨内存访问。</p>
-<p><strong>4、大页内存：</strong> 使用大页内存代替普通的内存，减少 cache-miss。</p>
-<p><strong>5、无锁技术：</strong> 采用无锁技术解决资源竞争问题。</p>
-<p>经研究，目前业内已经出现了很多优秀的集成了上述技术方案的高性能网络数据处理框架，如 6wind、Windriver、Netmap、DPDK 等，其中，Intel 的 DPDK 在众多方案脱颖而出，一骑绝尘。</p>
-<center><img src="/images/sdn/dpdk.png" alt=""></center>
-
-<p>DPDK 为 Intel 处理器架构下用户空间高效的数据包处理提供了库函数和驱动的支持，它不同于 Linux 系统以通用性设计为目的，而是专注于网络应用中数据包的高性能处理。</p>
-<p>也就是 DPDK 绕过了 Linux 内核协议栈对数据包的处理过程，在用户空间实现了一套数据平面来进行数据包的收发与处理。在内核看来，DPDK 就是一个普通的用户态进程，它的编译、连接和加载方式和普通程序没有什么两样。</p>
-<h3 id="06-DPDK-的突破"><a href="#06-DPDK-的突破" class="headerlink" title="06 DPDK 的突破"></a>06 DPDK 的突破</h3><hr>
-<p>相对传统的基于内核的网络数据处理，DPDK 对从内核层到用户层的网络数据流程进行了重大突破，我们先看看传统的数据流程和 DPDK 中的网络流程有什么不同。</p>
-<p><strong>传统 Linux 内核网络数据流程：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">硬件中断---&gt;取包分发至内核线程---&gt;软件中断---&gt;内核线程在协议栈中处理包---&gt;处理完毕通知用户层</span><br><span class="line">用户层收包--&gt;网络层---&gt;逻辑层---&gt;业务层</span><br></pre></td></tr></table></figure></p>
-<p><strong>dpdk 网络数据流程：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">硬件中断---&gt;放弃中断流程</span><br><span class="line">用户层通过设备映射取包---&gt;进入用户层协议栈---&gt;逻辑层---&gt;业务层</span><br></pre></td></tr></table></figure></p>
-<p>下面就具体看看 DPDK 做了哪些突破？</p>
-<h4 id="6-1-UIO-（用户空间的-I-O-技术）的加持。"><a href="#6-1-UIO-（用户空间的-I-O-技术）的加持。" class="headerlink" title="6.1 UIO （用户空间的 I/O 技术）的加持。"></a><strong>6.1 UIO （用户空间的 I/O 技术）的加持。</strong></h4><hr>
-<p>DPDK 能够绕过内核协议栈，本质上是得益于 UIO 技术，通过 UIO 能够拦截中断，并重设中断回调行为，从而绕过内核协议栈后续的处理流程。</p>
-<p>UIO 设备的实现机制其实是对用户空间暴露文件接口，比如当注册一个 UIO 设备 uioX，就会出现文件 /dev/uioX，对该文件的读写就是对设备内存的读写。除此之外，对设备的控制还可以通过 /sys/class/uio 下的各个文件的读写来完成。</p>
-<center><img src="/images/sdn/uio.jpg" alt=""></center>
-
-<h4 id="6-2-内存池技术"><a href="#6-2-内存池技术" class="headerlink" title="6.2 内存池技术"></a><strong>6.2 内存池技术</strong></h4><hr>
-<p>DPDK 在用户空间实现了一套精巧的内存池技术，内核空间和用户空间的内存交互不进行拷贝，只做控制权转移。这样，当收发数据包时，就减少了内存拷贝的开销。</p>
-<h4 id="6-3-大页内存管理"><a href="#6-3-大页内存管理" class="headerlink" title="6.3 大页内存管理"></a><strong>6.3 大页内存管理</strong></h4><hr>
-<p>DPDK 实现了一组大页内存分配、使用和释放的 API，上层应用可以很方便使用 API 申请使用大页内存，同时也兼容普通的内存申请。</p>
-<h4 id="6-4-无锁环形队列"><a href="#6-4-无锁环形队列" class="headerlink" title="6.4 无锁环形队列"></a><strong>6.4 无锁环形队列</strong></h4><hr>
-<p>DPDK 基于 Linux 内核的无锁环形缓冲 kfifo 实现了自己的一套无锁机制。支持单生产者入列/单消费者出列和多生产者入列/多消费者出列操作，在数据传输的时候，降低性能的同时还能保证数据的同步。</p>
-<h4 id="6-5-poll-mode-网卡驱动"><a href="#6-5-poll-mode-网卡驱动" class="headerlink" title="6.5 poll-mode 网卡驱动"></a><strong>6.5 poll-mode 网卡驱动</strong></h4><hr>
-<p>DPDK 网卡驱动完全抛弃中断模式，基于轮询方式收包，避免了中断开销。</p>
-<h4 id="6-6-NUMA"><a href="#6-6-NUMA" class="headerlink" title="6.6 NUMA"></a><strong>6.6 NUMA</strong></h4><hr>
-<p>DPDK 内存分配上通过 proc 提供的内存信息，使 CPU 核心尽量使用靠近其所在节点的内存，避免了跨 NUMA 节点远程访问内存的性能问题。</p>
-<h4 id="6-7-CPU-亲和性"><a href="#6-7-CPU-亲和性" class="headerlink" title="6.7 CPU 亲和性"></a><strong>6.7 CPU 亲和性</strong></h4><hr>
-<p>DPDK 利用 CPU 的亲和性将一个线程或多个线程绑定到一个或多个 CPU 上，这样在线程执行过程中，就不会被随意调度，一方面减少了线程间的频繁切换带来的开销，另一方面避免了 CPU 缓存的局部失效性，增加了 CPU 缓存的命中率。</p>
-<h4 id="6-8-多核调度框架"><a href="#6-8-多核调度框架" class="headerlink" title="6.8 多核调度框架"></a><strong>6.8 多核调度框架</strong></h4><hr>
-<p>DPDK 基于多核架构，一般会有主从核之分，主核负责完成各个模块的初始化，从核负责具体的业务处理。</p>
-<p>除了上述之外，DPDK 还有很多的技术突破，可以用下面这张图来概之。</p>
-<center><img src="/images/sdn/dpdkarch.jpg" alt=""></center>
-
-<h3 id="07-DPDK-的应用"><a href="#07-DPDK-的应用" class="headerlink" title="07 DPDK 的应用"></a>07 DPDK 的应用</h3><hr>
-<p>DPDK 作为优秀的用户空间高性能数据包加速套件，现在已经作为一个“胶水”模块被用在多个网络数据处理方案中，用来提高性能。如下是众多的应用。</p>
-<center><img src="/images/sdn/dpdkapp.jpg" alt=""></center>
-
-<h4 id="数据面（虚拟交换机）"><a href="#数据面（虚拟交换机）" class="headerlink" title="数据面（虚拟交换机）"></a><strong>数据面（虚拟交换机）</strong></h4><hr>
-<p><strong>OVS</strong></p>
-<p>Open vSwitch 是一个多核虚拟交换机平台，支持标准的管理接口和开放可扩展的可编程接口，支持第三方的控制接入。</p>
-<p><a href="https://github.com/openvswitch/ovs" target="_blank" rel="noopener">https://github.com/openvswitch/ovs</a></p>
-<p><strong>VPP</strong></p>
-<p>VPP 是 cisco 开源的一个高性能的包处理框架，提供了 交换/路由 功能，在虚拟化环境中，使它可以当做一个虚拟交换机来使用。在一个类 SDN 的处理框架中，它往往充当数据面的角色。经研究表明，VPP 性能要好于 OVS+DPDK 的组合，但它更适用于 NFV，适合做特定功能的网络模块。</p>
-<p><a href="https://wiki.fd.io/view/VPP" target="_blank" rel="noopener">https://wiki.fd.io/view/VPP</a></p>
-<p><strong>Lagopus</strong></p>
-<p>Lagopus 是另一个多核虚拟交换的实现，功能和 OVS 差不多，支持多种网络协议，如 Ethernet，VLAN，QinQ，MAC-in-MAC，MPLS 和 PBB，以及隧道协议，如 GRE，VxLan 和 GTP。</p>
-<p><a href="https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md" target="_blank" rel="noopener">https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md</a></p>
-<p><strong>Snabb</strong></p>
-<p>Snabb 是一个简单且快速的数据包处理工具箱。</p>
-<p><a href="https://github.com/SnabbCo/snabbswitch/blob/master/README.md" target="_blank" rel="noopener">https://github.com/SnabbCo/snabbswitch/blob/master/README.md</a></p>
-<h4 id="数据面（虚拟路由器）"><a href="#数据面（虚拟路由器）" class="headerlink" title="数据面（虚拟路由器）"></a><strong>数据面（虚拟路由器）</strong></h4><hr>
-<p><strong>OPENCONTRAIL</strong></p>
-<p>一个集成了 SDN 控制器的虚拟路由器，现在多用在 OpenStack 中，结合 Neutron 为 OpenStack 提供一站式的网络支持。</p>
-<p><a href="http://www.opencontrail.org/" target="_blank" rel="noopener">http://www.opencontrail.org/</a></p>
-<p><strong>CloudRouter</strong></p>
-<p>一个分布式的路由器。</p>
-<p><a href="https://cloudrouter.org/" target="_blank" rel="noopener">https://cloudrouter.org/</a></p>
-<h4 id="用户空间协议栈"><a href="#用户空间协议栈" class="headerlink" title="用户空间协议栈"></a><strong>用户空间协议栈</strong></h4><hr>
-<p><strong>mTCP</strong></p>
-<p>mTCP 是一个针对多核系统的高可扩展性的用户空间 TCP/IP 协议栈。</p>
-<p><a href="https://github.com/eunyoung14/mtcp/blob/master/README" target="_blank" rel="noopener">https://github.com/eunyoung14/mtcp/blob/master/README</a></p>
-<p><strong>IwIP</strong></p>
-<p>IwIP 针对 RAM 平台的精简版的 TCP/IP 协议栈实现。</p>
-<p><a href="http://git.savannah.gnu.org/cgit/lwip.git/tree/README" target="_blank" rel="noopener">http://git.savannah.gnu.org/cgit/lwip.git/tree/README</a></p>
-<p><strong>Seastar</strong></p>
-<p>Seastar 是一个开源的，基于 C++ 11/14 feature，支持高并发和低延迟的异步编程高性能库。</p>
-<p><a href="http://www.seastar-project.org/" target="_blank" rel="noopener">http://www.seastar-project.org/</a></p>
-<p><strong>f-stack</strong></p>
-<p>腾讯开源的用户空间协议栈，移植于 FreeBSD协议栈，粘合了 POSIX API，上层应用（协程框架，Nginx,Redis），纯 C 编写，易上手。</p>
-<p><a href="https://github.com/f-stack/f-stack" target="_blank" rel="noopener">https://github.com/f-stack/f-stack</a></p>
-<h4 id="存储加速"><a href="#存储加速" class="headerlink" title="存储加速"></a><strong>存储加速</strong></h4><hr>
-<p><strong>SPDK</strong></p>
-<p>SPDK 是 DPDK 的孪生兄弟，专注存储性能加速，目前的火热程度丝毫不亚于 DPDK，Intel 近来对 SPDK 特别重视，隔三差五就发布新版本。</p>
-<p><a href="https://github.com/spdk/spdk" target="_blank" rel="noopener">https://github.com/spdk/spdk</a></p>
-<h3 id="08-总结"><a href="#08-总结" class="headerlink" title="08 总结"></a>08 总结</h3><hr>
-<p>DPDK 绕过了 Linux 内核协议栈，加速数据的处理，用户可以在用户空间定制协议栈，满足自己的应用需求，目前出现了很多基于 DPDK 的高性能网络框架，OVS 和 VPP 是常用的数据面框架，mTCP 和 f-stack 是常用的用户态协议栈，SPDK 是存储性能加速器，很多大公司都在使用 DPDK 来优化网络性能。</p>
-<blockquote>
-<p>PS：本文所有的图来自网络，侵权必删。</p>
-</blockquote>
-<h3 id="09-DPDK-资料推荐"><a href="#09-DPDK-资料推荐" class="headerlink" title="09 DPDK 资料推荐"></a>09 DPDK 资料推荐</h3><hr>
-<p>在我看来，DPDK 最好的学习资料是官网，没有之一：</p>
-<p><a href="http://core.dpdk.org/doc/" target="_blank" rel="noopener">http://core.dpdk.org/doc/</a></p>
-<p>其次是看 Intel 技术专家出的书 《深入浅出 DPDK》。</p>
-<center><img src="/images/sdn/dpdkbook.jpg" alt=""></center>
-
-<p>本书详细介绍了DPDK 技术发展趋势，数据包处理，硬件加速技术，包处理和虚拟化 ，以及 DPDK 技术在 SDN，NFV ，网络存储等领域的实际应用。</p>
-<p>本书是国内第一本全面的阐述网络数据面的核心技术的书籍，面向 IT 网络通讯行业的从业人员，以及大专院校的学生，用通俗易懂的文字打开了一扇通向新一代网络处理架构的大门。</p>
-<p>本书我有电子版（但只有一部分，推荐大家买书），需要的公众号后台回复 “DPDK” 查看获取方式。</p>
-<p>除了书之外，就是看大牛的博客，加入相关的群和优秀的人一起学习，我整理了几份网上较好的博客资料，和书一起附赠，如果想加群学习，回复 “加群”。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/NUMA/"><i class="fas fa-hashtag fa-fw"></i>NUMA</a>
-                
-                    <a href="/tags/SDN/"><i class="fas fa-hashtag fa-fw"></i>SDN</a>
-                
-                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
-                
-                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
-                
-                    <a href="/tags/UIO/"><i class="fas fa-hashtag fa-fw"></i>UIO</a>
-                
-                    <a href="/tags/大页内存/"><i class="fas fa-hashtag fa-fw"></i>大页内存</a>
-                
-                    <a href="/tags/OVS/"><i class="fas fa-hashtag fa-fw"></i>OVS</a>
-                
-                    <a href="/tags/VPP/"><i class="fas fa-hashtag fa-fw"></i>VPP</a>
-                
-                    <a href="/tags/mTCP/"><i class="fas fa-hashtag fa-fw"></i>mTCP</a>
-                
-                    <a href="/tags/fstack/"><i class="fas fa-hashtag fa-fw"></i>fstack</a>
-                
-                    <a href="/tags/SPDK/"><i class="fas fa-hashtag fa-fw"></i>SPDK</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/04/06/tech/Docker_容器网络之单主机网络/">
-              
-                  Docker 容器网络之单主机网络
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-06
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>当容器逐步向容器集群，容器云技术演进的时候，一个不得不面对的问题就是各个容器的管理问题，有些容器需要交互，有些容器需要隔离，如何保证这些操作能够顺利地进行，这个时候，很多容器管理和编排的平台就应运而生了。首先，当然是 Docker 社区自己开发的 Swarm+Machine+Compose 的集群管理套件，然后还有 Twitter 主推 Apache 的 Mesos，最有名的应该为 Google 开源的 Kubernetes。</p>
-<p>这些平台综合了容器集群资源管理，服务发现和扩容缩融等问题，是一个集大成的解决方案，但其实这些问题本质上都离不开网络，资源在各容器之间调度需要网络，服务发现需要网络，所以，可以说网络是容器集群环境下最基础的一环。</p>
-<p>Docker 容器网络根据容器的部署位置，可以分为单主机网络（host）和多主机网络（multi-host），本文先看 Docker host 网络。</p>
-<p>Docker host 网络分为 none，host，joined container 和 bridge 网络。</p>
-<p>none 网络模式下，Docker 容器拥有自己的 network namespace，但是并不为容器进行任何的网络配置，也就是说容器除了 network namespace 本身自带的 localback 网卡外什么都没有，包括网卡、IP、路由等信息。用户如何要使用 none 网络，就需要自己添加特定的网卡，并配置 IP、路由等信息，但一般不会这么干，none 网络很好地做到了隔离，一般是用来跑那些对安全性要求极高且不需要联网的应用。</p>
-<p>比如某个容器的唯一用途是生成随机密码，就可以放到 none 网络中避免密码被窃取。</p>
-<p>想要使 Docker 使用 none 网络，只需要在创建容器的时候附带 –network = none 即可。</p>
-<p>host 网络，顾名思义就是 Docker 容器使用宿主机的网络，相当于和 host 共用了同一个 network namespace，Docker 容器使用 host 的网卡、IP 和路由等功能对外通信。</p>
-<p>虽然这种模式下 Docker 没有创建独立的 network namespace，但其他 namespace 仍然是隔离的，如文件系统、进程列表等。host 网络最大的好处就是使得 Docker 容器对外通信变得简单，直接使用 host 的 IP 进行通信即可，但缺点也很明显，就是降低了隔离性，同时还会存在和其他容器对网络资源的竞争与冲突的问题。</p>
-<p>同样要使用 host 网络，只需创建容器时附带 –network = host 即可。</p>
-<center><img src="/images/docker/net_host.png" alt=""></center>
-
-<p>joined container 网络和 host 网络不同的是，它是和其他的 container 共享一个 network namespace，一个 network namespace 可以被一个或者多个 Docker 容器共享。在这种模式下，两个容器之间可以通过 localback 回环网卡通信，增加了容器间通信的便利性。</p>
-<p>同样可以在创建容器时，使用参数 –network = container:another_container_name 来和另外容器共享网络。</p>
-<center><img src="/images/docker/net_con.png" alt=""></center>
-
-<p>bridge 网络是最常用的网络模式，它兼顾了安全性和功能的完备性，但其与外部通信要通过 NAT 转换，在复杂的网络场景下会存在诸多不便。</p>
-<p>bridge 网络在创建的时候通过 –network = bridge 指定，Docker daemon 会为创建的容器自动创建一个 Docker 网桥——docker0（也可以人为指定名称 –driver bridge my_net），这个 docker0 就用来联结 Docker 容器和 host 的桥梁。</p>
-<p>然后，Docker daemon 会创建一对虚拟网卡 veth pair，一块网卡留在宿主机的 root network namespace 中，并绑定到 docker0 上，另一块放在新创建的 network namespace 中，命名为 eth0，并为其配置 IP 和路由，将其网关设为 docker0，如下，这样整个容器的 bridge 网络通信环境就建立起来了，其他容器的建立方式也是如此，最终各容器之间就通过 docker0 这个桥梁互联互通了。</p>
-<center><img src="/images/docker/net_bridge.jpg" alt=""></center>
-
-<p>下文将讨论更为复杂的 multi-host 网络。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
-                
-                    <a href="/tags/Bridge/"><i class="fas fa-hashtag fa-fw"></i>Bridge</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
           <a href="/2018/03/28/tech/Docker_基础技术之_Linux_cgroups_详解/">
               
                   Docker 基础技术之 Linux cgroups 详解
@@ -869,6 +561,226 @@
         </div>
       
     
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/03/02/tech/容器生态系统/">
+              
+                  容器生态系统
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-02
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>说起生态，不禁让人想起贾跃亭的乐视，想当初我多次被它的生态布局给震撼到，一度相信它将要超越百度，坐拥互联网三大江山的宝座，但没过时日，各种劲爆的新闻就把它推到了风口浪尖上，现在想想也是让人唏嘘，但不管怎么说，愿它好吧，毕竟这种敢想敢做的精神还是值得敬佩的。</p>
+<p>回到技术这个领域，不得不说，技术更新迭代的速度快得让人应接不暇，就容器技术这个领域来说，从 Docker 面世短短的 2-3 年时间里，就衍生出多种与之相关的技术框架，由此形成了一个小小的生态系统。</p>
+<center><img src="/images/docker/docker_st.jpg" alt=""></center>
+
+<p>一谈到容器，大家都会想到 Docker，本文也主要从 Docker 角度来讲容器生态系统。</p>
+<h3 id="1-容器基础技术"><a href="#1-容器基础技术" class="headerlink" title="1 容器基础技术"></a>1 容器基础技术</h3><hr>
+<p>Docker 的本质是利用 Linux 内核的 namespace 和 cgroups 机制，构建出一个隔离的进程（容器进程）。所以，容器的基础技术主要涉及到 Linux 内核的 namespace 和 cgroups 技术。</p>
+<h3 id="2-容器核心技术"><a href="#2-容器核心技术" class="headerlink" title="2 容器核心技术"></a>2 容器核心技术</h3><hr>
+<p>容器核心技术保证容器能够在主机上运行起来，包括容器规范、容器 runtime、容器管理工具、容器定义工具、Registry 和容器 OS。</p>
+<center><img src="/images/docker/docker_core.jpg" alt=""></center>
+
+<p>容器规范旨在将多种容器（如 OpenVZ，rkt，Docker 等）融合在一起，解决各种兼容问题，为此还专门成立了一个叫 OCI（Open Container Initiative）的组织来专门制定相关的容器规范。</p>
+<p>容器 runtime 是容器真正运行的地方，一般需要依赖内核，也有运行在专门制定的容器 OS 上，关于容器 OS，下面会做介绍。lxc 、runc 和 rkt 是目前三种主流的 runtime。</p>
+<blockquote>
+<p>lxc 是 Linux 上老牌的容器 runtime。Docker 最初也是用 lxc 作为 runtime。<br>runc 是 Docker 自己开发的容器 runtime，符合 oci 规范，也是现在 Docker 的默认 runtime。<br>rkt 是 CoreOS 开发的容器 runtime，符合 oci 规范，因而能够运行 Docker 的容器。</p>
+</blockquote>
+<blockquote>
+<p>容器管理工具是对外提供给用户的 CLI 接口，方便用户管理容器，对内与 runtime 交互。对应于不同的 runtime，分别有三种不同的管理工具：lxd、docker engine 和 rkt cli。</p>
+</blockquote>
+<p>容器定义工具允许用户定义容器的内容和属性，如容器需要什么镜像，装载什么应用等。常用有三种工具：docker images、Dockerfile 和 ACL（App Container Image）。</p>
+<blockquote>
+<p>docker images 是容器镜像，runtime 依据 docker images 创建容器。dockerfile 是包含若干命令的文本文件，可以通过这些命令创建出 docker images。ACI 与 docker images 类似，只不过它是由 CoreOS 开发的 rkt 容器的 images 格式。</p>
+</blockquote>
+<p>Registry 是存放容器镜像的仓库，包括 Docker Registry、Docker Hub 和 Quay.io，以及国内的 DaoCloud.io。企业可以用 Docker Registry 构建私有的 Registry。</p>
+<p>容器 OS 不同于 runtime，是专门制定出来运行容器的操作系统，与常规 OS 相比，容器 OS 通常体积更小，启动更快。因为是为容器定制的 OS，通常它们运行容器的效率会更高。目前已经存在不少容器 OS，CoreOS、atomic 和 ubuntu core 是其中的杰出代表。</p>
+<h3 id="3-容器平台技术"><a href="#3-容器平台技术" class="headerlink" title="3 容器平台技术"></a>3 容器平台技术</h3><hr>
+<p>随着容器部署的增多，容器也逐步过渡到容器云，容器平台技术就是让容器作为集群在分布式的环境中运行，包括了容器编排引擎、容器管理平台和基于容器的 PaaS。</p>
+<center><img src="/images/docker/docker_plat.jpg" alt=""></center>
+
+<p>容器编排引擎就是管理、调度容器在集群中运行，以保障资源的合理利用。有名的三大编排引擎为 docker swarm、kubernetes 和 mesos。其中，kubernetes 这两年脱颖而出，成为其中的佼佼者。</p>
+<p>容器管理平台是在编排引擎之上更为通用的一个平台，它抽象了编排引擎的底层实现细节，能够支持多种编排引擎，提供友好的接口给用户，极大方便了管理。Rancher 和 ContainerShip 是容器管理平台的典型代表。</p>
+<p>基于容器的 PaaS 基于容器的 PaaS 为微服务应用开发人员和公司提供了开发、部署和管理应用的平台，使用户不必关心底层基础设施而专注于应用的开发。Deis、Flynn 和 Dokku 都是开源容器 PaaS 的代表。</p>
+<h3 id="4-容器支持技术"><a href="#4-容器支持技术" class="headerlink" title="4 容器支持技术"></a>4 容器支持技术</h3><hr>
+<p>容器的出现又重新让一些古老的技术焕发第二春，如监控、网络、数据管理、日志等技术，由于容器技术的不同，需要制定相应的符合容器规范的技术框架，由此有了容器支持技术，用于支持容器提供更丰富能力的基础设施。</p>
+<center><img src="/images/docker/docker_zc.jpg" alt=""></center>
+
+<p>其中包括容器网络、服务发现、监控、数据管理、日志管理和安全性。</p>
+<p>容器网络主要用于解决容器与容器之间，容器与其他实体之间的连通性和隔离性。包括 Docker 原生的网络解决方案 docker network，以及第三方的网络解决方案，如  flannel、weave 和 calico。</p>
+<p>服务发现保证容器使用过程中资源动态变化的感知性，如当负载增加时，集群会自动创建新的容器；负载减小，多余的容器会被销毁。容器也会根据 host 的资源使用情况在不同 host 中迁移，容器的 IP 和端口也会随之发生变化。在这种动态环境下，就需要有一种机制来感知这种变化，服务发现就是做这样的工作。etcd、consul 和 zookeeper 是服务发现的典型解决方案。</p>
+<p>监控室保证容器健康运行，且让用户实时了解应用运行状态的工具，除了 Docker 原生的监控工具 docker ps/top/stats 之外，也有第三方的监控方案，如 sysdig、cAdvisor/Heapster 和 Weave Scope 。</p>
+<p>数据管理保证容器在不同的 host 之间迁移时数据的动态迁移。有名的方案是 Flocker。</p>
+<p>日志管理为问题排查和事件管理提供了重要依据。docker logs 是 Docker 原生的日志工具。而 logspout 对日志提供了路由功能，它可以收集不同容器的日志并转发给其他工具进行后处理。</p>
+<p>容器安全性保证容器的安全，不被攻击，OpenSCAP 能够对容器镜像进行扫描，发现潜在的漏洞。</p>
+<p>PS：本文借鉴了知名云计算博主 CloudMan 的博文：<br><a href="http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢</a> CloudMan 呈现这么好的内容。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/02/28/tech/容器进化史/">
+              
+                  容器进化史
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-28
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>和虚拟机一样，容器技术也是一种资源隔离的虚拟化技术。我们追溯它的历史，会发现它的技术雏形早已有之。</p>
+<h3 id="1-容器简史"><a href="#1-容器简史" class="headerlink" title="1 容器简史"></a>1 容器简史</h3><hr>
+<p>容器概念始于 1979 年提出的 UNIX chroot，它是一个 UNIX 操作系统的系统调用，将一个进程及其子进程的根目录改变到文件系统中的一个新位置，让这些进程只能访问到这个新的位置，从而达到了进程隔离的目的。</p>
+<center><img src="/imagesss/docker/docker_his.jpg" alt=""></center>
+
+<p>2000 年的时候 FreeBSD 开发了一个类似于 chroot 的容器技术 Jails，这是最早期，也是功能最多的容器技术。Jails 英译过来是监狱的意思，这个“监狱”（用沙盒更为准确）包含了文件系统、用户、网络、进程等的隔离。</p>
+<p>2001 Linux 也发布自己的容器技术 Linux VServer，2004 Solaris 也发布了 Solaris Containers，两者都将资源进行划分，形成一个个 zones，又叫做虚拟服务器。</p>
+<p>2005 年推出 OpenVZ，它通过对 Linux 内核进行补丁来提供虚拟化的支持，每个 OpenVZ 容器完整支持了文件系统、用户及用户组、进程、网络、设备和 IPC 对象的隔离。</p>
+<p>2007 年 Google 实现了 Control Groups( cgroups )，并加入到 Linux 内核中，这是划时代的，为后期容器的资源配额提供了技术保障。</p>
+<p>2008 年基于 cgroups 和 linux namespace 推出了第一个最为完善的 Linux 容器 LXC。</p>
+<p>2013 年推出到现在为止最为流行和使用最广泛的容器 Docker，相比其他早期的容器技术，Docker 引入了一整套容器管理的生态系统，包括分层的镜像模型，容器注册库，友好的 Rest API 等。</p>
+<p>2014 年 CoreOS 也推出了一个类似于 Docker 的容器 Rocket，CoreOS 是一个更加轻量级的 Linux 操作系统，在安全性上比 Docker 更严格。</p>
+<p>2016 年微软也在 Windows 上提供了容器的支持，Docker 可以以原生方式运行在 Windows 上，而不是需要使用 Linux 虚拟机。</p>
+<p>基本上到这个时间节点，容器技术就已经很成熟了，再往后就是容器云的发展，由此也衍生出多种容器云的平台管理技术，其中以 kubernetes 最为出众，有了这样一些细粒度的容器集群管理技术，也为微服务的发展奠定了基石。因此，对于未来来说，应用的微服务化是一个较大的趋势。</p>
+<h3 id="2-为什么需要容器"><a href="#2-为什么需要容器" class="headerlink" title="2 为什么需要容器"></a>2 为什么需要容器</h3><hr>
+<p>其一，这是技术演进的一种创新结果，其二，这是人们追求高效生产活动的一种工具。</p>
+<p>随着软件开发的发展，相比于早期的集中式应用部署方式，现在的应用基本都是采用分布式的部署方式，一个应用可能包含多种服务或多个模块，因此多种服务可能部署在多种环境中，如虚拟服务器、公有云、私有云等，由于多种服务之间存在一些依赖关系，所以可能存在应用在运行过程中的动态迁移问题，那这时如何保证不同服务在不同环境中都能平滑的适配，不需要根据环境的不同而去进行相应的定制，就显得尤为重要。</p>
+<center><img src="/imagesss/docker/docker_con.jpg" alt=""></center>
+
+<p>就像货物的运输问题一样，如何将不同的货物放在不同的运输机器上，减少因货物的不同而频繁进行货物的装载和卸载，浪费大量的人力物力。</p>
+<p>为此人们发明了集装箱，将货物根据尺寸形状等的不同，用不同规格的集装箱装载，然后再放到运输机上运输，由于集装箱密封，只有货物到达目的地才需拆封，在运输过程能够在不同运输机上平滑过渡，避免了资源的浪费。</p>
+<center><img src="/imagesss/docker/docker_con1.jpg" alt=""></center>
+
+<p>因此集装箱被誉为是运输业与世界贸易最重要的发明。</p>
+<p>Docker 容器的思想就是采用集装箱思想，为应用提供了一个基于容器的标准化运输系统。Docker 可以将任何应用及其依赖打包成一个轻量级、可移植、自包含的容器。容器可以运行在几乎所有的操作系统上。这样容器就可以跑在任何环境中，因此才有了那句话：</p>
+<blockquote>
+<p>Build Once, Run Anywhere</p>
+</blockquote>
+<p>这种集装箱的思想我们也能从 Docker 的 Logo 中看出来，这不就是一堆集装箱吗？</p>
+<center><img src="/imagesss/docker/docker.jpg" alt=""></center>
+
+
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/imagesss/weichat.png" alt=""></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
 </section>
 
 
@@ -883,7 +795,7 @@
                 </a>
             
             <p class="current">
-                10 / 23
+                10 / 18
             </p>
             
                 <a class="next" rel="next" href="/page/11/">
@@ -971,7 +883,7 @@
         
           <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
         
@@ -995,11 +907,11 @@
         
           <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(0)</div></a></li>
         
       </ul>
     </div>
@@ -1021,7 +933,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 14px; color: #999">雾计算</a>
     </div>
   </section>
 

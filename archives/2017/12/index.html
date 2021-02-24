@@ -348,165 +348,7 @@
       
         
       
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
     
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/30/tech/雾计算简史/">
-              
-                  雾计算简史
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-30
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/02-雾计算/">02 雾计算</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>在我看来，雾计算和云计算的本质是一样的——都是充分利用「闲置的资源」进行任务的处理。不同在于云计算利用的是网络核心的资源，而雾计算则利用网络边缘的资源。</p>
-<p>1961 年，人工智能之父麦卡锡在一次会议上提出了「效用计算」这个概念，第一次体现了这种共享资源的思想。当时计算设备的价格非常昂贵，远非普通企业和机构所能承受，所以就想到将分散的闲置资源整合起来，共享给多个用户使用。类似的概念还有「网络计算」、「分布式计算」、「弹性计算」等，这些概念都是经由学术界提出，并逐步成为支撑工程应用发展的基础理论。</p>
-<center><img src="/images/cloud/mkx.jpg" alt=""></center>
-
-<p>工业界虽说比学术界要落后，但工业界做着让所有人都兴奋的事——让概念标准化，真正让技术实现落地。上面这些概念让人晕乎，虽有差异，但本质一致，所以工业界就统一用「云计算」一词来囊括。</p>
-<p>2006 年 8 月 9 日，Google 首席执行官埃里克·施密特在搜索引擎大会(SES San Jose 2006)首次提出云计算(Cloud Computing)的概念。从此云计算的发展进入了井喷时代。</p>
-<center><img src="/images/cloud/smt.jpg" alt=""></center>
-
-<p>2007 年初，Amazon 推出弹性计算云 EC2 服务；2007 年 11 月，IBM 发布业界首个云计算商业解决方案「蓝云」计划；2008 年 4 月，Google APP Engine 发布；2008 年 Gartner 发布报告，认为云计算代表了今后计算的方向；2009 年 1 月，阿里巴巴在南京建立首个“电子商务云计算中心”；2010 年 1 月，微软正式发布 Microsoft Azure 云平台服务；2010 年 7 月，美国国家航空航天局和包括 Rackspace、AMD、Intel、戴尔等支持厂商共同宣布开放「OpenStack」项目源代码……</p>
-<p>时至今日，云计算已经进入稳定发展时期，面临的是新的问题。</p>
-<p>随着移动设备、嵌入式设备和传感设备等智能设备的不断创新和普及，进入了「万物互联网时代（IoT）」，全球的移动数据呈现出疯狂式的增长。</p>
-<p>据 Cisco 2016 年做的一个关于移动数据预测报告显示，全球的移动数据将会在 2016 年和 2021 年之间提高 18  倍，2021 年截止将会超过 49 EB。面对大量的数据和新型的应用程序对服务质量的严苛需求，云计算的问题也凸显出来。</p>
-<center><img src="/images/cloud/datagrow.jpg" alt=""></center>
-
-<p>首先，云计算中心位于远程的 Internet，对于那些对延迟敏感的应用程序（如视频流、在线游戏等），将会带来较长的传播时延（WAN），这对于用户体验来说是无法忍受的。其次，对移动场景支持不足，特别是对于高速移动的车载网络环境，司机对于路况、交通流等的感知都必须是快速且实时的。再次，无法满足地理位置分布相关的感知环境的实时要求，如大规模的传感网络，要求传感节点定时向其他节点更新自身的信息。再有，大量的设备接入云端，网络带宽就显得捉襟见肘。最后，云计算的安全性和隐私性不容乐观，在用户和云计算中心之间需要经过多跳的网络传输，越深的网络传输，数据的完整性和机密性就越难保证。</p>
-<p>以上问题的解决方案，自然是由学术界首先提出的。2009 年卡内基梅隆大学的沙特亚教授等人在其发表的论文[1]中提出「微云（Cloudlet）」的概念。论文指出微云是一种「和云有着同样的技术标准，但邻近用户」的新型计算模式。</p>
-<center><img src="/images/cloud/cloudlet.jpg" alt=""></center>
-
-<p>这里面蕴含着几层信息。第一，能够提供和云计算一样的服务，但所提供的资源有限，不如云计算能够提供无限的资源；第二，邻近用户，意味着用户请求的响应时延大大减少；第三，雾计算基础设施以分布式的方式部署在网络的边缘，满足高速移动场景和地理位置分布的场景需求，同时，减缓了网络核心的带宽负载；第四，安全性和隐私性较云计算得到较大保障。</p>
-<p>这是「雾计算」最初的雏形。之后，学术界又提出很多类似的解决方案，如「Fog Computing」、「Edge Computing」、「Follow me Cloud」、「Small-Cell Cloud」、「Virtual Cloud」、「FemtoCloud」等。</p>
-<p>这些概念其实本质都是一样的，都是在讲一件事，就是将「计算去中心化」——将云计算资源和服务从网络的核心转移到网络的边缘，以此来适应今天多种 IoT 应用的需求。和云计算的提出如出一辙，只不过引导这次工业变革的对象不再是 Google，而是 Cisco。</p>
-<center><img src="/images/cloud/fog_cisco.jpg" alt=""></center>
-
-<p>Cisco 在 Cisco Live 2014 会议上首度提出这个概念。Cisco 强调雾计算是依托于现今无处不在的 IoT 应用产生的一种新型计算模式。</p>
-<p>相比于云计算，雾计算是一种更加新进和广泛的计算模式，更具扩展性和可持续性。但是雾计算也不能完全取代云计算，必须依托于云计算才能更好地发挥其作用，因此它们的关系是相辅相成，相互联系的。</p>
-<p>在会上，Cisco 同时发布了供开发者使用的开发套件 IOx。IOx 是 Cisco 对于雾计算模式的实现。它为开发者提供了一整套的开发框架（包括开发、分发、部署、监控和管理等多种组件）和计算平台，开发者能够将开发好的应用部署到网络的边界上（路由器、交换机等）进行处理。如下是 IOx 的架构图，更多信息请访问 IOx 开发者文档。</p>
-<center><img src="/images/cloud/fog_iox.jpg" alt=""></center>
-
-<p>雾计算是应现今「人工智能」、「物联网」一波红海而生的技术革新。业界多家企业和组织机构都开始在布局雾计算的生态体系，除了 Cisco、华为这些通讯产商，还有很多云计算、物联网的企业也加入进来。</p>
-<p>在中国，最早布局雾计算架构的是成立于2005 年的全球领先的物联网云服务商「智云」。他们在 2016 年初即发布了主打 IoT 雾计算的机智云 4.0，整合了雾计算、物联网大数据和机器学习应用能力，形成了一体化的解决方案。</p>
-<p>此外，2015 年 11 月 19 日，Cisco 联合 ARM、Dell、Intel、Microsoft 和普林斯顿大学成立了「开放雾联盟（OpenFog）」，旨在制定雾计算相关的技术标准和推动行业的技术变革。</p>
-<p>由此可见，雾计算将会成为继云计算之后的又一波技术浪潮。</p>
-<p>PS：最近听一些朋友在谈「雾计算」，正好我研究生期间研究过一段时间这玩意，于是有一种不吐不快之感，遂拿出来跟大家分享了。如果你觉得对你有一点帮助，点赞，转发，不胜感激，或者有什么想跟我探讨的，欢迎留言。</p>
-<p><strong>Reference:</strong> </p>
-<hr>
-<p>[1] The Case for VM-Based Cloudlets in Mobile Computing<br>[2] Fog Computing: A Taxonomy, Survey and future direction<br>[3] Edge-centric Computing: Vision and Challenges<br>[4] Edge-Computing: Challenges to support edge-as-a-service<br>[5] A virtual Cloud computing provider for mobile devices<br>[6] Femto Clouds: Leveraging mobile devices to provide Cloud service at the edge<br>[7] Follow me Cloud: interworking federated Clouds and distributed mobile networks</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
-                
-                    <a href="/tags/边缘计算/"><i class="fas fa-hashtag fa-fw"></i>边缘计算</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
     
       
         <div class="post-wrapper">
@@ -1056,7 +898,7 @@
         
           <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(0)</div></a></li>
         
           <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
         
@@ -1080,11 +922,11 @@
         
           <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(0)</div></a></li>
         
-          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(0)</div></a></li>
         
       </ul>
     </div>
@@ -1106,7 +948,7 @@
 </header>
 
     <div class="content material">
-      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 14px; color: #999">雾计算</a>
     </div>
   </section>
 
