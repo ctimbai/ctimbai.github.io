@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>长亭的网志空间</title>
+  <title>猿大白</title>
   
   
-  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈">
   
 
-  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+  <link rel="alternate" href="/atom.xml" title="猿大白">
 
   <meta name="HandheldFriendly" content="True">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,7 +76,7 @@
 		<div class="nav-main container container--flex">
       <a class="logo flat-box" href="/">
         
-          长亭的网志空间
+          猿大白
         
       </a>
 			<div class="menu">
@@ -178,9 +178,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/11/16/tech/初识云计算/">
+          <a href="/2018/06/01/tech/一文掌握_Linux_性能分析之网络篇/">
               
-                  初识云计算
+                  一文掌握 Linux 性能分析之网络篇
               
           </a>
       </h2>
@@ -188,7 +188,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-16
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-06-01
       </time>
     
 
@@ -196,7 +196,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -210,165 +210,173 @@
 </section>
 
     <section class="article typo">
-        <p><img src="/images/cloud/2.png" alt=""></p>
-<blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<h3 id="云计算的发展历史"><a href="#云计算的发展历史" class="headerlink" title="云计算的发展历史"></a>云计算的发展历史</h3><hr>
-<p>我们主要从用户对云计算的认知角度来谈云计算的发展史，至于它从提出到发扬光大的那些大事件，网上搜下就知道了，而且我觉得去谈那些发展事件意义也不大，
-        
-            <div class="readmore">
-                <a href="/2017/11/16/tech/初识云计算/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
+<p>这是 Linux 性能分析系列的第四篇。</p>
+<p>比较宽泛地讲，网络方向的性能分析既包括主机测的网络配置查看、监控，又包括网络链路上的包转发时延、吞吐量、带宽等指标分析。包括但不限于以下分析工具：</p>
+<ul>
+<li>ping：测试网络连通性</li>
+<li>ifconfig：接口配置</li>
+<li>ip：网络接口统计信息</li>
+<li>netsat：多种网络栈和接口统计信息</li>
+<li>ifstat：接口网络流量监控工具</li>
+<li>netcat：快速构建网络连接</li>
+<li>tcpdump：抓包工具</li>
+<li>sar：统计信息历史</li>
+<li>traceroute：测试网络路由</li>
+<li>pathchar：确定网络路径特征</li>
+<li>dtrace：TCP/IP 栈跟踪</li>
+<li>iperf / netperf / netserver：网络性能测试工具</li>
+<li>perf ：性能分析神器</li>
+</ul>
+<p>本文先来看前面 7 个。</p>
+<h4 id="ping"><a href="#ping" class="headerlink" title="ping"></a><strong>ping</strong></h4><hr>
+<p>ping 发送 ICMP echo 数据包来探测网络的连通性，除了能直观地看出网络的连通状况外，还能获得本次连接的往返时间（RTT 时间），丢包情况，以及访问的域名所对应的 IP 地址（使用 DNS 域名解析），比如：</p>
+<center><img src="/images/linux/ping.jpg" alt=""></center>
 
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-            </div>
-        
-    </p></section>
-</article>
+<p>我们 <code>ping baidu.com，-c</code>参数指定发包数。可以看到，解析到了 baidu 的一台服务器 IP 地址为 220.181.112.244。RTT 时间的最小、平均、最大和算术平均差分别是 40.732ms、40.762ms、40.791ms 和 0.248。</p>
+<h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a><strong>ifconfig</strong></h3><hr>
+<p>ifconfig 命令被用于配置和显示 Linux 内核中网络接口的统计信息。通过这些统计信息，我们也能够进行一定的网络性能调优。</p>
+<p><strong>1）ifconfig 显示网络接口配置信息</strong></p>
+<center><img src="/images/linux/ifconfig.jpg" alt=""></center>
 
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/11/15/tech/云计算术语扫盲/">
-              
-                  云计算术语扫盲
-              
-          </a>
-      </h2>
-    
+<p>其中，RX/TX packets 是对接收/发送数据包的情况统计，包括错误的包，丢掉多少包等。RX/TX bytes 是接收/发送数据字节数统计。其余还有很多参数，就不一一述说了，性能调优时可以重点关注 MTU（最大传输单元） 和 txqueuelen（发送队列长度），比如可以用下面的命令来对这两个参数进行微调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 txqueuelen 2000</span><br><span class="line">ifconfig eth0 mtu 1500</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）网络接口地址配置</strong></p>
+<p>ifconfig 还常用来配置网口的地址，比如：<br>为网卡配置和删除 IPv6 地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 add 33ffe:3240:800:1005::2/64    #为网卡eth0配置IPv6地址</span><br><span class="line">ifconfig eth0 del 33ffe:3240:800:1005::2/64    #为网卡eth0删除IPv6地址</span><br></pre></td></tr></table></figure></p>
+<p>修改MAC地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 hw ether 00:AA:BB:CC:dd:EE</span><br></pre></td></tr></table></figure></p>
+<p>配置IP地址：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.2.10</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0</span><br><span class="line">ifconfig eth0 192.168.2.10 netmask 255.255.255.0 broadcast 192.168.2.255</span><br></pre></td></tr></table></figure></p>
+<h4 id="IP"><a href="#IP" class="headerlink" title="IP"></a><strong>IP</strong></h4><hr>
+<p>ip 命令用来显示或设置 Linux 主机的网络接口、路由、网络设备、策略路由和隧道等信息，是 Linux 下功能强大的网络配置工具，旨在替代 ifconfig 命令，如下显示 IP 命令的强大之处，功能涵盖到 ifconfig、netstat、route 三个命令。</p>
+<center><img src="/images/linux/iptool.jpg" alt=""></center>
 
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-11-15
-      </time>
-    
+<h4 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a><strong>netstat</strong></h4><hr>
+<p>netstat 可以查看整个 Linux 系统关于网络的情况，是一个集多钟网络工具于一身的组合工具。</p>
+<p>常用的选项包括以下几个：</p>
+<ul>
+<li>默认：列出连接的套接字</li>
+<li>-a：列出所有套接字的信息</li>
+<li>-s：各种网络协议栈统计信息</li>
+<li>-i：网络接口信息</li>
+<li>-r：列出路由表</li>
+<li>-l：仅列出有在 Listen 的服务状态</li>
+<li>-p：显示 PID 和进程名称</li>
+</ul>
+<p>各参数组合使用实例如下：</p>
+<ul>
+<li>netstat -at 列出所有 TCP 端口</li>
+<li>netstat -au 列出所有 UDP 端口</li>
+<li>netstat -lt 列出所有监听 TCP 端口的 socket</li>
+<li>netstat -lu 列出所有监听 UDP 端口的 socket</li>
+<li>netstat -lx 列出所有监听 UNIX 端口的 socket</li>
+<li>netstat -ap | grep ssh 找出程序运行的端口</li>
+<li>netstat -an | grep ‘:80’ 找出运行在指定端口的进程</li>
+</ul>
+<p><strong>1）netstat 默认显示连接的套接字数据</strong></p>
+<center><img src="/images/linux/netstat.jpg" alt=""></center>
 
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
-    </div>
+<p>整体上来看，输出结果包括两个部分：</p>
+<ul>
+<li>Active Internet connections ：有源 TCP 连接，其中 Recv-Q 和 Send-Q 指的是接收队列和发送队列，这些数字一般都是 0，如果不是，说明请求包和回包正在队列中堆积。</li>
+<li>Active UNIX domain sockets：有源 UNIX 域套接口，其中 proto 显示连接使用的协议，RefCnt 表示连接到本套接口上的进程号，Types 是套接口的类型，State 是套接口当前的状态，Path 是连接到套接口的进程使用的路径名。</li>
+</ul>
+<p><strong>2）netstat -i 显示网络接口信息</strong></p>
+<center><img src="/images/linux/netstati.png" alt=""></center>
 
+<p>接口信息包括网络接口名称（Iface）、MTU，以及一系列接收（RX-）和传输（TX-）的指标。其中 OK 表示传输成功的包，ERR 是错误包，DRP 是丢包，OVR 是超限包。</p>
+<p>这些参数有助于我们对网络收包情况进行分析，从而判断瓶颈所在。</p>
+<p><strong>3）netstat -s 显示所有网络协议栈的信息</strong></p>
+<center><img src="/images/linux/netstats.jpg" alt=""></center>
 
-    
+<p>可以看到，这条命令能够显示每个协议详细的信息，这有助于我们针对协议栈进行更细粒度的分析。</p>
+<p><strong>4）netstat -r 显示路由表信息</strong></p>
+<center><img src="/images/linux/netstat.jpg" alt=""></center>
 
-    
+<p>这条命令能够看到主机路由表的一个情况。当然查路由我们也可以用 ip route 和 route 命令，这个命令显示的信息会更详细一些。</p>
+<h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a><strong>ifstat</strong></h4><hr>
+<p>ifstat 主要用来监测主机网口的网络流量，常用的选项包括：</p>
+<ul>
+<li>-a：监测主机所有网口</li>
+<li>-i：指定要监测的网口</li>
+<li>-t：在每行输出信息前加上时间戳</li>
+<li>-b：以 Kbit/s 显示流量数据，而不是默认的 KB/s</li>
+<li>delay：采样间隔（单位是 s），即每隔 delay 的时间输出一次统计信息</li>
+<li>count：采样次数，即共输出 count 次统计信息</li>
+</ul>
+<p>比如，通过以下命令统计主机所有网口某一段时间内的流量数据：</p>
+<center><img src="/images/linux/ifstat.png" alt=""></center>
 
-    
+<p>可以看出，分别统计了三个网口的流量数据，前面输出的时间戳，有助于我们统计一段时间内各网口总的输入、输出流量。</p>
+<h4 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a><strong>netcat</strong></h4><hr>
+<p>netcat，简称 nc，命令简单，但功能强大，在排查网络故障时非常有用，因此它也在众多网络工具中有着“瑞士军刀”的美誉。</p>
+<p>它主要被用来构建网络连接。可以以客户端和服务端的方式运行，当以服务端方式运行时，它负责监听某个端口并接受客户端的连接，因此可以用它来调试客户端程序；当以客户端方式运行时，它负责向服务端发起连接并收发数据，因此也可以用它来调试服务端程序，此时它有点像 Telnet 程序。</p>
+<p>常用的选项包括以下几种：</p>
+<ul>
+<li>-l：以服务端的方式运行，监听指定的端口。默认是以客户端的方式运行。</li>
+<li>-k：重复接受并处理某个端口上的所有连接，必须与 -l 一起使用。</li>
+<li>-n：使用 IP 地址表示主机，而不是主机名，使用数字表示端口号，而不是服务名称。</li>
+<li>-p：当以客户端运行时，指定端口号。</li>
+<li>-s：设置本地主机发出的数据包的 IP 地址。</li>
+<li>-C：将 CR 和 LF 两个字符作为结束符。</li>
+<li>-U：使用 UNIX 本地域套接字通信。</li>
+<li>-u：使用 UDP 协议通信，默认使用的是 TCP 协议。</li>
+<li>-w：如果 nc 客户端在指定的时间内未检测到任何输入，则退出。</li>
+<li>-X：当 nc 客户端与代理服务器通信时，该选项指定它们之间的通信协议，目前支持的代理协议包括 “4”（SOCKS v.4），“5”（SOCKS v.5）和 “connect” （HTTPs Proxy），默认使用 SOCKS v.5。</li>
+<li>-x：指定目标代理服务器的 IP 地址和端口号。</li>
+</ul>
+<p>下面举一个简单的例子，使用 nc 命令发送消息：<br>首先，启动服务端，用 nc -l 0.0.0.0 12345 监听端口 12345 上的所有连接。</p>
+<center><img src="/images/linux/netcat.png" alt=""></center>
 
-  </div>
-</section>
+<p>然后，启动客户端，用 nc -p 1234 127.0.0.1 12345 使用 1234 端口连接服务器 127.0.0.1::12345。</p>
+<center><img src="/images/linux/netcatc.png" alt=""></center>
 
-    <section class="article typo">
-        <p><img src="/images/cloud/1.png" alt=""></p>
+<p>接着就可以在两端互发数据了。这里只是抛砖引玉，更多例子大家可以多实践。</p>
+<h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a><strong>tcpdump</strong></h4><hr>
+<p>最后是 tcpdump，强大的网络抓包工具。虽然有 wireshark 这样更易使用的图形化抓包工具，但 tcpdump 仍然是网络排错的必备利器。</p>
+<p>tcpdump 选项很多，我就不一一列举了，大家可以看文章末尾的引用来进一步了解。这里列举几种 tcpdump 常用的用法。</p>
+<p><strong>1）捕获某主机的数据包</strong></p>
+<p>比如想要捕获主机 200.200.200.100 上所有收到和发出的所有数据包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.100</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）捕获多个主机的数据包</strong></p>
+<p>比如要捕获主机 200.200.200.1 和主机 200.200.200.2 或 200.200.200.3 的通信，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump host 200.200.200.1 and \(200.200.200.2 or \)</span><br></pre></td></tr></table></figure></p>
+<p>同样要捕获主机 200.200.200.1 除了和主机 200.200.200.2 之外所有主机通信的 IP 包。使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump ip host 200.200.200.1 and ! 200.200.200.2</span><br></pre></td></tr></table></figure></p>
+<p><strong>3）捕获某主机接收或发出的某种协议类型的包</strong><br>比如要捕获主机 200.200.200.1 接收或发出的 Telnet 包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump tcp port 23 host 200.200.200.1</span><br></pre></td></tr></table></figure></p>
+<p><strong>4）捕获某端口相关的数据包</strong></p>
+<p>比如捕获在端口 6666 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump port 6666</span><br></pre></td></tr></table></figure></p>
+<p><strong>5）捕获某网口的数据包</strong><br>比如捕获在网口 eth0 上通过的包，使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0</span><br></pre></td></tr></table></figure></p>
+<p>下面还是举个例子，抓取 TCP 三次握手的包：<br>首先，用 nc 启动一个服务端，监听端口 12345 上客户端的连接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v -l 0.0.0.0 12345</span><br></pre></td></tr></table></figure></p>
+<p>接着，启动 tcpdump 监听端口 12345 上通过的包：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i any &apos;port 12345&apos; -XX -nn -vv -S</span><br></pre></td></tr></table></figure></p>
+<p>然后，再用 nc 启动客户端，连接服务端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -v 127.0.0.1 12345</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们看到 tcpdump 抓到包如下：</p>
+<center><img src="/images/linux/tcpdump.jpg" alt=""></center>
+
+<p>怎么分析是 TCP 的三次握手，就当做小作业留给大家吧，其实看图就已经很明显了。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
+<p>本文总结了几种初级的网络工具，一般的网络性能分析，通过组合以上几种工具，基本都能应付，但对于复杂的问题，以上工具可能就无能为力了。更多高阶的工具将在下文送上，敬请期待。</p>
+<p>Reference：</p>
+<ol>
+<li>ip 和 ipconfig：<br><a href="https://blog.csdn.net/freeking101/article/details/68939059" target="_blank" rel="noopener">https://blog.csdn.net/freeking101/article/details/68939059</a></li>
+<li>性能之巅：Linux网络性能分析工具<br><a href="http://www.infoq.com/cn/articles/linux-networking-performance-analytics" target="_blank" rel="noopener">http://www.infoq.com/cn/articles/linux-networking-performance-analytics</a></li>
+<li>抓包工具tcpdump用法说明<br><a href="https://www.cnblogs.com/f-ck-need-u/p/7064286.html" target="_blank" rel="noopener">https://www.cnblogs.com/f-ck-need-u/p/7064286.html</a></li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
 <blockquote>
-<p>文章首发我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
 </blockquote>
-<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><hr>
-<p>在云计算中，资源和服务本质上是一样的，服务可能更泛一些，资源一般特指 CPU（计算）、Mem（存储）和 IO （网络）三大资源，
-        
-            <div class="readmore">
-                <a href="/2017/11/15/tech/云计算术语扫盲/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
                 
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
                 
-            </div>
-        
-    </p></section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/05/20/life/架构小觑——来自《大型网站技术架构》/">
-              
-                  架构小觑——来自《大型网站技术架构》
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-05-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/读书/">读书</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p><img src="/images/tech/大型网站核心架构要素.png" alt=""></p>
-<p>这本书出版比较早了，13年出的，在互联网发展超乎想象的今天，可能书中某些东西都不值一提了，但对于没有做过什么大型项目的小白来说，还是很有指导意义的，特别开阔眼界，对性能、可用性、扩展性、伸缩性、安全性等这些抽象的词会有更为具体且全面的理解。</p>
-        
-            <div class="readmore">
-                <a href="/2017/05/20/life/架构小觑——来自《大型网站技术架构》/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/读书/"><i class="fas fa-hashtag fa-fw"></i>读书</a>
-                
-                    <a href="/tags/架构/"><i class="fas fa-hashtag fa-fw"></i>架构</a>
-                
-                    <a href="/tags/阿里巴巴/"><i class="fas fa-hashtag fa-fw"></i>阿里巴巴</a>
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
                 
             </div>
         
@@ -387,9 +395,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/05/10/life/我锤这次真的惊艳到我了/">
+          <a href="/2018/05/24/tech/一文掌握Linux性能分析之IO篇/">
               
-                  我锤这次真的惊艳到我了！
+                  一文掌握 Linux 性能分析之 IO 篇
               
           </a>
       </h2>
@@ -397,7 +405,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-05-10
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-24
       </time>
     
 
@@ -405,7 +413,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -419,23 +427,102 @@
 </section>
 
     <section class="article typo">
-        <p><img src="/images/mobile/jgpro.jpg" alt=""></p>
-<p>不带半点的感情掺杂，作为一个理性的消费者，我仍然觉得「坚果pro」是目前为止我见过的最好的外观设计的手机，它满足了我对手机设计的所有期待：简洁，大方，硬朗，充满了质感，漂亮得不像实力派，感觉就像是为我量身定制的一样。</p>
-        
-            <div class="readmore">
-                <a href="/2017/05/10/life/我锤这次真的惊艳到我了/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>这是 Linux 性能分析系列的第三篇。</p>
+<p>IO 和 存储密切相关，存储可以概括为磁盘，内存，缓存，三者读写的性能差距非常大，磁盘读写是毫秒级的（一般 0.1-10ms），内存读写是微妙级的（一般 0.1-10us），cache 是纳秒级的（一般 1-10ns）。但这也是牺牲其他特性为代价的，速度快的，价格越贵，容量也越小。</p>
+<p>IO 性能这块，我们更多关注的是读写磁盘的性能。首先，先了解下磁盘的基本信息。</p>
+<h3 id="磁盘基本信息"><a href="#磁盘基本信息" class="headerlink" title="磁盘基本信息"></a>磁盘基本信息</h3><hr>
+<h4 id="fdisk"><a href="#fdisk" class="headerlink" title="fdisk"></a><strong>fdisk</strong></h4><p>查看磁盘信息，包括磁盘容量，扇区大小，IO 大小等信息，常用 <code>fdisk -l</code>查看：</p>
+<center><img src="/images/linux/fdisk.jpg" alt=""></center>
+
+<p>可以看到 /dev/ 下有一个 40G 的硬盘，一共 8K 多万个扇区，每个扇区 512字节，IO 大小也是 512 字节。</p>
+<h4 id="df"><a href="#df" class="headerlink" title="df"></a><strong>df</strong></h4><p>查看磁盘使用情况，通常看磁盘使用率：</p>
+<center><img src="/images/linux/df.jpg" alt=""></center>
+
+
+<h3 id="磁盘性能分析"><a href="#磁盘性能分析" class="headerlink" title="磁盘性能分析"></a>磁盘性能分析</h3><hr>
+<p>主要分析磁盘的读写效率（IOPS：每秒读写的次数；吞吐量：每秒读写的数据量），IO 繁忙程度，及 IO 访问对 CPU 的消耗等性能指标。</p>
+<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a><strong>vmstat</strong></h4><p>第一个较为常用的还是这个万能的 vmstat：</p>
+<center><img src="/images/linux/vmstatio.jpg" alt=""></center>
+
+<p>对于 IO，我们常关注三个部分：</p>
+<ul>
+<li>b 值：表示因为 IO 阻塞排队的任务数</li>
+<li>bi 和 bo 值：表示每秒读写磁盘的块数，bi（block in）是写磁盘，bo（block out）是读磁盘。</li>
+<li>wa 值：表示因为 IO 等待（wait）而消耗的 CPU 比例。</li>
+</ul>
+<p>一般这几个值偏大，都意味着系统 IO 的消耗较大，对于读请求较大的服务器，b、bo、wa 的值偏大，而写请求较大的服务器，b、bi、wa 的值偏大。</p>
+<h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a><strong>iostat</strong></h4><p>vmstat 虽然万能，但是它分析的东西有限，iostat 是专业分析 IO 性能的工具，可以方便查看 CPU、网卡、tty 设备、磁盘、CD-ROM 等等设备的信息，非常强大，总结下来，共有以下几种用法：</p>
+<p><strong>1）iostat -c 查看部分 CPU 使用情况：</strong></p>
+<center><img src="/images/linux/iostat.png" alt=""></center>
+
+<p>这里显示的是多个 CPU 的平均值，每个字段的含义我就不多解释了，我一般会重点关注 %iowait 和 %idle，分别表示 CPU 等待 IO 完成时间的百分比和 CPU 空闲时间百分比。</p>
+<p>如果 %iowait 较高，则表明磁盘存在 IO 瓶颈，如果 %idle 较高，则 CPU 比较空闲，如果两个值都比较高，则有可能 CPU 在等待分配内存，瓶颈在内存，此时应该加大内存，如果 %idle 较低，则此时瓶颈在 CPU，应该增加 CPU 资源。</p>
+<p><strong>2）iostat -d 查看磁盘使用情况，主要是显示 IOPS 和吞吐量信息</strong>（-k : 以 KB 为单位显示，-m：以 M 为单位显示）：</p>
+<center><img src="/images/linux/iostatd.png" alt=""></center>
+
+<p>其中，几个参数分别解释如下：</p>
+<ul>
+<li>tps：设备每秒的传输次数（transfers per second），也就是读写次数。</li>
+<li>kB_read/s 和 kB_wrtn/s：每秒读写磁盘的数据量。</li>
+<li>kB_read 和 kB_wrtn：读取磁盘的数据总量。</li>
+</ul>
+<p><strong>3）iostat -x 查看磁盘详细信息：</strong></p>
+<center><img src="/images/linux/iostatx.jpg" alt=""></center>
+
+<p>其中，几个参数解释如下；</p>
+<ul>
+<li>rrqm/s 和 wrqm/s：分别每秒进行合并的读操作数和写操作数，这是什么意思呢，合并就是说把多次 IO 请求合并成少量的几次，这样可以减小 IO 开销，buffer 存在的意义就是为了解决这个问题的。</li>
+<li>r/s 和 w/s：每秒磁盘读写的次数。这两个值相加就是 tps。</li>
+<li>rkB/s 和 wkB/s：每秒磁盘读写的数据量，这两个值和上面的 kB_read/s、kB_wrnt/s 是一样的。</li>
+<li>avgrq-sz：平均每次读写磁盘扇区的大小。</li>
+<li>avgqu-sze：平均 IO 队列长度。队列长度越短越好。</li>
+<li>await：平均每次磁盘读写的等待时间（ms）。</li>
+<li>svctm：平均每次磁盘读写的服务时间（ms）。</li>
+<li>%util：一秒钟有百分之多少的时间用于磁盘读写操作。</li>
+</ul>
+<p>以上这些参数太多了，我们并不需要每个都关注，可以重点关注两个：</p>
+<p><strong>a. %util：衡量 IO 的繁忙程度</strong></p>
+<p>这个值越大，说明产生的 IO 请求较多，IO 压力较大，我们可以结合 %idle 参数来看，如果 %idle &lt; 70% 就说明 IO 比较繁忙了。也可以结合 vmstat 的 b 参数（等待 IO 的进程数）和 wa 参数（IO 等待所占 CPU 时间百分比）来看，如果 wa &gt; 30% 也说明 IO 较为繁忙。</p>
+<p><strong>b. await：衡量 IO 的响应速度</strong></p>
+<p>通俗理解，await 就像我们去医院看病排队等待的时间，这个值和医生的服务速度（svctm）和你前面排队的人数（avgqu-size）有关。如果 svctm 和 await 接近，说明磁盘 IO 响应时间较快，排队较少，如果 await 远大于 svctm，说明此时队列太长，响应较慢，这时可以考虑换性能更好的磁盘或升级 CPU。</p>
+<p><strong>4）iostat 1 2 默认显示 cpu 和 吞吐量信息，1 定时 1s 显示，2 显示 2 条信息</strong></p>
+<center><img src="/images/linux/iostat12.jpg" alt=""></center>
+
+<h3 id="进程-IO-性能分析"><a href="#进程-IO-性能分析" class="headerlink" title="进程 IO 性能分析"></a>进程 IO 性能分析</h3><hr>
+<p>有了以上两个命令，基本上能对磁盘 IO 的信息有个全方位的了解了。但如果要确定具体哪个进程的 IO 开销较大，这就得借助另外的工具了。</p>
+<h4 id="iotop"><a href="#iotop" class="headerlink" title="iotop"></a><strong>iotop</strong></h4><p>这个命令类似 top，可以显示每个进程的 IO 情况，有了这个命令，就可以定位具体哪个进程的 IO 开销比较大了。</p>
+<center><img src="/images/linux/iostop.jpg" alt=""></center>
+
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>OK，最后还是总结下，fdisk -l 和 df 查看磁盘基本信息，iostat -d 查看磁盘 IOPS 和吞吐量，iostat -x 结合 vmstat 查看磁盘的繁忙程度和处理效率。</p>
+<p>下文我们将探讨网络方面的的性能分析问题。</p>
+<p>Reference：<br>1.linux 性能分析：<br><a href="http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html" target="_blank" rel="noopener">http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/iostat.html</a></p>
+<ol start="2">
+<li>linux 性能分析工具总结：<br><a href="http://rdc.hundsun.com/portal/article/731.html" target="_blank" rel="noopener">http://rdc.hundsun.com/portal/article/731.html</a></li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/老罗/"><i class="fas fa-hashtag fa-fw"></i>老罗</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
                 
-                    <a href="/tags/锤子科技/"><i class="fas fa-hashtag fa-fw"></i>锤子科技</a>
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
+                
+                    <a href="/tags/I-O/"><i class="fas fa-hashtag fa-fw"></i>I/O</a>
                 
             </div>
         
@@ -454,9 +541,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/04/27/life/《人民的名义》好在哪/">
+          <a href="/2018/05/18/tech/一文掌握Linux性能分析之内存篇/">
               
-                  《人民的名义》好在哪
+                  一文掌握 Linux 性能分析之内存篇
               
           </a>
       </h2>
@@ -464,7 +551,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-04-27
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-18
       </time>
     
 
@@ -472,7 +559,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -486,21 +573,97 @@
 </section>
 
     <section class="article typo">
-        <p><img src="/images/movie/rmdmy.png" alt=""></p>
-<p>紧跟中央反腐大潮，一众老戏骨加持，扎实的剧本，紧张的剧情，《人民的名义》猝不及防地在这个开春之际火得一塌糊涂。</p>
-        
-            <div class="readmore">
-                <a href="/2017/04/27/life/《人民的名义》好在哪/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<h3 id="内存信息"><a href="#内存信息" class="headerlink" title="内存信息"></a>内存信息</h3><hr>
+<p>同样在分析内存之前，我们得知到怎么查看系统内存信息，有以下几种方法。</p>
+<h4 id="proc-meminfo"><a href="#proc-meminfo" class="headerlink" title="/proc/meminfo"></a><strong>/proc/meminfo</strong></h4><p>这个文件记录着比较详细的内存配置信息，使用 cat /proc/meminfo 查看。</p>
+<center><img src="/images/linux/meminfo.jpg" alt=""></center>
+
+<p>我们比较关心的是下面几个字段：</p>
+<ul>
+<li>MemTotal：系统总内存，由于 BIOS、内核等会占用一些内存，所以这里和配置声称的内存会有一些出入，比如我这里配置有 2G，但其实只有 1.95G 可用。</li>
+<li>MemFree：系统空闲内存。</li>
+<li>MemAvailable：应用程序可用内存。有人会比较奇怪和 MemFree 的区别，可以从两个层面来区分，MemFree 是系统层面的，而 MemAvailable 是应用程序层面的。系统中有些内存虽然被使用了但是有一部分是可以回收的，比如 Buffers、Cached 及 Slab 这些内存，这部分可以回收的内存加上 MemFree 才是 MemAvailable 的内存值，这是内核通过特定算法算出来的，是一个估算值。</li>
+<li>Buffers：缓冲区内存</li>
+<li>Cached：缓存</li>
+</ul>
+<p>上面信息没有 MemUsed 的值，虽然可以用现有的值大致估算出来，但是我们想一步到位，就用下面的 free 命令。</p>
+<h4 id="free"><a href="#free" class="headerlink" title="free"></a><strong>free</strong></h4><p>这个命令估计用的人就多了（我一般都是用这个命令）。</p>
+<center><img src="/images/linux/free.png" alt=""></center>
+
+<p>这里存在一个计算公式：</p>
+<p><strong>MemTotal = used + free + buff/cache（单位 K）</strong></p>
+<p>几个字段和上面 /proc/meminfo 的字段是对应的。还有个 shared 字段，这个是多进程的共享内存空间，不常用。</p>
+<p>我们注意到 free 很小，buff/cache 却很大，这是 Linux 的内存设计决定的，Linux 的想法是内存闲着反正也是闲着，不如拿出来做系统缓存和缓冲区，提高数据读写的速率。但是当系统内存不足时，buff/cache 会让出部分来，非常灵活的操作。</p>
+<p>要看比较直观的值，可以加 -h 参数：</p>
+<center><img src="/images/linux/freeh.png" alt=""></center>
+
+<h4 id="dmidecode"><a href="#dmidecode" class="headerlink" title="dmidecode"></a><strong>dmidecode</strong></h4><p>同样可以使用这个命令，对于内存，可以使用 dmidecode -t memory 查看：</p>
+<center><img src="/images/linux/dmimem.jpg" alt=""></center>
+
+<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a><strong>vmstat</strong></h4><p>这个命令也是非常常用了。但对于内存，显示信息有限。它更多是用于进行系统全局分析和 CPU 分析。详细可以看 CPU 分析一文。</p>
+<center><img src="/images/linux/vmstatmem.jpg" alt=""></center>
+
+<h3 id="进程内存使用情况分析"><a href="#进程内存使用情况分析" class="headerlink" title="进程内存使用情况分析"></a>进程内存使用情况分析</h3><hr>
+<p>最常用的两个命令 ps 和 top，虽然很简单的两个命令，但还是有不少学问的。</p>
+<h4 id="top-htop"><a href="#top-htop" class="headerlink" title="top/htop"></a><strong>top/htop</strong></h4><p>top 命令运行时默认是按照 CPU 利用率进行排序的，如果要按照内存排序，该怎么操作呢？两种方法，一种直接按 “M”（相应的按 “P” 是 CPU），另外一种是在键入 top 之后，按下 “F”，然后选择要排序的字段，再按下 “s” 确认即可。</p>
+<center><img src="/images/linux/topmem.jpg" alt=""></center>
+
+<p>可以看到，我按照 “%MEM” 排序的结果。这个结果对于查看系统占用内存较多的哪些进程是比较有用的。</p>
+<p>然后这里我们会重点关注几个地方，上面横排区，和前面几个命令一样可以查看系统内存信息，中间标注的横条部分，和内存相关的有三个字段：VIRT、RES、SHR。</p>
+<ul>
+<li>VIRT：virtual memory usage，进程占用的虚拟内存大小。</li>
+<li>RES：resident memory usage，进程常驻内存大小，也就是实际内存占用情况，一般我们看进程占用了多少内存，就是看的这个值。</li>
+<li>SHR：shared memory，共享内存大小，不常用。</li>
+</ul>
+<h4 id="ps"><a href="#ps" class="headerlink" title="ps"></a><strong>ps</strong></h4><p>ps 同样可以查看进程占用内存情况，一般常用来查看 Top n 进程占用内存情况，如：</p>
+<p><code>ps aux --sort=rss | head -n</code>，表示按 rss 排序，取 Top n。</p>
+<center><img src="/images/linux/psmem.jpg" alt=""></center>
+
+<p>这里也关注三个字段：</p>
+<ul>
+<li>%MEM：进程使用物理内存所占百分比。</li>
+<li>VSZ：进程使用虚拟内存大小。</li>
+<li>RSS：进程使用物理内存大小，我们会重点关注这个值。</li>
+</ul>
+<h4 id="pmap"><a href="#pmap" class="headerlink" title="pmap"></a><strong>pmap</strong></h4><p>这个命令用于查看进程的内存映像信息，能够查看进程在哪些地方用了多少内存。常用 <code>pmap -x pid</code> 来查看。</p>
+<center><img src="/images/linux/pmap1.jpg" alt=""></center><br><center><img src="/images/linux/pmap2.jpg" alt=""></center>
+
+<p>可以看到该进程内存被哪些库、哪些文件所占用，据此我们定位程序对内存的使用。</p>
+<p>几个字段介绍一下：</p>
+<ul>
+<li>Address：占用内存的文件的内存起始地址。</li>
+<li>Kbytes：占用内存的字节数。</li>
+<li>RSS：实际占用内存大小。</li>
+<li>Dirty：脏页大小。</li>
+<li>Mapping：占用内存的文件，[anon] 为已分配的内存，[stack] 为程序堆栈</li>
+<li>最后的 total 为统计的总值。我们可以使用 pmap -x pid | tail -1 这样只显示最后一行，循环显示最后一行，达到监控该进程的目的。使用：<br><code>while true; do pmap -x pid | tail -1; sleep 1; done</code></li>
+</ul>
+<p>OK，以上工具都是 Linux 自带的，当然还有很多高阶的工具，比如 atop、memstat 等等，对于内存泄漏有一个比较常用的检测工具 Valgrind，这些等之后再找时间跟大家分享了。</p>
+<p>通过以上手段，我们基本上就能定位内存问题所在了，究竟是内存太小，还是进程占用内存太多，有哪些进程占用较多，这些进程又究竟有哪些地方占用较多，这些问题通过以上方法都能解决。</p>
+<p>最后简单总结下，以上不少工具可能有人会犯选择困难症了。对于我来说，查看系统内存用 free -h，分析进程内存占用用 ps 或者 top（首选 ps），深入分析选择 pmap，就酱。</p>
+<p>Reference：<br>1.Linux下查看内存使用情况的多种方法：<br><a href="http://stor.51cto.com/art/201804/570236.htm" target="_blank" rel="noopener">http://stor.51cto.com/art/201804/570236.htm</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/人民的名义/"><i class="fas fa-hashtag fa-fw"></i>人民的名义</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
+                
+                    <a href="/tags/内存/"><i class="fas fa-hashtag fa-fw"></i>内存</a>
                 
             </div>
         
@@ -519,9 +682,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/04/25/life/我眼中的国产电影Top10/">
+          <a href="/2018/05/10/tech/CPU拓扑：从SMP谈到NUMA（实践篇）/">
               
-                  我眼中的国产电影Top10
+                  CPU 拓扑：从 SMP 谈到 NUMA （理论篇）
               
           </a>
       </h2>
@@ -529,7 +692,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-04-25
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-10
       </time>
     
 
@@ -537,7 +700,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -551,21 +714,84 @@
 </section>
 
     <section class="article typo">
-        <p><img src="/images/movie/moviebg.jpg" alt=""></p>
-<p>国产电影给人的感觉一直都是不温不火，特别是商业化气息浓重的今天，大多数导演拍戏都不是从本心出发，而是特意去迎合市场，迎合观众的口味。所以，这两年烂片层出不穷，值得一提的好电影屈指可数。</p>
-        
-            <div class="readmore">
-                <a href="/2017/04/25/life/我眼中的国产电影Top10/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>本文的一些概念依赖于上一篇 “CPU 拓扑：从 SMP 谈到 NUMA （理论篇）”，如果你对这块还没有概念，建议看完那篇再来看，如果对这块有自己独到的见解，欢迎探讨。</p>
+<p>本文主要会侧重 NUMA 这块，我会通过自己的环境验证 NUMA  的几个概念，以便对 NUMA 的架构有个较深的印象。</p>
+<h3 id="NUMA-的几个概念：Node，Socket，Core，Thread"><a href="#NUMA-的几个概念：Node，Socket，Core，Thread" class="headerlink" title="NUMA 的几个概念：Node，Socket，Core，Thread"></a>NUMA 的几个概念：Node，Socket，Core，Thread</h3><hr>
+<p>NUMA 技术的主要思想是将 CPU 进行分组，Node 即是分组的抽象，一个 Node 表示一个分组，一个分组可以由多个 CPU 组成。每个 Node 都有自己的本地资源，包括内存、IO 等。每个 Node 之间通过互联模块（QPI）进行通信，因此每个 Node 除了可以访问自己的本地内存之外，还可以访问远端 Node 的内存，只不过性能会差一些，一般用 distance 这个抽象的概念来表示各个 Node 之间互访资源的开销。</p>
+<center><img src="/images/linux/numaarch1.jpg" alt=""></center>
+
+<p>Node 是一个逻辑上的概念，与之相对的 Socket，是物理上的概念。它表示一颗物理 CPU 的封装，是主板上的 CPU 插槽，所以，一般就称之为插槽（敲黑板，这 Y 不是套接字吗？emmm……）</p>
+<p>Core 就是 Socket 里独立的一组程序执行单元，称之为物理核。有了物理核，自然就有逻辑核，Thread 就是逻辑核。更专业的说法应该称之为超线程。</p>
+<p>超线程是为了进一步提高 CPU 的处理能力，Intel 提出的新型技术。它能够将一个 Core 从逻辑上划分成多个逻辑核（一般是两个），每个逻辑核有独立的寄存器和中断逻辑，但是一个 Core 上的多个逻辑核共享 Core 内的执行单元和 Cache，频繁调度可能会引起资源竞争，影响性能。超线程必须要 CPU 支持才能开启。</p>
+<center><img src="/images/linux/ht.jpg" alt=""></center>
+
+<p>综上所述，一个 NUMA Node 可以有一个或者多个 Socket，每个 Socket 也可以有一个（单核）或者多个（多核）Core，一个 Core 如果打开超线程，则会变成两个逻辑核（Logical Processor，简称 Processor）。</p>
+<p>所以，几个概念从大到小排序依次是：</p>
+<p><strong>Node &gt; Socket &gt; Core &gt; Processor</strong>。</p>
+<h3 id="验证-CPU-拓扑"><a href="#验证-CPU-拓扑" class="headerlink" title="验证 CPU 拓扑"></a>验证 CPU 拓扑</h3><hr>
+<p>了解了以上基本概念，下面在实际环境中查看这些概念并验证。</p>
+<h4 id="Node"><a href="#Node" class="headerlink" title="Node"></a><strong>Node</strong></h4><p>用 <code>numactl --hardware</code> 查看当前系统的 NUMA Node（numactl 是设定进程 NUMA 策略的命令行工具）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Linux # numactl --hardware</span><br><span class="line">available: 2 nodes (0-1)</span><br><span class="line">node 0 cpus: 0 1 2 3 4 5 12 13 14 15 16 17</span><br><span class="line">node 0 size: 49043 MB</span><br><span class="line">node 0 free: 20781 MB</span><br><span class="line">node 1 cpus: 6 7 8 9 10 11 18 19 20 21 22 23</span><br><span class="line">node 1 size: 49152 MB</span><br><span class="line">node 1 free: 31014 MB</span><br><span class="line">node distances:</span><br><span class="line">node   0   1 </span><br><span class="line">0:  10  21 </span><br><span class="line">1:  21  10</span><br></pre></td></tr></table></figure></p>
+<p>可以得出的信息有：1）系统的 Node 数为 2；2）每个 Node 包含的 Processor 数为 12；3）每个 Node 的总内存大小和空闲内存大小；4）每个 Node 之间的 distance。</p>
+<p>还可以查看 <code>/sys/devices/system/node/</code> 目录，这里记录着具体哪些 Node。</p>
+<h4 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a><strong>Socket</strong></h4><p><code>/proc/cpuinfo</code> 中记录着 Socket 信息，用 “physical id” 表示，可以用 <code>cat /proc/cpuinfo | grep &quot;physical id&quot;</code> 查看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Linux # cat /proc/cpuinfo | grep &quot;physical id&quot;</span><br><span class="line">physical id     : 0</span><br><span class="line">physical id     : 0</span><br><span class="line">physical id     : 0</span><br><span class="line">physical id     : 0</span><br><span class="line">physical id     : 1</span><br><span class="line">physical id     : 1</span><br><span class="line">physical id     : 1</span><br><span class="line">physical id     : 1</span><br></pre></td></tr></table></figure>
+<p>可以看到有 2 个 Socket，我们还可以查看以下这几种变种：</p>
+<p><strong>1）查看有几个 Socket</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Linux # grep &apos;physical id&apos; /proc/cpuinfo | awk -F: &apos;&#123;print $2 | &quot;sort -un&quot;&#125;&apos;</span><br><span class="line"></span><br><span class="line">0</span><br><span class="line">1</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux # grep &apos;physical id&apos; /proc/cpuinfo | awk -F: &apos;&#123;print $2 | &quot;sort -un&quot;&#125;&apos; | wc -l</span><br><span class="line"></span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p><strong>2）查看每个 Socket 有几个 Processor</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Linux # grep &apos;physical id&apos; /proc/cpuinfo | awk -F: &apos;&#123;print $2&#125;&apos; | sort | uniq -c</span><br><span class="line"></span><br><span class="line">12 0</span><br><span class="line">12 1</span><br></pre></td></tr></table></figure></p>
+<p><strong>3）查看每个 Socket 有哪几个 Processor</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux # awk -F: &apos;&#123; </span><br><span class="line">&gt;     if ($1 ~ /processor/) &#123;</span><br><span class="line">&gt;         gsub(/ /,&quot;&quot;,$2);</span><br><span class="line">&gt;         p_id=$2;</span><br><span class="line">&gt;     &#125; else if ($1 ~ /physical id/)&#123;</span><br><span class="line">&gt;         gsub(/ /,&quot;&quot;,$2);</span><br><span class="line">&gt;         s_id=$2;</span><br><span class="line">&gt;         arr[s_id]=arr[s_id] &quot; &quot; p_id</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt; &#125; </span><br><span class="line">&gt; </span><br><span class="line">&gt; END&#123;</span><br><span class="line">&gt;     for (i in arr) </span><br><span class="line">&gt;         print arr[i];</span><br><span class="line">&gt; &#125;&apos; /proc/cpuinfo | cut -c2-</span><br><span class="line"></span><br><span class="line">0 1 2 3 4 5 12 13 14 15 16 17</span><br><span class="line">6 7 8 9 10 11 18 19 20 21 22 23</span><br></pre></td></tr></table></figure></p>
+<h4 id="Core"><a href="#Core" class="headerlink" title="Core"></a><strong>Core</strong></h4><p>同样在 /proc/cpuinfo 中查看 Core 信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Linux # cat /proc/cpuinfo |grep &quot;core id&quot; | sort -u</span><br><span class="line">core id    : 0</span><br><span class="line">core id    : 1</span><br><span class="line">core id    : 2</span><br><span class="line">core id    : 3</span><br><span class="line">core id    : 4</span><br><span class="line">core id    : 5</span><br></pre></td></tr></table></figure>
+<p>上面的结果表明一个 Socket 有 5 个 Core。上面查到有 2 个 Socket，则一共就有 10 个 Core。</p>
+<h4 id="Processor"><a href="#Processor" class="headerlink" title="Processor"></a><strong>Processor</strong></h4><p>上面查看 Socket 信息时已经能够得到 Processor 的信息，总共有 24 个 Processor，不过也可以直接从 /proc/cpuinfo 中获取：</p>
+<p><strong>1）获取总的 Processor 数，查看 “processor” 字段：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux # cat /proc/cpuinfo | grep &quot;processor&quot; | wc -l</span><br><span class="line"></span><br><span class="line">24</span><br></pre></td></tr></table></figure></p>
+<p><strong>2）获取每个 Socket 的 Processor 数，查看 “siblings” 字段：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux # cat /proc/cpuinfo | grep &quot;siblings&quot; | sort -u</span><br><span class="line"></span><br><span class="line">12</span><br></pre></td></tr></table></figure></p>
+<h4 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a><strong>Cache</strong></h4><p>Cache 也一样通过 /proc/cpuinfo 查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">processor  : 0</span><br><span class="line"></span><br><span class="line">cache size  : 15360 KB</span><br><span class="line"></span><br><span class="line">cache_alignment  : 64</span><br></pre></td></tr></table></figure></p>
+<p>不过这里的值 cache size 比较粗略，我们并不知道这个值是哪一级的 Cache 值（L1？L2？L3？），这种方法不能确定，我们换一种方法。</p>
+<p>其实详细的 Cache 信息可以通过 <code>sysfs</code> 查看，如下：</p>
+<p>比如查看 cpu0 的 cache 情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux # ls /sys/devices/system/cpu/cpu0/cache/</span><br><span class="line"></span><br><span class="line">index0/  index1/  index2/  index3/</span><br></pre></td></tr></table></figure></p>
+<p>其中包含四个目录：<br>index0 存 L1 数据 Cache，index1 存 L1 指令 Cache，index2 存 L2 Cache，index3 存 L3 Cache。每个目录里面包含一堆描述 Cache 信息的文件。我们选 index0 具体看下：</p>
+<center><img src="/images/linux/cache_info.jpg" alt=""></center>
+
+<p>其中，shared_cpu_list 和 shared_cpu_map 表示意思是一样的，都表示该 cache 被哪几个 processor 共享。对 <strong>shared_cpu_map</strong> 具体解释一下。</p>
+<p>这个值表面上看是二进制，但其实是 16 进制，每个数字有 4 个bit，代表 4 个 cpu。比如上面的 001001 拆开后是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0000 0000 0001 0000 0000 0001，1 bit 处即对应 cpu 标号，即 cpu0 和 cpu12。</span><br></pre></td></tr></table></figure></p>
+<p>同样我们可以对其他 index 进行统计，可以得出：<br><strong>/proc/cpuinfo 中的 cache size 对应的 L3 Cache size</strong>。</p>
+<p>最后，综合以上所有信息我们可以绘制出一下的 CPU 拓扑图：</p>
+<center><img src="/images/linux/cpu_topo.jpg" alt=""></center>
+
+<p>我们发现以上命令用得不太顺手，要获取多个数据需要输入多条命令，能不能一条命令就搞定，当然是有的，lscpu 就可以做到，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Linux # lscpu </span><br><span class="line">Architecture:          x86_64</span><br><span class="line">CPU op-mode(s):        32-bit, 64-bit</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                24   //共有24个逻辑CPU（threads）</span><br><span class="line">On-line CPU(s) list:   0-23</span><br><span class="line">Thread(s) per core:    2   //每个 Core 有 2 个 Threads</span><br><span class="line">Core(s) per socket:    12  //每个 Socket 有 12 个 Threads</span><br><span class="line">Socket(s):             2  //共有 2 个 Sockets</span><br><span class="line">NUMA node(s):          2  //共有 2 个 Nodes</span><br><span class="line">Vendor ID:             GenuineIntel</span><br><span class="line">CPU family:            6</span><br><span class="line">Model:                 63</span><br><span class="line">Stepping:              2</span><br><span class="line">CPU MHz:               2401.000</span><br><span class="line">BogoMIPS:             4803.16</span><br><span class="line">Virtualization:        VT-x</span><br><span class="line">L1d cache:             32K  //L1 data cache 32k</span><br><span class="line">L1 cache:             32K   //L1 instruction cache 32k  </span><br><span class="line">L2 cache:              256K //L2 instruction cache 256k</span><br><span class="line">L3 cache:              15360K //L3 instruction cache 15M</span><br><span class="line">NUMA node0 CPU(s):     0-5,12-17</span><br><span class="line">NUMA node1 CPU(s):     6-11,18-23</span><br></pre></td></tr></table></figure></p>
+<p>当然了，没有完美的命令，lscpu 也只能显示一些宽泛的信息，只是相对比较全面而已，更详细的信息，比如 Core 和 Cache 信息就得借助 cpuinfo 和 sysfs 了。</p>
+<p>下面给大家提供一个脚本，能够比较直观的显示以上所有信息，有 shell 版的和 python 版的（不是我写的，文末附上了引用出处）。</p>
+<p>大家有需要可以回复 “CPU” 获取，我就不贴出来了，显示的结果大概就是长下面这个样子：</p>
+<p><strong>python 版：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">============================================================</span><br><span class="line">Core and Socket Information (as reported by &apos;/proc/cpuinfo&apos;)</span><br><span class="line">============================================================</span><br><span class="line"></span><br><span class="line">cores =  [0, 1, 2, 3, 4, 5]</span><br><span class="line"></span><br><span class="line">sockets =  [0, 1]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Socket 0        Socket 1        </span><br><span class="line"></span><br><span class="line">--------        --------        </span><br><span class="line"></span><br><span class="line">Core 0 [0, 12]         [6, 18]         </span><br><span class="line"></span><br><span class="line">Core 1 [1, 13]         [7, 19]         </span><br><span class="line"></span><br><span class="line">Core 2 [2, 14]         [8, 20]         </span><br><span class="line"></span><br><span class="line">Core 3 [3, 15]         [9, 21]         </span><br><span class="line"></span><br><span class="line">Core 4 [4, 16]         [10, 22]        </span><br><span class="line"></span><br><span class="line">Core 5 [5, 17]         [11, 23]</span><br></pre></td></tr></table></figure></p>
+<p>Reference：</p>
+<ol>
+<li>玩转 CPU 拓扑：<br><a href="http://blog.itpub.net/645199/viewspace-1421876/" target="_blank" rel="noopener">http://blog.itpub.net/645199/viewspace-1421876/</a></li>
+<li>NUMA 体系结构详解<br><a href="https://blog.csdn.net/ustc_dylan/article/details/45667227（shell" target="_blank" rel="noopener">https://blog.csdn.net/ustc_dylan/article/details/45667227（shell</a> 代码引用）</li>
+<li>dpdk 源代码（python 代码引用）</li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/电影推荐/"><i class="fas fa-hashtag fa-fw"></i>电影推荐</a>
+                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
+                
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
+                
+                    <a href="/tags/NUMA/"><i class="fas fa-hashtag fa-fw"></i>NUMA</a>
                 
             </div>
         
@@ -584,9 +810,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/04/24/life/双罗际会的《长谈》擦出了怎样的火花/">
+          <a href="/2018/05/03/tech/CPU拓扑从SMP谈到NUMA（理论篇）/">
               
-                  吐血整理双罗际会9个小时的《长谈》笔记
+                  CPU 拓扑：从 SMP 谈到 NUMA （理论篇）
               
           </a>
       </h2>
@@ -594,7 +820,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-04-24
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-05-03
       </time>
     
 
@@ -602,7 +828,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/读书/">读书</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -616,217 +842,84 @@
 </section>
 
     <section class="article typo">
-        <p><img src="/images/mobile/ct1.jpg" alt=""></p>
-<p>一位是当今科技圈拥有多重身份的科技新星罗永浩（老罗），一位是传媒界成功转型的创业先锋罗振宇（罗胖），当这样两位个性鲜明的中年人聚在一起时会擦出怎样的火花呢？<br>
-        
-            <div class="readmore">
-                <a href="/2017/04/24/life/双罗际会的《长谈》擦出了怎样的火花/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>随着计算机技术（特别是以芯片为主的硬件技术）的快速发展，CPU 架构逐步从以前的单核时代进阶到如今的多核时代，在多核时代里，多颗 CPU 核心构成了一个小型的“微观世界”。每颗 CPU 各司其职，并与其他 CPU 交互，共同支撑起了一个“物理世界”。从这个意义上来看，我们更愿意称这样的“微观世界”为 CPU 拓扑，就像一个物理网络一样，各个网络节点通过拓扑关系建立起连接来支撑起整个通信系统。</p>
+<center><img src="/images/linux/processor.jpg" alt=""></center>
+
+<h3 id="单核-or-多核-or-多-CPU-or-超线程"><a href="#单核-or-多核-or-多-CPU-or-超线程" class="headerlink" title="单核 or 多核 or 多 CPU or 超线程 ?"></a>单核 or 多核 or 多 CPU or 超线程 ?</h3><hr>
+<p>在单核时代，为了提升 CPU 的处理能力，普遍的做法是提高 CPU 的主频率，但一味地提高频率对于 CPU 的功耗也是影响很大的（CPU 的功耗正比于主频的三次方）。</p>
+<p>另外一种做法是提高 IPC （每个时钟周期内执行的指令条数），这种做法要么是提高指令的并行度，要么是增加核数。显然，后一种方法更具有可扩展性，这也是摩尔定律的必然性。</p>
+<p>CPU 的性能到底是如何体现的呢？为了弄清楚这个问题，我们结合单核 CPU 和多核 CPU 的结构来进一步剖析。</p>
+<p>首先，对于一个单核结构，即一颗物理 CPU 封装里只集成了一个物理核心，其主要组件可以简化为：CPU 寄存器集合、中断逻辑、执行单元和 Cache，如下图：</p>
+<center><img src="/images/linux/one_core.jpg" alt=""></center>
+
+<p>对于一个多线程程序，主要通过时间片轮转的方式来获得 CPU 的执行权，从内部来看，这其实是串行执行的，性能自然并不怎么高。</p>
+<p>其次，对于多核结构，则是在一颗物理 CPU 封装里集成了多个对等的物理核心，所谓对等，就是每个核心都有相同的内部结构。多个核心之间通过芯片内部总线来完成通信。随着 CPU 制造工艺的提升，每颗 CPU 封装中集成的物理核心也在不断提高。</p>
+<center><img src="/images/linux/multi_core.jpg" alt=""></center>
+
+<p>对于一个多线程程序，这种情况能够实现真正的并发，但线程在不同核之间切换会存在一定的开销，但由于走的是芯片内部总线，开销相对会比较小。</p>
+<p>除了上述两种结构，还有另外一种结构是多 CPU 结构，也就是多颗单独封装的 CPU 通过外部总线相连，构成的一个统一的计算平台。每个 CPU 都需要独立的电路支持，有自己的 Cache。它们之间的通信通过主板上的总线来完成。</p>
+<center><img src="/images/linux/multi_cpu.jpg" alt=""></center>
+
+<p>同样对于一个多线程程序，不同于上一种情况的是，线程间的切换走的是外部总线，延迟较大，开销自然较大，而且对于有共享的数据还会因 Cache 一致性带来一定的开销（关于 Cache 下一小节说明）。</p>
+<p>上述结构，一个 CPU 核心同一时间内只能执行一个线程，效率低下，为了提高 CPU 的利用率，CPU 芯片厂商又推出超线程（Hyper-Thread-ing）技术，即让一个物理核心同时执行多个线程，使整体性能得到提升。虽然物理上只有一个核心，但逻辑上被划分了多个逻辑核心，它们之间是完全隔离的。</p>
+<center><img src="/images/linux/ht.jpg" alt=""></center>
+
+<p>对于每个逻辑核心，拥有完整独立的寄存器集合和中断逻辑，共享执行单元和 Cache。由于是共享执行单元，所以对高 IPC 的应用，其性能提升有限。</p>
+<h3 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h3><hr>
+<p>Cache 是一种 SRAM （Static Random Access Memory，静态访问随机存储器）。出于成本和生产工艺考虑，一般将 Cache 分为三级。一级（L1）访问速度最快，但是容量最小，一般只有几十 KB；二级（L2）次之，一般有几百 KB 到几 MB 不等，三级（LLC，Last Level Cache）最慢，但是容量也最大，一般有几 MB 到几十 MB。</p>
+<p>一级 Cache 又分为数据 Cache 和指令 Cache，顾名思义，数据 Cache 用来存数据，指令 Cache 用来存指令。下图是一个简单的 Cache 系统逻辑示意图。</p>
+<center><img src="/images/linux/cache.jpg" alt=""></center>
+
+<p>在多核结构中，每个物理核心都拥有独立的一级 Cache 和二级 Cache，而三级 Cache 是所有核心共享。这种共享需要解决的一个问题是公平地为每个核心分配 Cache 大小，避免 Cache 命中率低的问题。</p>
+<p>对于现代计算机系统，说到 Cache，不得不提 TLB（Translation Look-aside Buffer） Cache。简单理解，如果说 Cache 存放的是内存中的内容，那么 TLB Cache 存放的是页表项。</p>
+<p>为什么页表项需要用 Cache 存，原因当然是快。你可能觉得用三级 Cache 存就行了，为什么还要专门上 TLB Cache。</p>
+<p>这里有两点考虑，一点是 TLB 采用基于内容的访问存储器 CAM，这种存储器能做到根据虚拟地址查询直接返回物理地址，效率极高，不需要像传统方式那样采用多级页表查询。另外一点是 Cache 的“淘汰”机制决定，Cache 会根据算法淘汰掉那些不常使用的内容，这对于页表这种需要频繁访问（每次程序寻址都要访问页表）的特性显然是矛盾的，所以就需要专门为页表提供一种特殊的 Cache，即 TLB Cache。</p>
+<h3 id="SMP-or-NUMA-or-MPP"><a href="#SMP-or-NUMA-or-MPP" class="headerlink" title="SMP or NUMA or MPP?"></a>SMP or NUMA or MPP?</h3><hr>
+<p>如果说前面咱们讨论的是 CPU 内部的“微观世界”，那么本节将跳出来，探讨一个系统级的“宏观世界”。</p>
+<p>首先是 SMP，对称多处理器系统，指的是一种多个 CPU 处理器共享资源的电脑硬件架构，其中，每个 CPU 没有主从之分，地位平等，它们共享相同的物理资源，包括总线、内存、IO、操作系统等。每个 CPU 访问内存所用时间都是相同的，因此这种系统也被称为一致存储访问结构（UMA，Uniform Memory Access）。</p>
+<center><img src="/images/linux/smp.jpg" alt=""></center>
+
+<p>这种系统由于共享资源，不可避免地要加锁来解决资源竞争的问题，带来一定的性能开销，另外，扩展能力还非常有限，实验证明，SMP 系统最好的情况是有 2-4 个 CPU，适用于 PC、笔记本电脑和小型服务器等。</p>
+<p>tips: 查看系统是否是 SMP 结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/devices/system/node/     # 如果只看到一个 node0 那就是 SMP 架构</span><br></pre></td></tr></table></figure></p>
+<p>为了应对大规模的系统要求（特别是云计算环境），就研制出了 NUMA 结构，即非一致存储访问结构。</p>
+<p>这种结构引入了 CPU 分组的概念，用 Node 来表示，一个 Node 可能包含多个物理 CPU 封装，从而包含多个 CPU 物理核心。每个 Node 有自己独立的资源，包括内存、IO 等。每个 Node 之间可以通过互联模块总线（QPI）进行通信，所以，也就意味着每个 Node 上的 CPU 都可以访问到整个系统中的所有内存，但很显然，访问远端 Node 的内存比访问本地内存要耗时很多，这也是 NUMA 架构的问题所在，我们在基于 NUMA 架构开发上层应用程序要尽可能避免跨 Node 内存访问。</p>
+<center><img src="/images/linux/numaarch.jpg" alt=""></center>
+
+<p>NUMA 架构在 SMP 架构的基础上通过分组的方式增强了可扩展性，但从性能上看，随着 CPU 数量的增加，并不能线性增加系统性能，原因就在于跨 Node 内存访问的问题。所以，一般 NUMA 架构最多支持几百个 CPU 就不错了。</p>
+<p>但对于很多大型计算密集型的系统来说，NUMA 显然有些吃力，所以，后来又出现了 MPP 架构，即海量并行处理架构。这种架构也有分组的概念，但和 NUMA 不同的是，它不存在异地内存访问的问题，每个分组内的 CPU 都有自己本地的内存、IO，并且不与其他 CPU 共享，是一种完全无共享的架构，因此它的扩展性最好，可以支持多达数千个 CPU 的量级。</p>
+<center><img src="/images/linux/mpp.jpg" alt=""></center>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
+<p>1、在芯片技术已然发展成熟的今天，性能低，上核不是问题，但上核就一定能提高性能吗，另外上核怎么很好地利用多核来完成自身进化，这些问题都值得深思。</p>
+<p>2、NUMA 架构算是多核时代应用较大的一种 CPU 架构，本文从核心谈到系统，让大家有个全面的了解，下文会特别针对 NUMA 架构做一些实验验证。</p>
+<p>Reference：<br>1.《深入浅出 DPDK》</p>
+<ol start="2">
+<li>SMP、NUMA、MPP体系结构介绍：<br><a href="https://www.cnblogs.com/yubo/archive/2010/04/23/1718810.html" target="_blank" rel="noopener">https://www.cnblogs.com/yubo/archive/2010/04/23/1718810.html</a></li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/老罗/"><i class="fas fa-hashtag fa-fw"></i>老罗</a>
+                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
                 
-                    <a href="/tags/罗胖/"><i class="fas fa-hashtag fa-fw"></i>罗胖</a>
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
                 
-                    <a href="/tags/锤子科技/"><i class="fas fa-hashtag fa-fw"></i>锤子科技</a>
-                
-            </div>
-        
-    </p></section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/04/21/life/在手机严重同质化的今天，小米6带来了什么惊喜/">
-              
-                  在手机严重同质化的今天，小米6带来了什么惊喜
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-04-21
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p><img src="/images/next/xiaomi6.jpg" alt=""></p>
-<p>在手机严重同质化的今天，仍然还有一些厂家在不断涌入这个市场，究其原因，我想现在的手机已经不在单纯是一台手机，而是一台连接多种智能产品的连接器，在未来可能就是一台AR，一台人工智能机器终端。大家不是为了现在能够分一杯羹，而是为了将来能有自己的生存空间。</p>
-        
-            <div class="readmore">
-                <a href="/2017/04/21/life/在手机严重同质化的今天，小米6带来了什么惊喜/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/手机/"><i class="fas fa-hashtag fa-fw"></i>手机</a>
-                
-                    <a href="/tags/小米/"><i class="fas fa-hashtag fa-fw"></i>小米</a>
+                    <a href="/tags/NUMA/"><i class="fas fa-hashtag fa-fw"></i>NUMA</a>
                 
             </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/03/20/life/《硅谷之谜》读书笔记/">
-              
-                  《硅谷之谜》给我的启示
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/读书/">读书</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>作为一个程序猿，我觉得读一些科普类的书是很有必要的，不但扩充了自己的眼界，还对这个世界更加充满了好奇。之前就拜读过吴军老师的《浪潮之巅》，第一次了解了世界知名大公司的兴衰史，读起来让人热血沸腾。当知道了曾经那些叱咤风云的大公司如今已呈衰败之势，或倒闭，或被收购，无不让人唏嘘不已。</p>
-<p>《硅谷之谜》是吴军老师对科技，对文明深度探讨的另一大作，系列的书还有《大学之路》、《文明之光》以及今年新出的《智能时代》，《智能时代》已入手，准备之后拜读，其余两本也会跟上。现在恨不得没日没夜抱着啃，但是急不得，好东西是需要慢慢品味的。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/20/life/《硅谷之谜》读书笔记/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/读书/"><i class="fas fa-hashtag fa-fw"></i>读书</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/03/15/life/终于还是鼓起勇气看了《霸王别姬》/">
-              
-                  终于还是鼓起勇气看了《霸王别姬》
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-15
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>我是一个感性胜过理性的人，虽然大学一直读的理科专业。对于那些悲情虐心的电影，我一般是没有勇气看的，因为很容易被感动，很多时候看完之后心情总是久久不能平静，很难继续做事情。但好电影还是忍不住想看，觉得不能压抑自己的情绪，看得多了，自然也就免疫了。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/15/life/终于还是鼓起勇气看了《霸王别姬》/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
         
     </section>
 </article>
@@ -848,7 +941,7 @@
                 </a>
             
             <p class="current">
-                8 / 12
+                8 / 23
             </p>
             
                 <a class="next" rel="next" href="/page/9/">
@@ -885,7 +978,7 @@
 </header>
 
   <div class="content material">
-    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+    <p>你好，这里是<a href="https://ctimbai.github.io">猿大白</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
 
   </div>
 </section>

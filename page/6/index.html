@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>长亭的网志空间</title>
+  <title>猿大白</title>
   
   
-  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈">
   
 
-  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+  <link rel="alternate" href="/atom.xml" title="猿大白">
 
   <meta name="HandheldFriendly" content="True">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,7 +76,7 @@
 		<div class="nav-main container container--flex">
       <a class="logo flat-box" href="/">
         
-          长亭的网志空间
+          猿大白
         
       </a>
 			<div class="menu">
@@ -178,9 +178,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/03/02/tech/容器生态系统/">
+          <a href="/2018/09/07/tech/Kubernetes_笔记_05_使用产品前请先阅读说明书/">
               
-                  容器生态系统
+                  Kubernetes 笔记 05 使用产品前请先阅读说明书
               
           </a>
       </h2>
@@ -188,7 +188,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-03-02
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-07
       </time>
     
 
@@ -196,7 +196,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
     </div>
 
 
@@ -213,263 +213,27 @@
         <blockquote>
 <p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<p>说起生态，不禁让人想起贾跃亭的乐视，想当初我多次被它的生态布局给震撼到，一度相信它将要超越百度，坐拥互联网三大江山的宝座，但没过时日，各种劲爆的新闻就把它推到了风口浪尖上，现在想想也是让人唏嘘，但不管怎么说，愿它好吧，毕竟这种敢想敢做的精神还是值得敬佩的。</p>
-<p>回到技术这个领域，不得不说，技术更新迭代的速度快得让人应接不暇，就容器技术这个领域来说，从 Docker 面世短短的 2-3 年时间里，就衍生出多种与之相关的技术框架，由此形成了一个小小的生态系统。</p>
-<center><img src="/images/docker/docker_st.jpg" alt=""></center>
-
-<p>一谈到容器，大家都会想到 Docker，本文也主要从 Docker 角度来讲容器生态系统。</p>
-<h3 id="1-容器基础技术"><a href="#1-容器基础技术" class="headerlink" title="1 容器基础技术"></a>1 容器基础技术</h3><hr>
-<p>Docker 的本质是利用 Linux 内核的 namespace 和 cgroups 机制，构建出一个隔离的进程（容器进程）。所以，容器的基础技术主要涉及到 Linux 内核的 namespace 和 cgroups 技术。</p>
-<h3 id="2-容器核心技术"><a href="#2-容器核心技术" class="headerlink" title="2 容器核心技术"></a>2 容器核心技术</h3><hr>
-<p>容器核心技术保证容器能够在主机上运行起来，包括容器规范、容器 runtime、容器管理工具、容器定义工具、Registry 和容器 OS。</p>
-<center><img src="/images/docker/docker_core.jpg" alt=""></center>
-
-<p>容器规范旨在将多种容器（如 OpenVZ，rkt，Docker 等）融合在一起，解决各种兼容问题，为此还专门成立了一个叫 OCI（Open Container Initiative）的组织来专门制定相关的容器规范。</p>
-<p>容器 runtime 是容器真正运行的地方，一般需要依赖内核，也有运行在专门制定的容器 OS 上，关于容器 OS，下面会做介绍。lxc 、runc 和 rkt 是目前三种主流的 runtime。</p>
-<blockquote>
-<p>lxc 是 Linux 上老牌的容器 runtime。Docker 最初也是用 lxc 作为 runtime。<br>runc 是 Docker 自己开发的容器 runtime，符合 oci 规范，也是现在 Docker 的默认 runtime。<br>rkt 是 CoreOS 开发的容器 runtime，符合 oci 规范，因而能够运行 Docker 的容器。</p>
-</blockquote>
-<blockquote>
-<p>容器管理工具是对外提供给用户的 CLI 接口，方便用户管理容器，对内与 runtime 交互。对应于不同的 runtime，分别有三种不同的管理工具：lxd、docker engine 和 rkt cli。</p>
-</blockquote>
-<p>容器定义工具允许用户定义容器的内容和属性，如容器需要什么镜像，装载什么应用等。常用有三种工具：docker images、Dockerfile 和 ACL（App Container Image）。</p>
-<blockquote>
-<p>docker images 是容器镜像，runtime 依据 docker images 创建容器。dockerfile 是包含若干命令的文本文件，可以通过这些命令创建出 docker images。ACI 与 docker images 类似，只不过它是由 CoreOS 开发的 rkt 容器的 images 格式。</p>
-</blockquote>
-<p>Registry 是存放容器镜像的仓库，包括 Docker Registry、Docker Hub 和 Quay.io，以及国内的 DaoCloud.io。企业可以用 Docker Registry 构建私有的 Registry。</p>
-<p>容器 OS 不同于 runtime，是专门制定出来运行容器的操作系统，与常规 OS 相比，容器 OS 通常体积更小，启动更快。因为是为容器定制的 OS，通常它们运行容器的效率会更高。目前已经存在不少容器 OS，CoreOS、atomic 和 ubuntu core 是其中的杰出代表。</p>
-<h3 id="3-容器平台技术"><a href="#3-容器平台技术" class="headerlink" title="3 容器平台技术"></a>3 容器平台技术</h3><hr>
-<p>随着容器部署的增多，容器也逐步过渡到容器云，容器平台技术就是让容器作为集群在分布式的环境中运行，包括了容器编排引擎、容器管理平台和基于容器的 PaaS。</p>
-<center><img src="/images/docker/docker_plat.jpg" alt=""></center>
-
-<p>容器编排引擎就是管理、调度容器在集群中运行，以保障资源的合理利用。有名的三大编排引擎为 docker swarm、kubernetes 和 mesos。其中，kubernetes 这两年脱颖而出，成为其中的佼佼者。</p>
-<p>容器管理平台是在编排引擎之上更为通用的一个平台，它抽象了编排引擎的底层实现细节，能够支持多种编排引擎，提供友好的接口给用户，极大方便了管理。Rancher 和 ContainerShip 是容器管理平台的典型代表。</p>
-<p>基于容器的 PaaS 基于容器的 PaaS 为微服务应用开发人员和公司提供了开发、部署和管理应用的平台，使用户不必关心底层基础设施而专注于应用的开发。Deis、Flynn 和 Dokku 都是开源容器 PaaS 的代表。</p>
-<h3 id="4-容器支持技术"><a href="#4-容器支持技术" class="headerlink" title="4 容器支持技术"></a>4 容器支持技术</h3><hr>
-<p>容器的出现又重新让一些古老的技术焕发第二春，如监控、网络、数据管理、日志等技术，由于容器技术的不同，需要制定相应的符合容器规范的技术框架，由此有了容器支持技术，用于支持容器提供更丰富能力的基础设施。</p>
-<center><img src="/images/docker/docker_zc.jpg" alt=""></center>
-
-<p>其中包括容器网络、服务发现、监控、数据管理、日志管理和安全性。</p>
-<p>容器网络主要用于解决容器与容器之间，容器与其他实体之间的连通性和隔离性。包括 Docker 原生的网络解决方案 docker network，以及第三方的网络解决方案，如  flannel、weave 和 calico。</p>
-<p>服务发现保证容器使用过程中资源动态变化的感知性，如当负载增加时，集群会自动创建新的容器；负载减小，多余的容器会被销毁。容器也会根据 host 的资源使用情况在不同 host 中迁移，容器的 IP 和端口也会随之发生变化。在这种动态环境下，就需要有一种机制来感知这种变化，服务发现就是做这样的工作。etcd、consul 和 zookeeper 是服务发现的典型解决方案。</p>
-<p>监控室保证容器健康运行，且让用户实时了解应用运行状态的工具，除了 Docker 原生的监控工具 docker ps/top/stats 之外，也有第三方的监控方案，如 sysdig、cAdvisor/Heapster 和 Weave Scope 。</p>
-<p>数据管理保证容器在不同的 host 之间迁移时数据的动态迁移。有名的方案是 Flocker。</p>
-<p>日志管理为问题排查和事件管理提供了重要依据。docker logs 是 Docker 原生的日志工具。而 logspout 对日志提供了路由功能，它可以收集不同容器的日志并转发给其他工具进行后处理。</p>
-<p>容器安全性保证容器的安全，不被攻击，OpenSCAP 能够对容器镜像进行扫描，发现潜在的漏洞。</p>
-<p>PS：本文借鉴了知名云计算博主 CloudMan 的博文：<br><a href="http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/6706546.html，感谢</a> CloudMan 呈现这么好的内容。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
+<center><img src="/images/k8s/7.png" alt=""></center>
 
 <hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+<p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 5 篇。</p>
+<p>生活中，随处可见，几乎每一款产品都会附带一份说明书，说明书可以记录产品的使用方法，也可以记录产品的配方。有了说明书，我们完全可以窥探一款产品的全貌。</p>
         
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
+            <div class="readmore">
+                <a href="/2018/09/07/tech/Kubernetes_笔记_05_使用产品前请先阅读说明书/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
             </div>
         
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/02/28/tech/容器进化史/">
-              
-                  容器进化史
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-28
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>和虚拟机一样，容器技术也是一种资源隔离的虚拟化技术。我们追溯它的历史，会发现它的技术雏形早已有之。</p>
-<h3 id="1-容器简史"><a href="#1-容器简史" class="headerlink" title="1 容器简史"></a>1 容器简史</h3><hr>
-<p>容器概念始于 1979 年提出的 UNIX chroot，它是一个 UNIX 操作系统的系统调用，将一个进程及其子进程的根目录改变到文件系统中的一个新位置，让这些进程只能访问到这个新的位置，从而达到了进程隔离的目的。</p>
-<center><img src="/imagesss/docker/docker_his.jpg" alt=""></center>
-
-<p>2000 年的时候 FreeBSD 开发了一个类似于 chroot 的容器技术 Jails，这是最早期，也是功能最多的容器技术。Jails 英译过来是监狱的意思，这个“监狱”（用沙盒更为准确）包含了文件系统、用户、网络、进程等的隔离。</p>
-<p>2001 Linux 也发布自己的容器技术 Linux VServer，2004 Solaris 也发布了 Solaris Containers，两者都将资源进行划分，形成一个个 zones，又叫做虚拟服务器。</p>
-<p>2005 年推出 OpenVZ，它通过对 Linux 内核进行补丁来提供虚拟化的支持，每个 OpenVZ 容器完整支持了文件系统、用户及用户组、进程、网络、设备和 IPC 对象的隔离。</p>
-<p>2007 年 Google 实现了 Control Groups( cgroups )，并加入到 Linux 内核中，这是划时代的，为后期容器的资源配额提供了技术保障。</p>
-<p>2008 年基于 cgroups 和 linux namespace 推出了第一个最为完善的 Linux 容器 LXC。</p>
-<p>2013 年推出到现在为止最为流行和使用最广泛的容器 Docker，相比其他早期的容器技术，Docker 引入了一整套容器管理的生态系统，包括分层的镜像模型，容器注册库，友好的 Rest API 等。</p>
-<p>2014 年 CoreOS 也推出了一个类似于 Docker 的容器 Rocket，CoreOS 是一个更加轻量级的 Linux 操作系统，在安全性上比 Docker 更严格。</p>
-<p>2016 年微软也在 Windows 上提供了容器的支持，Docker 可以以原生方式运行在 Windows 上，而不是需要使用 Linux 虚拟机。</p>
-<p>基本上到这个时间节点，容器技术就已经很成熟了，再往后就是容器云的发展，由此也衍生出多种容器云的平台管理技术，其中以 kubernetes 最为出众，有了这样一些细粒度的容器集群管理技术，也为微服务的发展奠定了基石。因此，对于未来来说，应用的微服务化是一个较大的趋势。</p>
-<h3 id="2-为什么需要容器"><a href="#2-为什么需要容器" class="headerlink" title="2 为什么需要容器"></a>2 为什么需要容器</h3><hr>
-<p>其一，这是技术演进的一种创新结果，其二，这是人们追求高效生产活动的一种工具。</p>
-<p>随着软件开发的发展，相比于早期的集中式应用部署方式，现在的应用基本都是采用分布式的部署方式，一个应用可能包含多种服务或多个模块，因此多种服务可能部署在多种环境中，如虚拟服务器、公有云、私有云等，由于多种服务之间存在一些依赖关系，所以可能存在应用在运行过程中的动态迁移问题，那这时如何保证不同服务在不同环境中都能平滑的适配，不需要根据环境的不同而去进行相应的定制，就显得尤为重要。</p>
-<center><img src="/imagesss/docker/docker_con.jpg" alt=""></center>
-
-<p>就像货物的运输问题一样，如何将不同的货物放在不同的运输机器上，减少因货物的不同而频繁进行货物的装载和卸载，浪费大量的人力物力。</p>
-<p>为此人们发明了集装箱，将货物根据尺寸形状等的不同，用不同规格的集装箱装载，然后再放到运输机上运输，由于集装箱密封，只有货物到达目的地才需拆封，在运输过程能够在不同运输机上平滑过渡，避免了资源的浪费。</p>
-<center><img src="/imagesss/docker/docker_con1.jpg" alt=""></center>
-
-<p>因此集装箱被誉为是运输业与世界贸易最重要的发明。</p>
-<p>Docker 容器的思想就是采用集装箱思想，为应用提供了一个基于容器的标准化运输系统。Docker 可以将任何应用及其依赖打包成一个轻量级、可移植、自包含的容器。容器可以运行在几乎所有的操作系统上。这样容器就可以跑在任何环境中，因此才有了那句话：</p>
-<blockquote>
-<p>Build Once, Run Anywhere</p>
-</blockquote>
-<p>这种集装箱的思想我们也能从 Docker 的 Logo 中看出来，这不就是一堆集装箱吗？</p>
-<center><img src="/imagesss/docker/docker.jpg" alt=""></center>
-
-
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/imagesss/weichat.png" alt=""></p>
-
-        
 
         
             <div class="full-width auto-padding tags">
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
-                
-                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/02/20/tech/2018_云计算领域的技术趋势预测/">
-              
-                  2018 云计算领域的技术趋势预测
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-20
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/01-云计算/">01 云计算</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<center><img src="/images/cloud/6.jpg" alt=""></center>
-
-<p>作为一个技术人，保持对技术的敏感是必要的，尤其是在互联网这个行业，昨天还觉得移动互联网挺酷炫的，今天就被人工智能这波潮流给掩盖掉了锋芒，泯然众人矣。虽然我们不一定要赶时髦，踏踏实实做好技术才是好的，但保持这样一份好奇心，也许会让我们的技术之路走得更加顺畅一点。</p>
-<p>对于云计算这个领域，虽然早已是陈词滥调，但新瓶装旧酒，总会玩出很多新鲜的花样。作为一个没什么经验的初学者，我斗胆预测一下 2018 年云计算领域的几大技术趋势，仅供参考。</p>
-<h3 id="混合云"><a href="#混合云" class="headerlink" title="混合云"></a>混合云</h3><hr>
-<p>混合云其实叫嚣了很多年，但一直没有得到真正的应用，现在大部分企业和个人还是部署公有云和私有云为主，随着市场的增长和用户需求的增加，尤其是对云安全这块的需求，相信在 2018 年会有众多客户将业务迁移到混合云上。公有云市场的一些大公司，像阿里云，腾讯云会大力布局其混合云市场，而私有云市场则会更多选择与公有云大公司合作来布局自己的混合云市场，另外，像 zstack 这样的混合云开源技术框架会得到较多青睐，兴许可以成为下一个 OpenStack。</p>
-<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><hr>
-<p>2014 年，AWS 推出了 serverless （无服务器）计算服务  Lambda，微服务便是在这样一种模式下提出的一种架构设计思想。此后几年各大互联网公司都在引入微服务的设计思想，应用在自家的业务产品中。可以说，微服务架构设计得好，不管是开发测试，还是运维管理都会大大提升效率和增强产品的可维护性和可扩展性。2018 年，微服务将会引发一波小高潮。很多大公司会开放他们的微服务设计框架，及相关的开源项目。</p>
-<h3 id="kubernetes-k8s-容器编排"><a href="#kubernetes-k8s-容器编排" class="headerlink" title="kubernetes( k8s ) 容器编排"></a>kubernetes( k8s ) 容器编排</h3><hr>
-<p>容器技术现在基本上已经成为各大互联网公司的标配，随着部署的容器应用的增多，容器云的编排与管理已经成了不得不面对的问题。k8s 的强势崛起，在短短时间之内就刮起一阵旋风，令 docker 家族闻风丧胆，最终不得不缴械投降，2018 年，k8s 会得到井喷式应用。</p>
-<h3 id="雾计算"><a href="#雾计算" class="headerlink" title="雾计算"></a>雾计算</h3><hr>
-<p>雾计算，或者边缘计算，在学术界已经不算什么新鲜词了，但在工业界还少有耳闻，但其实 cisco 和一些物联网公司早已开发出自己的雾计算产品，并大量应用在网络边缘的计算设备中。据我所知的，智云这家公司早已推出自己的雾计算平台，并应用在很多物联网项目中，大公司中，百度在 2018 年年初也率先推出了自己的雾计算项目「智能边缘」，旨在通过提供 “IoT Edge SDK” 组件的方式进行数据的本地处理，结合 AI 技术，为用户打造实时响应，智能推断，安全可靠的服务体验。相信在 2018 年会有更多的雾计算产品出现，我们拭目以待吧。</p>
-<p>以上就是我对 2018 年云计算这个领域技术趋势的大致预测，预测本身就代表着不确定性，但保持对新技术的敏感性，能让我们提前做一些准备，毕竟作为技术人，终身学习是最基本的职业素养。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
-                
-                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
                 
                     <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
-                    <a href="/tags/混合云/"><i class="fas fa-hashtag fa-fw"></i>混合云</a>
-                
-                    <a href="/tags/微服务/"><i class="fas fa-hashtag fa-fw"></i>微服务</a>
-                
             </div>
         
     </section>
@@ -487,9 +251,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/13/tech/雾计算技术架构浅析与应用概览/">
+          <a href="/2018/09/05/tech/Kubernetes_笔记_04_架构是个好东西/">
               
-                  雾计算技术架构浅析与应用概览
+                  Kubernetes 笔记 04 架构是个好东西
               
           </a>
       </h2>
@@ -497,7 +261,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-13
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-05
       </time>
     
 
@@ -505,7 +269,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/02-雾计算/">02 雾计算</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
     </div>
 
 
@@ -522,77 +286,17 @@
         <blockquote>
 <p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<center><img src="/images/cloud/fog_level.jpg" alt=""></center>
+<center><img src="/images/k8s/6.jpg" alt=""></center>
 
-<p>上篇文章简单回顾了 [雾计算的简史]，本篇将对雾计算的架构和相关的应用场景做一点小小的阐述。这也算是对自己近两年来的研究工作做一点总结。从科学研究的角度，我更多做的是理论性的研究工作，因此，本文也只限于从理论角度做一点记录，更多的实践工作还望跟进Cisco和相关公司的研究进展。</p>
-<h3 id="1-从云计算到雾计算的转变"><a href="#1-从云计算到雾计算的转变" class="headerlink" title="1. 从云计算到雾计算的转变"></a>1. 从云计算到雾计算的转变</h3><hr>
-<p>Cisco 对「雾计算」的定义是：将云计算资源和服务从网络的核心（network core）扩展到网络的边缘（network edge），以满足多种IoT应用服务质量（QoS）的需求，提高用户体验。</p>
-<p>传统的云计算架构位于网络的核心，即 Internet 数据中心。用户终端和云端之间采用Client-Server的通信模式，物理距离较远，用户消息需要经过若干跳的网络传输才能达到。另外，云数据中心采用「集中式」的资源管理方式，不易够灵活且不易扩展。如下左图是一种简化的架构图。</p>
-<table>
-<thead>
-<tr>
-<th>集中式</th>
-<th>分布式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><img src="/images/cloud/fog_tran.jpg" alt=""></td>
-<td><img src="/images/cloud/fog_dis.jpg" alt=""></td>
-</tr>
-</tbody>
-</table>
-<p>雾计算架构位于网络的边缘。Cisco对网络边缘的定义是广义的，只要相对网络核心更接近于用户层面的，都可以称之为网络边缘，如接入网、近场的网关设备、本地设备或与设备相连的通信模块，更具体一点就是路由器、交换机、AP、服务器、PC、Mobile等等这些设备都可以构成网络边缘，而提供雾计算能力的这些设备，我们通常称之为「雾结点」。</p>
-<p>从这个层面上看，雾计算更多看成是一种计算模式。只要能够为用户提供就近的资源和服务访问，就可以看作是雾计算。IOx是Cisco实现的雾计算架构的解决方案，开发者能够利用它开发相关的应用，并部署到网络的边缘进行管理。更多关于IOx的技术文档请访问 <a href="https://developer.cisco.com/media/iox-dev-guide-3-10-16/" target="_blank" rel="noopener">IOx开发者文档</a>。相对于云计算集中式的架构，雾计算采用分布式的架构，更加接近用户，减少网络访问时延的同时，提高了资源管理的灵活性和可扩展性。如上图右图就是一种简化了的雾计算架构图。</p>
-<h3 id="2-雾计算的架构"><a href="#2-雾计算的架构" class="headerlink" title="2. 雾计算的架构"></a>2. 雾计算的架构</h3><hr>
-<p>由于雾计算基础设施部署的灵活性，雾计算的架构呈现也是比较灵活的。通过查阅资料可知大致可以分为两种架构，一种是分层架构，另一种是 D2D( Device to Device )架构。</p>
-<h4 id="2-1-分层架构"><a href="#2-1-分层架构" class="headerlink" title="2.1 分层架构"></a>2.1 分层架构</h4><hr>
-<p>这种架构很好理解，简单了说，就是用户层、雾计算层和云计算层构成了三层的架构图。其中，雾计算层的结构实现，要完成雾结点的物理资源（包括计算、存储、网络）的抽象和应用或服务（如各种IoT应用程序）的协调，除此之外，当然免不了要提供各种功能模块的计算平台。如下图就是一种理论上可行的雾计算架构。Cisco 的 IOx 就属于这种架构的最佳实践。</p>
-<center><img src="/images/cloud/fog_tech.jpg" alt=""></center>
-
-<p>图中雾计算资源抽象层（Abstraction Layer）通过可定制的 API 和 UI 在异构的基础设施中，提供统一的资源访问、监控和管理，同时保证多租户的安全性和隐私性。服务协调层（Orchestration Service Layer）主要用于上层应用或服务的生命周期管理和协调。由于雾计算基础设施分布式的特性，所以该层需要实现很多的分布式组件来满足各种应用对资源的动态需求及管理，如分布式的数据库、各种软件中间件和策略管理组件等。详细请访问文章<code>[1]</code>。</p>
-<h4 id="2-2-D2D架构"><a href="#2-2-D2D架构" class="headerlink" title="2.2 D2D架构"></a>2.2 D2D架构</h4><hr>
-<p>这种架构顾名思义，就是设备到设备的通信，也叫 M2M( Machine to Machine )。云计算和雾计算的本质都是对闲置资源的充分利用，实现共享。D2D架构的特点在于充分利用自己附近的闲置资源来处理自身的应用。比如两台很近的移动设备之间通过蓝牙连接来共享资源，更如移动设备可以访问附近的基站、车辆、咖啡厅的某个服务器等等设备的闲置资源或服务。这种架构较早的实践方案是由文献<code>[2]</code>提出的，他们提出用「Mapreduce」和「Hadoop」这些分布式计算框架实现移动设备之间的任务计算。如下图是一种直观的D2D架构图（图片摘自文献<code>[3]</code>）</p>
-<center><img src="/images/cloud/fog_d2d.jpg" alt=""></center>
-
-<h3 id="3-雾计算的应用"><a href="#3-雾计算的应用" class="headerlink" title="3. 雾计算的应用"></a>3. 雾计算的应用</h3><hr>
-<p>雾计算满足低时延、动态实时、大规模分布等应用的需求。这些恰是今天多种IoT应用、AI 应用、增强现实和大数据分析应用等的基本需求。具体可以细分到诸多垂直市场，如智慧农业，智能交通，智慧城市，智慧建筑，智能医疗等等。详细内容可访问<code>[5]</code>。</p>
-<ul>
-<li><strong>智能交通</strong></li>
-</ul>
-<p>通过智能交通控制系统中的雾节点网络，可以分享高峰时刻的交通信息、进行本地化事故处理、重新规划交通路径。同样，人们也可以很容易从娱乐系统中获取资源，因为每个公共交通用户手机上具有雾计算应用，让用户可以共享相邻用户数据，相互提供可靠的网络连接。</p>
-<p>对于公共交通中的无人驾驶汽车安全系统、道路监控系统、售票系统来说，可以搜集许多基于传感器和视频的数据。这些系统，理想地来说，只将一些汇总的数据上传到云端，从而不侵犯用户隐私，同时智能地保证用户带宽。云，可以提取有用的商业价值，例如如何在更长时间级别规划路径，而不是短期提供低延时保证。在边缘，可以进行实时决策，策略控制。而在云端，可以进行大数据分析。</p>
-<ul>
-<li><strong>智慧农业</strong></li>
-</ul>
-<p>对于农业来说，作用体现在肉类和乳制品，水产品，水稻，蔬菜，玉米等的种植和生产。在许多地区，农业通过合作农场形式进行优化。这些农场，已经经过技术革命，应用适量除草剂和杀虫剂，最大化利用水资源，保证产量。更进一步的说，小农场（小于2英亩），将在我们的粮食生产中扮演更重要的角色。这些小农场，也需要最大化资源使用效率。</p>
-<p>但是，缺少可信赖或者节约的方法连接云端，无法实时高效的知道除草剂和杀虫剂的效率，动物健康，环境因素，以及水和土壤情况等等，阻碍了生产率提高。另外，农民没有专业IT知识，所以即使让农民和云基础架构连接，也不清楚他们可以如何利用这些资源。所以，本地化计算资源，对于农业来说，积极作用很大。</p>
-<ul>
-<li><strong>智慧城市</strong></li>
-</ul>
-<p>建立智慧城市一个主要障碍就是：带宽和连接的可用性。当大多数现代城市小区网络容量和峰值带宽受限，只能满足现有居民的需求。对于额外的服务，所预留的带宽很少，Fog正是可以解决这个问题。可以影响人们在城市中的交互和生活方式，帮助提高基础城市相关操作效率，例如延时，连接性，隐私，安全等等，提供高效和人性化服务。</p>
-<p>智慧城市挑战还来自于安全，关键指标和高级分析。城市网络，可能携带敏感数据以及生命攸关的系统，例如智能运输避障应用，第一应答者通信等等，所以需要安全和信赖。视频监控高级分析，也是保证快速有效定位城市犯罪的关键。所以，智慧城市部署需要本地化。Fog架构，具有安全性，数据加密和分布式分析，在智慧城市中扮演重要角色。</p>
-<ul>
-<li><strong>智慧建筑</strong></li>
-</ul>
-<p>建筑管理自动化，是边缘智能和本地化处理的一个经典案例。商业建筑，会包含许多传感器，测量不同建筑操作参数，包括温度，湿度，门开关，出入证读取，泊车位占有率，安全，电梯和空气质量。这些传感器不断测量建筑内部数据，存储在本地，然后驱动制动器，对于建筑内条件进行优化。从传感器测得的数据后，需要进行实时的计算，从而决定暖通空调是否要运行慢点，当房间没人时关灯，感知到火情时触发火警，在起火时启动消防装置等等。Fog部署模型，可自主的进行本地控制功能操作。</p>
-<p>另外，长期建筑遥测数据和控制动作，可以上传到云端，进行关于电、水、燃气消耗、操作效率、设备检修时间、预防性活动和其他相关操作的更大范围分析。基于这些存储的操作历史，可以训练机器学习模型，在本地“雾”基础架构中，使用“云”训练优化操作策略。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><hr>
-<p>其实这样看下来，可以发现，雾计算也不是什么新鲜的技术，都是原有的技术随着时间推移的一种架构演进，其中体现的分布式计算的思想很早就存在了。不禁想起计算机领域的一句至理：<br>All problems in computer science can be solved by another level of indirection（计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决）</p>
-<p><strong>福利：</strong></p>
-<p>公众号后台回复“雾计算”关键字，免费获赠雾计算资料一份。</p>
-<hr>
-<p><strong>Preference:</strong></p>
-<p>[1] A Paradigm Shift from Cloud to Fog Computing.<br>[2] Misco: a mapreduce framework for mobile systems.<br>[3] To Offload or to Wait An Opportunistic Offloading Algorithm for Parallel Tasks in a Mobile Cloud.<br>[4] <a href="http://blogs.cisco.com/perspectives/iot-from-cloud-to-fog-computing" target="_blank" rel="noopener">IoT, from cloud to fog computing</a><br>[5] <a href="OpenFog-Architecture-Overview-WP-2-2016.pdf">OpenFog开放雾计算架构及其垂直市场应用</a><br>[6] <a href="http://blogs.cisco.com/digital/cisco-iox-in-cisco-live-2014-showcasing-fog-computing-at-work" target="_blank" rel="noopener">Cisco IOx in Cisco Live 2014: Showcasing“fog computing”at work</a><br>[7] <a href="https://www.openfogconsortium.org/resources/#definition-of-fog-computing" target="_blank" rel="noopener">openfogconsortium.org</a><br>[8] <a href="http://club.gizwits.com/thread-3569-1-1.html" target="_blank" rel="noopener">机智云4.0发布 推下一代IOT雾计算概念</a><br>[9] <a href="http://www.infoq.com/cn/articles/talk-fog-computing" target="_blank" rel="noopener">毋庸置疑的雾计算</a></p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+<p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第 4 篇。</p>
+<p>任何技术的诞生，都会经历从架构设计到开发测试的过程，好的技术，往往也会有一套好的架构。架构是个好东西，它能帮助我们站在高处看清楚事物的整体结构，避免过早地进入细节而迷失方向。</p>
+        
+            <div class="readmore">
+                <a href="/2018/09/05/tech/Kubernetes_笔记_04_架构是个好东西/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
         
 
         
@@ -600,9 +304,7 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
-                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
-                
-                    <a href="/tags/边缘计算/"><i class="fas fa-hashtag fa-fw"></i>边缘计算</a>
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
             </div>
         
@@ -621,9 +323,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2018/02/06/tech/vhost_user_简介/">
+          <a href="/2018/09/03/tech/Kubernetes_笔记_03_扫清概念/">
               
-                  vhost-user 简介
+                  Kubernetes 笔记 03 扫清概念
               
           </a>
       </h2>
@@ -631,7 +333,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-02-06
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-09-03
       </time>
     
 
@@ -639,7 +341,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
     </div>
 
 
@@ -656,609 +358,17 @@
         <blockquote>
 <p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<h3 id="1-什么是-vhost-user"><a href="#1-什么是-vhost-user" class="headerlink" title="1. 什么是 vhost-user"></a>1. 什么是 vhost-user</h3><p>在 vhost 的方案中，由于 vhost 实现在内核中，guest 与 vhost 的通信，相较于原生的 virtio 方式性能上有了一定程度的提升，从 guest 到 kvm.ko 的交互只有一次用户态的切换以及数据拷贝。这个方案对于不同 host 之间的通信，或者 guest 到 host nic 之间的通信是比较好的，但是对于某些用户态进程间的通信，比如数据面的通信方案，openvswitch 和与之类似的 SDN 的解决方案，guest 需要和 host 用户态的 vswitch 进行数据交换，如果采用 vhost 的方案，guest 和 host 之间又存在多次的上下文切换和数据拷贝，为了避免这种情况，业界就想出将 vhost 从内核态移到用户态。这就是 vhost-user 的实现。</p>
-<h3 id="2-vhost-user-的实现"><a href="#2-vhost-user-的实现" class="headerlink" title="2 vhost-user 的实现"></a>2 vhost-user 的实现</h3><hr>
-<p>vhost-user 和 vhost 的实现原理是一样，都是采用  vring 完成共享内存，eventfd 机制完成事件通知。不同在于 vhost 实现在内核中，而 vhost-user 实现在用户空间中，用于用户空间中两个进程之间的通信，其采用共享内存的通信方式。</p>
-<center><img src="/images/virt/vhost_user.png" alt=""></center>
+<center><img src="/images/k8s/5.jpg" alt=""></center>
 
-<p>vhost-user 基于 C/S 的模式，采用 UNIX 域套接字（UNIX domain socket）来完成进程间的事件通知和数据交互，相比 vhost 中采用 ioctl 的方式，vhost-user 采用 socket 的方式大大简化了操作。</p>
-<p>vhost-user 基于 vring 这套通用的共享内存通信方案，只要 client 和 server 按照 vring 提供的接口实现所需功能即可，常见的实现方案是 client 实现在 guest OS 中，一般是集成在 virtio 驱动上，server 端实现在 qemu 中，也可以实现在各种数据面中，如 OVS，Snabbswitch 等虚拟交换机。</p>
-<p>如果使用 qemu 作为 vhost-user 的 server 端实现，在启动 qemu 时，我们需要指定 -mem-path 和 -netdev 参数，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ qemu -m 1024 -mem-path /hugetlbfs,prealloc=on,share=on \</span><br><span class="line">-netdev type=vhost-user,id=net0,file=/path/to/socket \</span><br><span class="line">-device virtio-net-pci,netdev=net0</span><br></pre></td></tr></table></figure>
-<p>指定 -mem-path 意味着 qemu 会在 guest OS 的内存中创建一个文件，share=on 选项允许其他进程访问这个文件，也就意味着能访问 guest OS 内存，达到共享内存的目的。</p>
-<p>-netdev type=vhost-user 指定通信方案，file=/path/to/socket 指定 socket 文件。</p>
-<p>当 qemu 启动之后，首先会进行 vring 的初始化，并通过 socket 建立 C/S 的共享内存区域和事件机制，然后 client 通过 eventfd 将 virtio kick 事件通知到 server 端，server 端同样通过 eventfd 进行响应，完成整个数据交互。 </p>
-<center><img src="/images/virt/vhost_user_flow.jpg" alt=""></center>
-
-<h3 id="3-几个例子"><a href="#3-几个例子" class="headerlink" title="3 几个例子"></a>3 几个例子</h3><hr>
-<p>开源社区中实现了一个项目 Vapp，主要是用来测试 vhost-user 的 C/S 模式的，github 地址如下：<br><a href="https://github.com/virtualopensystems/vapp.git" target="_blank" rel="noopener">https://github.com/virtualopensystems/vapp.git</a></p>
-<p>使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/virtualopensystems/vapp.git</span><br><span class="line">$ cd vapp</span><br><span class="line">$ make</span><br><span class="line">// 运行 server 端</span><br><span class="line">$ ./vhost -s ./vhost.sock</span><br><span class="line">// 运行 client 端</span><br><span class="line">$ ./vhost -q ./vhost.sock</span><br></pre></td></tr></table></figure>
-<p>通过以上步骤，就可以启动 vhost-user 的 C/S 模式。</p>
-<p>另外还有例子就是集成在虚拟交换机 Snabbswitch 上的 vhost-user，通过以下方式获得 vhost-user 分支：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b vhostuser --recursive https://github.com/SnabbCo/snabbswitch.git</span><br><span class="line">$ cd snabbswitch</span><br><span class="line">$ make</span><br><span class="line">测试：</span><br><span class="line">$ sudo src/snabbswitch -t apps.vhost.vhost_user</span><br></pre></td></tr></table></figure>
-<p>还有例子就是 qemu 上的实现，这也是最原早的实现，同样通过以下方式来获得使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git clone -b vhost-user-v5 https://github.com/virtualopensystems/qemu.git</span><br><span class="line">$ mkdir qemu/obj</span><br><span class="line">$ cd qemu/obj/</span><br><span class="line">$ ../configure --target-list=x86_64-softmmu</span><br><span class="line">$ make -j</span><br></pre></td></tr></table></figure>
-<p>除此之外，还有很多的实现，如 OVS 和 DPDK 上都有实现，这实际上是集成了 vhost-user 的通用 API。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h3><hr>
-<p>virtio，vhost，vhost-user 是基于场景和性能而提出的三种 guest 和 host 之间的通信方案，三种方案，各有优劣。<br>vhost-user 用在很多数据面之上的进程间通信，效率高。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
+<p>Hi，大家好，我是 Linux云计算网络，欢迎大家和我一起学 K8S，这是系列第三篇。</p>
+<p>每一种技术，为了描述清楚它的设计理念，都会自定义一堆概念或术语。在进入一门技术的研究之前，我们有必要扫清它的基本概念。</p>
         
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-                    <a href="/tags/vhost-user/"><i class="fas fa-hashtag fa-fw"></i>vhost_user</a>
-                
-                    <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
-                
-                    <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
-                
+            <div class="readmore">
+                <a href="/2018/09/03/tech/Kubernetes_笔记_03_扫清概念/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
             </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/01/23/tech/vhost_简介/">
-              
-                  vhost 简介
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-23
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/03-虚拟化/">03 虚拟化</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<h3 id="1-什么是-vhost"><a href="#1-什么是-vhost" class="headerlink" title="1. 什么是 vhost"></a>1. 什么是 vhost</h3><hr>
-<p>vhost 是 virtio 的一种后端实现方案，在 virtio 简介中，我们已经提到 virtio 是一种半虚拟化的实现方案，需要虚拟机端和主机端都提供驱动才能完成通信，通常，virtio 主机端的驱动是实现在用户空间的 qemu 中，而 vhost 是实现在内核中，是内核的一个模块 vhost-net.ko。为什么要实现在内核中，有什么好处呢，请接着往下看。</p>
-<center><img src="/images/virt/vhost.jpg" alt=""></center>
-
-<h3 id="2-为什么要用-vhost"><a href="#2-为什么要用-vhost" class="headerlink" title="2. 为什么要用 vhost"></a>2. 为什么要用 vhost</h3><hr>
-<p>在 virtio 的机制中，guest 与 用户空间的 Hypervisor 通信，会造成多次的数据拷贝和 CPU 特权级的上下文切换。例如 guest 发包给外部网络，首先，guest 需要切换到 host kernel，然后 host kernel 会切换到 qemu 来处理 guest 的请求， Hypervisor 通过系统调用将数据包发送到外部网络后，会切换回 host kernel ， 最后再切换回 guest。这样漫长的路径无疑会带来性能上的损失。</p>
-<p>vhost 正是在这样的背景下提出的一种改善方案，它是位于 host kernel 的一个模块，用于和 guest 直接通信，数据交换直接在 guest 和 host kernel 之间通过 virtqueue 来进行，qemu 不参与通信，但也没有完全退出舞台，它还要负责一些控制层面的事情，比如和 KVM 之间的控制指令的下发等。</p>
-<h3 id="3-vhost-的数据流程"><a href="#3-vhost-的数据流程" class="headerlink" title="3. vhost 的数据流程"></a>3. vhost 的数据流程</h3><hr>
-<p>下图左半部分是 vhost 负责将数据发往外部网络的过程， 右半部分是 vhost 大概的数据交互流程图。其中，qemu 还是需要负责 virtio 设备的适配模拟，负责用户空间某些管理控制事件的处理，而 vhost  实现较为纯净，以一个独立的模块完成 guest 和 host kernel 的数据交换过程。</p>
-<center><img src="/images/virt/vhost_flow.png" alt=""></center>
-
-<p>vhost 与 virtio 前端的通信主要采用一种事件驱动 eventfd 的机制来实现，guest 通知 vhost 的事件要借助 kvm.ko 模块来完成，vhost 初始化期间，会启动一个工作线程 work 来监听 eventfd，一旦 guest 发出对 vhost 的 kick event，kvm.ko 触发 ioeventfd 通知到 vhost，vhost 通过 virtqueue 的 avail ring 获取数据，并设置 used ring。同样，从 vhost 工作线程向 guest 通信时，也采用同样的机制，只不过这种情况发的是一个回调的 call envent，kvm.ko 触发 irqfd 通知 guest。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><hr>
-<p>vhost 与 kvm 的事件通信通过 eventfd 机制来实现，主要包括两个方向的 event，一个是 guest 到 vhost 方向的 kick event，通过 ioeventfd 实现；另一个是 vhost 到 guest 方向的 call event，通过  irqfd 实现。</p>
-<p>代码分析整个通信的流程：<br><a href="http://royluo.org/2014/08/22/vhost/" target="_blank" rel="noopener">http://royluo.org/2014/08/22/vhost/</a></p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
-                
-                    <a href="/tags/KVM/"><i class="fas fa-hashtag fa-fw"></i>KVM</a>
-                
-                    <a href="/tags/Qemu/"><i class="fas fa-hashtag fa-fw"></i>Qemu</a>
-                
-                    <a href="/tags/vhost/"><i class="fas fa-hashtag fa-fw"></i>vhost</a>
-                
-                    <a href="/tags/virtio/"><i class="fas fa-hashtag fa-fw"></i>virtio</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/01/21/tech/用户空间网络提升_NFV_的性能/">
-              
-                  用户空间网络提升 NFV 的性能
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-21
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/NFV/">NFV</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">本文是一篇翻译，翻译自：</span><br><span class="line">https://software.intel.com/en-us/blogs/2015/06/12/user-space-networking-fuels-nfv-performance，文章有点老了，15年写的，但是文章总结了一些用户态的协议栈，很有学习参考的意义。</span><br></pre></td></tr></table></figure>
-<h3 id="用户态协议栈"><a href="#用户态协议栈" class="headerlink" title="用户态协议栈"></a>用户态协议栈</h3><hr>
-<p>如今，作为一个网络空间的软件开发人员是非常激动人心的，因为工程师的角色随着这个世界的规则在逐渐发生改变。</p>
-<p>过去这 15 年来，人们对高性能网络做了很多努力，网络模型也发生了很多改变，起初，数据包的收发都要推送到内核才能完成，现在，不用内核态的参与也可以完成。这种改变的背后主要是在解决以下的几个问题：1）用户态和内核态上下文切换的开销；2）软硬中断的开销；3）数据拷贝的开销等等。</p>
-<center><img src="/images/sdn/mtcp.jpg" alt=""></center>
-
-<p>最近，很多人在讨论 mTCP——一个实现了用户态协议栈的开源库，这种技术在很大程度上就颠覆了传统的网络模型，使得网络收发包的效率大大提升。它充分利用了 CPU 的亲和性，共享内存，批处理等技术来实现高效的 I/O 事件。与之类似的技术也相继被提出。</p>
-<p>实验表明，mTCP 这种用户态协议栈，相较原生的内核协议栈，在处理多种流行的应用时的性能得到较大提升，如 SSLShader 提升了 33%，lighttpd 提升了 320%。</p>
-<center><img src="/images/sdn/user_tcp_stack.png" alt=""></center>
-
-<p>软件形态的改变离不开硬件的革新。由以前的单核系统到如今多核系统的性能扩展，直接导致了网络软件架构的改变。例如，以前内核所做的所有功能和处理，包括网络驱动程序，现在都可以被直接放到用户空间中来实现，应用程序可以直接访问底层的 NUMA 结构，利用 CPU 的亲和性，以及多核特性并行处理任务。这种设计避免了上下文之间的切换开销，可以显著降低数据传输的延迟和 CPU 使用，同时提高吞吐量和带宽。另外，提供一种运行到完成（run-to-completion）的模型能够让不同的核独立并行地完成不同的任务。</p>
-<p>随着网络的发展，我们现在看到了大量的开源项目，都在将内核协议栈移到用户空间来做。它们的做法存在一些区别，像 mTCP，它的协议栈是从零开始开发的，而其他很多项目则是基于 FreeBSD 的来做，这主要是因为 FreeBSD 的协议栈具有 “最健壮的网络协议栈的声誉”，此外，很多存储解决方案也是采用的 FreeBSD 来作为其核心操作系统。当然，Linux 协议栈也是可以采用的。</p>
-<p>这些用户态协议栈怎么做到绕过内核的，这就离不开 DPDK 的支持。利用 DPDK，用户态协议栈可以创建一个中断来将数据包从 NIC 的缓冲区直接映射到用户空间，然后利用协议栈的特性来管理 TCP/IP 数据包的处理和传输。</p>
-<p>DPDK 还可以作为一些 vSwitch（虚拟交换机）的加速器，这些 vSwitch 包含 OpenFlow 协议的完整实现，以及与 OpenStack Neutron 的整合。</p>
-<p>下面，我们收集了一些发现的开源项目，无论你决定使用一个 vSwitch 还是一个完整的网络协议栈，网络开发人员都有很多选择，可以将应用程序移到用户空间，并在多核系统上扩展性能。</p>
-<h4 id="DPDK-Enabled-vSwitch："><a href="#DPDK-Enabled-vSwitch：" class="headerlink" title="DPDK-Enabled vSwitch："></a>DPDK-Enabled vSwitch：</h4><hr>
-<p><strong>OVS</strong>      </p>
-<p>Open vSwitch 是一个多核虚拟交换机平台，支持标准的管理接口和开放可扩展的可编程接口，支持第三方的控制接入。<br><a href="https://github.com/openvswitch/ovs" target="_blank" rel="noopener">https://github.com/openvswitch/ovs</a></p>
-<p><strong>Lagopus</strong></p>
-<p>Lagopus 是另一个多核虚拟交换的实现，功能和 OVS 差不多，支持多种网络协议，如 Ethernet，VLAN，QinQ，MAC-in-MAC，MPLS 和 PBB，以及隧道协议，如 GRE，VxLan 和 GTP。<br><a href="https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md" target="_blank" rel="noopener">https://github.com/lagopus/lagopus/blob/master/QUICKSTART.md</a></p>
-<p><strong>Snabb</strong></p>
-<p>Snabb 是一个简单且快速的数据包处理工具箱。<br><a href="https://github.com/SnabbCo/snabbswitch/blob/master/README.md" target="_blank" rel="noopener">https://github.com/SnabbCo/snabbswitch/blob/master/README.md</a></p>
-<p><strong>xDPd</strong></p>
-<p>xDPd 是一个多平台，多 OpenFlow 版本支持的开源 datapath，主要专注在性能和可扩展性上。<br><a href="https://github.com/bisdn/xdpd/blob/stable/README" target="_blank" rel="noopener">https://github.com/bisdn/xdpd/blob/stable/README</a></p>
-<h4 id="从零开发的用户空间协议栈套件"><a href="#从零开发的用户空间协议栈套件" class="headerlink" title="从零开发的用户空间协议栈套件"></a>从零开发的用户空间协议栈套件</h4><hr>
-<p><strong>mTCP</strong></p>
-<p>mTCP 是一个针对多核系统的高可扩展性的用户空间 TCP/IP 协议栈。<br><a href="https://github.com/eunyoung14/mtcp/blob/master/README" target="_blank" rel="noopener">https://github.com/eunyoung14/mtcp/blob/master/README</a></p>
-<p><strong>Mirage-Tcpip</strong></p>
-<p>mirage-tcpip 是一个针对 MirageOS 这种 “库操作系统” 而开发的一个用户态网络协议栈，开发的语言是 OCaml。<br><a href="https://github.com/mirage/mirage-tcpip" target="_blank" rel="noopener">https://github.com/mirage/mirage-tcpip</a></p>
-<p><strong>IwIP</strong></p>
-<p>IwIP 针对 RAM 平台的精简版的 TCP/IP 协议栈实现。<br><a href="http://git.savannah.gnu.org/cgit/lwip.git/tree/README" target="_blank" rel="noopener">http://git.savannah.gnu.org/cgit/lwip.git/tree/README</a></p>
-<h4 id="移植版的用户空间协议栈套件"><a href="#移植版的用户空间协议栈套件" class="headerlink" title="移植版的用户空间协议栈套件"></a>移植版的用户空间协议栈套件</h4><hr>
-<p><strong>Arrakis</strong>  </p>
-<p>针对多核系统的用户空间 OS，移植于 IwIP。<br><a href="https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS" target="_blank" rel="noopener">https://github.com/UWNetworksLab/arrakis/blob/master/README_ARRAKIS</a></p>
-<p><strong>libuinet</strong></p>
-<p>用户空间的 TCP/IP 协议栈，移植于 FreeBSD。<br><a href="https://github.com/pkelsey/libuinet/blob/master/README" target="_blank" rel="noopener">https://github.com/pkelsey/libuinet/blob/master/README</a></p>
-<p><strong>NUSE (libos)</strong>  </p>
-<p>一个基于 Linux 的库操作系统，移植于 Linux。<br><a href="https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start" target="_blank" rel="noopener">https://github.com/libos-nuse/net-next-nuse/wiki/Quick-Start</a></p>
-<p><strong>OpenDP</strong> </p>
-<p>一个针对 DPDK TCP/IP 协议栈的数据面，移植于 FreeBSD。<br><a href="https://github.com/opendp/dpdk-odp/wiki" target="_blank" rel="noopener">https://github.com/opendp/dpdk-odp/wiki</a></p>
-<p><strong>OpenOnload</strong></p>
-<p>一个高性能的用户态协议栈，移植于 IwIP。<br><a href="http://www.openonload.org/download/openonload-201205-README.txt" target="_blank" rel="noopener">http://www.openonload.org/download/openonload-201205-README.txt</a></p>
-<p><strong>OSv</strong>  </p>
-<p>一个针对虚拟机的开源操作系统。移植于 FreeBSD。<br><a href="https://github.com/cloudius-systems/osv/blob/master/README.md" target="_blank" rel="noopener">https://github.com/cloudius-systems/osv/blob/master/README.md</a></p>
-<p><strong>Sandstorm</strong>  </p>
-<p>一个针对个人服务器安全的开源网络平台，移植于 FreeBSD。<br><a href="https://github.com/sandstorm-io/sandstorm/blob/master/README.md" target="_blank" rel="noopener">https://github.com/sandstorm-io/sandstorm/blob/master/README.md</a></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>1、这篇文字的亮点在于总结了当前阶段业界出现的一些用户空间协议栈，对于文章标题提到的 NFV 在文中则只字未提，但其实意思也很明了了。用户空间的协议栈是随着硬件技术的发展，以及新鲜应用场景应运而生的，换句话说，对于像 NFV 这种对性能要求比较高的场景，采用用户态的协议栈是比较合适的。</p>
-<p>2、文中是 2015 年写的，这意味着到现在为止，肯定出现了很多比上面总结还要多的方案，其中比较出名的有 SeaStar 和 腾讯开源的 F-Stack，后面找机会再进行详述，敬请期待吧。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
-                
-                    <a href="/tags/mTCP/"><i class="fas fa-hashtag fa-fw"></i>mTCP</a>
-                
-                    <a href="/tags/NFV/"><i class="fas fa-hashtag fa-fw"></i>NFV</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/01/12/tech/Linux_网络体系结构全景分析/">
-              
-                  Linux 网络体系结构全景分析
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-12
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>Linux 是一个非常庞大的系统结构，模块众多，各个模块分工合作，共同运作着各自的任务，为 Linux 这个大家庭贡献着自己的力量。</p>
-<h3 id="Linux-网络子系统"><a href="#Linux-网络子系统" class="headerlink" title="Linux 网络子系统"></a>Linux 网络子系统</h3><hr>
-<p>其中，网络子系统是一个较为复杂的模块，如下图是 Linux 网络子系统的体系结构，自顶向下，可以分应用层、插口层（或协议无关层）、协议层和接口层（或设备驱动层），这个层级关系也分别对应着我们所熟悉的 OSI 七层模型（物理层、数据链路层、网络层、传输层、会话层、表示层和应用层）。</p>
-<center><img src="/images/linux/linux_net_level.jpg" alt=""></center>
-
-<p>Linux 所有用户态的应用程序要访问链接内核都要依赖系统调用，这是内核提供给用户态的调用接口，这通常是由标准的 C 库函数来实现的。对于网络应用程序，内核提供了一套通用的 socket 系统调用的接口。</p>
-<p>插口层，也叫协议无关层，它屏蔽了协议相关的操作，不论是什么协议（UDP，TCP），都提供一组通用的函数接口，也就是 socket 的实现。</p>
-<p>协议层，用于实现各种具体的网络协议族，包括 TCP/IP，OSI 和 Unix 域的实现，每个协议族都包含自己的内部结构，例如，对于 TCP/IP 协议族，IP 是最底层，TCP 和 UDP 层在 IP 层的上面。</p>
-<p>接口层，包括了通用设备接口，和网络设备通信的设备驱动程序，其中，包串口使用的 SLIP 驱动程序以及以太网使用的以太网驱动程序，以及环回口使用的都是这一层的设备。它对上提供了协议与设备驱动通信的通用接口，对下也提供了一组通用函数供底层网络设备驱动程序使用。具体的细节后面再开文章详细讲述。</p>
-<p>以上是从分层的体系结构来看，下面从数据传输的角度来说说，一个数据包是如何依赖这些层次关系被发送/接收的。</p>
-<p>首先，数据的发送过程，应用层组织好待发送的数据包，执行系统调用进入内核协议栈，按照层次关系分别进行包头的封装，如到达传输层，封装 TCP/UDP 的包头，进入网络层封装 IP 包头，进入接口层封装 MAC 帧，最后借助驱动将数据包从网卡发送出去。</p>
-<p>然后，数据的接收过程正好与发包过程相反，是一个拆包的过程。接口层借助网卡 DMA 硬件中断感知数据包的到来，拆解包头，识别数据，借助软中断机制告知上层进行相应的收包处理，最终用户态执行系统调用接收数据包。</p>
-<center><img src="/images/linux/linux_net_flow.jpg" alt=""></center>
-
-<p>继续细化这个过程，其内部在实现上都是通过具体的数据结构来完成每一层的过渡的，譬如说，应用层和内核之间通过 struct sock 结构实现协议无关的接口调用进行交互，传输层提供 struct proto 的结构来支持多种协议，网络层通过 struct sk_buff 来传递数据，接口层定义 struct net_device 来完成和驱动程序的交互。</p>
-<center><img src="/images/linux/linux_net_struct.jpg" alt=""></center>
-
-<p>Linux 网络体系结构还是比较博大精深的，尤其是这套自顶向下的分层设计方式对很多技术都有借鉴意义。更具体的函数调用和数据收发过程，后面的文章再进行讲述，敬请期待。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr>
-<p>Linux 网络子系统的分层模型，数据收发过程，以及核心数据结构。</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2018/01/05/tech/Linux_下几种零拷贝的方法/">
-              
-                  Linux 下几种零拷贝的方法
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-01-05
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>本文讲解 Linux 的零拷贝技术，我在「云计算技能图谱」中说过，云计算是一门很庞大的技术学科，融合了很多技术，Linux 算是比较基础的技术，所以，学好 Linux 对于云计算的学习会有比较大的帮助。</p>
-<p>本文借鉴并总结了几种比较常见的 Linux 下的零拷贝技术，相关的引用链接见文后，大家如果觉得本文总结得太抽象，可以转到链接看详细解释。</p>
-<h3 id="为什么需要零拷贝"><a href="#为什么需要零拷贝" class="headerlink" title="为什么需要零拷贝"></a>为什么需要零拷贝</h3><hr>
-<p>传统的 Linux 系统的标准 I/O 接口（read、write）是基于数据拷贝的，也就是数据都是 copy_to_user 或者 copy_from_user，这样做的好处是，通过中间缓存的机制，减少磁盘 I/O 的操作，但是坏处也很明显，大量数据的拷贝，用户态和内核态的频繁切换，会消耗大量的 CPU 资源，严重影响数据传输的性能，有数据表明，在Linux内核协议栈中，这个拷贝的耗时甚至占到了数据包整个处理流程的57.1%。</p>
-<h3 id="什么是零拷贝"><a href="#什么是零拷贝" class="headerlink" title="什么是零拷贝"></a>什么是零拷贝</h3><hr>
-<p>零拷贝就是这个问题的一个解决方案，通过尽量避免拷贝操作来缓解 CPU 的压力。Linux 下常见的零拷贝技术可以分为两大类：一是针对特定场景，去掉不必要的拷贝；二是去优化整个拷贝的过程。由此看来，零拷贝并没有真正做到“0”拷贝，它更多是一种思想，很多的零拷贝技术都是基于这个思想去做的优化。</p>
-<center><img src="/imagessss/linux/copy_type.jpg" alt=""></center>
-
-<h3 id="零拷贝的几种方法"><a href="#零拷贝的几种方法" class="headerlink" title="零拷贝的几种方法"></a>零拷贝的几种方法</h3><hr>
-<h4 id="原始数据拷贝操作"><a href="#原始数据拷贝操作" class="headerlink" title="原始数据拷贝操作"></a>原始数据拷贝操作</h4><hr>
-<p>在介绍之前，先看看 Linux 原始的数据拷贝操作是怎样的。如下图，假如一个应用需要从某个磁盘文件中读取内容通过网络发出去，像这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">while((n = read(diskfd, buf, BUF_SIZE)) &gt; 0)</span><br><span class="line"></span><br><span class="line">write(sockfd, buf , n);</span><br></pre></td></tr></table></figure>
-<p>那么整个过程就需要经历：1）read 将数据从磁盘文件通过 DMA 等方式拷贝到内核开辟的缓冲区；2）数据从内核缓冲区复制到用户态缓冲区；3）write 将数据从用户态缓冲区复制到内核协议栈开辟的 socket 缓冲区；4）数据从 socket 缓冲区通过 DMA 拷贝到网卡上发出去。</p>
-<center><img src="/imagessss/linux/copy_tran.png" alt=""></center>
-
-<p>可见，整个过程发生了至少四次数据拷贝，其中两次是 DMA 与硬件通讯来完成，CPU 不直接参与，去掉这两次，仍然有两次 CPU 数据拷贝操作。</p>
-<h4 id="方法一：用户态直接-I-O"><a href="#方法一：用户态直接-I-O" class="headerlink" title="方法一：用户态直接 I/O"></a>方法一：用户态直接 I/O</h4><hr>
-<p>这种方法可以使应用程序或者运行在用户态下的库函数直接访问硬件设备，数据直接跨过内核进行传输，内核在整个数据传输过程除了会进行必要的虚拟存储配置工作之外，不参与其他任何工作，这种方式能够直接绕过内核，极大提高了性能。</p>
-<center><img src="/imagessss/linux/copy_dirtio.jpg" alt=""></center>
-
-<p><strong>缺陷：</strong></p>
-<p>1）这种方法只能适用于那些不需要内核缓冲区处理的应用程序，这些应用程序通常在进程地址空间有自己的数据缓存机制，称为自缓存应用程序，如数据库管理系统就是一个代表。</p>
-<p>2）这种方法直接操作磁盘 I/O，由于 CPU 和磁盘 I/O 之间的执行时间差距，会造成资源的浪费，解决这个问题需要和异步 I/O 结合使用。</p>
-<h4 id="方法二：mmap"><a href="#方法二：mmap" class="headerlink" title="方法二：mmap"></a>方法二：mmap</h4><hr>
-<p>这种方法，使用 mmap 来代替 read，可以减少一次拷贝操作，如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buf = mmap(diskfd, len);</span><br><span class="line"></span><br><span class="line">write(sockfd, buf, len);</span><br></pre></td></tr></table></figure>
-<p>应用程序调用 mmap ，磁盘文件中的数据通过 DMA 拷贝到内核缓冲区，接着操作系统会将这个缓冲区与应用程序共享，这样就不用往用户空间拷贝。应用程序调用write ，操作系统直接将数据从内核缓冲区拷贝到 socket 缓冲区，最后再通过 DMA 拷贝到网卡发出去。</p>
-<center><img src="/imagessss/linux/copy_mmap.png" alt=""></center>
-
-<p><strong>缺陷：</strong> </p>
-<p>1）mmap 隐藏着一个陷阱，当 mmap 一个文件时，如果这个文件被另一个进程所截获，那么 write 系统调用会因为访问非法地址被 SIGBUS 信号终止，SIGBUS 默认会杀死进程并产生一个 coredump，如果服务器被这样终止了，那损失就可能不小了。</p>
-<p>解决这个问题通常使用文件的租借锁：首先为文件申请一个租借锁，当其他进程想要截断这个文件时，内核会发送一个实时的 RT_SIGNAL_LEASE 信号，告诉当前进程有进程在试图破坏文件，这样 write 在被 SIGBUS 杀死之前，会被中断，返回已经写入的字节数，并设置 errno 为 success。</p>
-<p>通常的做法是在 mmap 之前加锁，操作完之后解锁：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">if(fcntl(diskfd, F_SETSIG, RT_SIGNAL_LEASE) == -1) &#123;</span><br><span class="line"></span><br><span class="line">perror(&quot;kernel lease set signal&quot;);</span><br><span class="line"></span><br><span class="line">return -1;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* l_type can be F_RDLCK F_WRLCK  加锁*/</span><br><span class="line"></span><br><span class="line">/* l_type can be  F_UNLCK 解锁*/</span><br><span class="line"></span><br><span class="line">if(fcntl(diskfd, F_SETLEASE, l_type))&#123;</span><br><span class="line"></span><br><span class="line">perror(&quot;kernel lease set type&quot;);</span><br><span class="line"></span><br><span class="line">return -1;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="方法三：sendfile"><a href="#方法三：sendfile" class="headerlink" title="方法三：sendfile"></a>方法三：sendfile</h4><hr>
-<p>从Linux 2.1版内核开始，Linux引入了sendfile，也能减少一次拷贝。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/sendfile.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);</span><br></pre></td></tr></table></figure>
-<p>sendfile 是只发生在内核态的数据传输接口，没有用户态的参与，自然避免了用户态数据拷贝。它指定在 in_fd 和 out_fd 之间传输数据，其中，它规定 in_fd 指向的文件必须是可以 mmap 的，out_fd 必须指向一个套接字，也就是规定数据只能从文件传输到套接字，反之则不行。sendfile 不存在像 mmap 时文件被截获的情况，它自带异常处理机制。</p>
-<center><img src="/imagessss/linux/copy_sendfile.jpg" alt=""></center>
-
-<p><strong>缺陷：</strong></p>
-<p>1）只能适用于那些不需要用户态处理的应用程序。</p>
-<h4 id="方法四：DMA-辅助的-sendfile"><a href="#方法四：DMA-辅助的-sendfile" class="headerlink" title="方法四：DMA 辅助的 sendfile"></a>方法四：DMA 辅助的 sendfile</h4><hr>
-<p>常规 sendfile 还有一次内核态的拷贝操作，能不能也把这次拷贝给去掉呢？</p>
-<p>答案就是这种 DMA 辅助的 sendfile。</p>
-<p>这种方法借助硬件的帮助，在数据从内核缓冲区到 socket 缓冲区这一步操作上，并不是拷贝数据，而是拷贝缓冲区描述符，待完成后，DMA 引擎直接将数据从内核缓冲区拷贝到协议引擎中去，避免了最后一次拷贝。</p>
-<center><img src="/imagessss/linux/copy_dma_sendfile.jpg" alt=""></center>
-
-<p><strong>缺陷：</strong></p>
-<p>1）除了3.4 中的缺陷，还需要硬件以及驱动程序支持。</p>
-<p>2）只适用于将数据从文件拷贝到套接字上。</p>
-<h4 id="方法五：splice"><a href="#方法五：splice" class="headerlink" title="方法五：splice"></a>方法五：splice</h4><hr>
-<p>splice 去掉 sendfile 的使用范围限制，可以用于任意两个文件描述符中传输数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#define _GNU_SOURCE         /* See feature_test_macros(7) */</span><br><span class="line"></span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t splice(int fd_in, loff_t *off_in, int fd_out, loff_t *off_out, size_t len, unsigned int flags);</span><br></pre></td></tr></table></figure>
-<p>但是 splice 也有局限，它使用了 Linux 的管道缓冲机制，所以，它的两个文件描述符参数中至少有一个必须是管道设备。</p>
-<p>splice 提供了一种流控制的机制，通过预先定义的水印（watermark）来阻塞写请求，有实验表明，利用这种方法将数据从一个磁盘传输到另外一个磁盘会增加 30%-70% 的吞吐量，CPU负责也会减少一半。</p>
-<p><strong>缺陷：</strong> </p>
-<p>1）同样只适用于不需要用户态处理的程序</p>
-<p>2）传输描述符至少有一个是管道设备。</p>
-<h4 id="方法六：写时复制"><a href="#方法六：写时复制" class="headerlink" title="方法六：写时复制"></a>方法六：写时复制</h4><hr>
-<p>在某些情况下，内核缓冲区可能被多个进程所共享，如果某个进程想要这个共享区进行 write 操作，由于 write 不提供任何的锁操作，那么就会对共享区中的数据造成破坏，写时复制就是 Linux 引入来保护数据的。</p>
-<p>写时复制，就是当多个进程共享同一块数据时，如果其中一个进程需要对这份数据进行修改，那么就需要将其拷贝到自己的进程地址空间中，这样做并不影响其他进程对这块数据的操作，每个进程要修改的时候才会进行拷贝，所以叫写时拷贝。这种方法在某种程度上能够降低系统开销，如果某个进程永远不会对所访问的数据进行更改，那么也就永远不需要拷贝。</p>
-<p><strong>缺陷：</strong></p>
-<p>需要 MMU 的支持，MMU 需要知道进程地址空间中哪些页面是只读的，当需要往这些页面写数据时，发出一个异常给操作系统内核，内核会分配新的存储空间来供写入的需求。</p>
-<h4 id="方法七：缓冲区共享"><a href="#方法七：缓冲区共享" class="headerlink" title="方法七：缓冲区共享"></a>方法七：缓冲区共享</h4><hr>
-<p>这种方法完全改写 I/O 操作，因为传统 I/O 接口都是基于数据拷贝的，要避免拷贝，就去掉原先的那套接口，重新改写，所以这种方法是比较全面的零拷贝技术，目前比较成熟的一个方案是最先在 Solaris 上实现的 fbuf （Fast Buffer，快速缓冲区）。</p>
-<p>Fbuf 的思想是每个进程都维护着一个缓冲区池，这个缓冲区池能被同时映射到程序地址空间和内核地址空间，内核和用户共享这个缓冲区池，这样就避免了拷贝。</p>
-<center><img src="/imagessss/linux/copy_fbuf.jpg" alt=""></center>
-
-<p><strong>缺陷：</strong></p>
-<p>1）管理共享缓冲区池需要应用程序、网络软件、以及设备驱动程序之间的紧密合作</p>
-<p>2）改写 API ，尚处于试验阶段。</p>
-<h4 id="高性能网络-I-O-框架——netmap"><a href="#高性能网络-I-O-框架——netmap" class="headerlink" title="高性能网络 I/O 框架——netmap"></a>高性能网络 I/O 框架——netmap</h4><hr>
-<p>Netmap 基于共享内存的思想，是一个高性能收发原始数据包的框架，由Luigi Rizzo 等人开发完成，其包含了内核模块以及用户态库函数。其目标是，不修改现有操作系统软件以及不需要特殊硬件支持，实现用户态和网卡之间数据包的高性能传递。</p>
-<center><img src="/imagessss/linux/netmap.jpg" alt=""></center>
-
-<p>在 Netmap 框架下，内核拥有数据包池，发送环\接收环上的数据包不需要动态申请，有数据到达网卡时，当有数据到达后，直接从数据包池中取出一个数据包，然后将数据放入此数据包中，再将数据包的描述符放入接收环中。内核中的数据包池，通过 mmap 技术映射到用户空间。用户态程序最终通过 netmap_if 获取接收发送环 netmap_ring，进行数据包的获取发送。</p>
-<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><hr>
-<p>1、零拷贝本质上体现了一种优化的思想</p>
-<p>2、直接 I/O，mmap，sendfile，DMA sendfile，splice，缓冲区共享，写时复制……</p>
-<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><hr>
-<p>（1）Linux 中的零拷贝技术，第 1 部分<br><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html</a><br>（2）Linux 中的零拷贝技术，第 2 部分<br><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/</a><br>（3）Netmap 原理<br><a href="http://www.tuicool.com/articles/MnIRbuU" target="_blank" rel="noopener">http://www.tuicool.com/articles/MnIRbuU</a></p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/imagessss/weichat.png" alt=""></p>
-
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
-                
-                    <a href="/tags/零拷贝/"><i class="fas fa-hashtag fa-fw"></i>零拷贝</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/12/30/tech/雾计算简史/">
-              
-                  雾计算简史
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-12-30
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/02-雾计算/">02 雾计算</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <blockquote>
-<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
-</blockquote>
-<p>在我看来，雾计算和云计算的本质是一样的——都是充分利用「闲置的资源」进行任务的处理。不同在于云计算利用的是网络核心的资源，而雾计算则利用网络边缘的资源。</p>
-<p>1961 年，人工智能之父麦卡锡在一次会议上提出了「效用计算」这个概念，第一次体现了这种共享资源的思想。当时计算设备的价格非常昂贵，远非普通企业和机构所能承受，所以就想到将分散的闲置资源整合起来，共享给多个用户使用。类似的概念还有「网络计算」、「分布式计算」、「弹性计算」等，这些概念都是经由学术界提出，并逐步成为支撑工程应用发展的基础理论。</p>
-<center><img src="/images/cloud/mkx.jpg" alt=""></center>
-
-<p>工业界虽说比学术界要落后，但工业界做着让所有人都兴奋的事——让概念标准化，真正让技术实现落地。上面这些概念让人晕乎，虽有差异，但本质一致，所以工业界就统一用「云计算」一词来囊括。</p>
-<p>2006 年 8 月 9 日，Google 首席执行官埃里克·施密特在搜索引擎大会(SES San Jose 2006)首次提出云计算(Cloud Computing)的概念。从此云计算的发展进入了井喷时代。</p>
-<center><img src="/images/cloud/smt.jpg" alt=""></center>
-
-<p>2007 年初，Amazon 推出弹性计算云 EC2 服务；2007 年 11 月，IBM 发布业界首个云计算商业解决方案「蓝云」计划；2008 年 4 月，Google APP Engine 发布；2008 年 Gartner 发布报告，认为云计算代表了今后计算的方向；2009 年 1 月，阿里巴巴在南京建立首个“电子商务云计算中心”；2010 年 1 月，微软正式发布 Microsoft Azure 云平台服务；2010 年 7 月，美国国家航空航天局和包括 Rackspace、AMD、Intel、戴尔等支持厂商共同宣布开放「OpenStack」项目源代码……</p>
-<p>时至今日，云计算已经进入稳定发展时期，面临的是新的问题。</p>
-<p>随着移动设备、嵌入式设备和传感设备等智能设备的不断创新和普及，进入了「万物互联网时代（IoT）」，全球的移动数据呈现出疯狂式的增长。</p>
-<p>据 Cisco 2016 年做的一个关于移动数据预测报告显示，全球的移动数据将会在 2016 年和 2021 年之间提高 18  倍，2021 年截止将会超过 49 EB。面对大量的数据和新型的应用程序对服务质量的严苛需求，云计算的问题也凸显出来。</p>
-<center><img src="/images/cloud/datagrow.jpg" alt=""></center>
-
-<p>首先，云计算中心位于远程的 Internet，对于那些对延迟敏感的应用程序（如视频流、在线游戏等），将会带来较长的传播时延（WAN），这对于用户体验来说是无法忍受的。其次，对移动场景支持不足，特别是对于高速移动的车载网络环境，司机对于路况、交通流等的感知都必须是快速且实时的。再次，无法满足地理位置分布相关的感知环境的实时要求，如大规模的传感网络，要求传感节点定时向其他节点更新自身的信息。再有，大量的设备接入云端，网络带宽就显得捉襟见肘。最后，云计算的安全性和隐私性不容乐观，在用户和云计算中心之间需要经过多跳的网络传输，越深的网络传输，数据的完整性和机密性就越难保证。</p>
-<p>以上问题的解决方案，自然是由学术界首先提出的。2009 年卡内基梅隆大学的沙特亚教授等人在其发表的论文[1]中提出「微云（Cloudlet）」的概念。论文指出微云是一种「和云有着同样的技术标准，但邻近用户」的新型计算模式。</p>
-<center><img src="/images/cloud/cloudlet.jpg" alt=""></center>
-
-<p>这里面蕴含着几层信息。第一，能够提供和云计算一样的服务，但所提供的资源有限，不如云计算能够提供无限的资源；第二，邻近用户，意味着用户请求的响应时延大大减少；第三，雾计算基础设施以分布式的方式部署在网络的边缘，满足高速移动场景和地理位置分布的场景需求，同时，减缓了网络核心的带宽负载；第四，安全性和隐私性较云计算得到较大保障。</p>
-<p>这是「雾计算」最初的雏形。之后，学术界又提出很多类似的解决方案，如「Fog Computing」、「Edge Computing」、「Follow me Cloud」、「Small-Cell Cloud」、「Virtual Cloud」、「FemtoCloud」等。</p>
-<p>这些概念其实本质都是一样的，都是在讲一件事，就是将「计算去中心化」——将云计算资源和服务从网络的核心转移到网络的边缘，以此来适应今天多种 IoT 应用的需求。和云计算的提出如出一辙，只不过引导这次工业变革的对象不再是 Google，而是 Cisco。</p>
-<center><img src="/images/cloud/fog_cisco.jpg" alt=""></center>
-
-<p>Cisco 在 Cisco Live 2014 会议上首度提出这个概念。Cisco 强调雾计算是依托于现今无处不在的 IoT 应用产生的一种新型计算模式。</p>
-<p>相比于云计算，雾计算是一种更加新进和广泛的计算模式，更具扩展性和可持续性。但是雾计算也不能完全取代云计算，必须依托于云计算才能更好地发挥其作用，因此它们的关系是相辅相成，相互联系的。</p>
-<p>在会上，Cisco 同时发布了供开发者使用的开发套件 IOx。IOx 是 Cisco 对于雾计算模式的实现。它为开发者提供了一整套的开发框架（包括开发、分发、部署、监控和管理等多种组件）和计算平台，开发者能够将开发好的应用部署到网络的边界上（路由器、交换机等）进行处理。如下是 IOx 的架构图，更多信息请访问 IOx 开发者文档。</p>
-<center><img src="/images/cloud/fog_iox.jpg" alt=""></center>
-
-<p>雾计算是应现今「人工智能」、「物联网」一波红海而生的技术革新。业界多家企业和组织机构都开始在布局雾计算的生态体系，除了 Cisco、华为这些通讯产商，还有很多云计算、物联网的企业也加入进来。</p>
-<p>在中国，最早布局雾计算架构的是成立于2005 年的全球领先的物联网云服务商「智云」。他们在 2016 年初即发布了主打 IoT 雾计算的机智云 4.0，整合了雾计算、物联网大数据和机器学习应用能力，形成了一体化的解决方案。</p>
-<p>此外，2015 年 11 月 19 日，Cisco 联合 ARM、Dell、Intel、Microsoft 和普林斯顿大学成立了「开放雾联盟（OpenFog）」，旨在制定雾计算相关的技术标准和推动行业的技术变革。</p>
-<p>由此可见，雾计算将会成为继云计算之后的又一波技术浪潮。</p>
-<p>PS：最近听一些朋友在谈「雾计算」，正好我研究生期间研究过一段时间这玩意，于是有一种不吐不快之感，遂拿出来跟大家分享了。如果你觉得对你有一点帮助，点赞，转发，不胜感激，或者有什么想跟我探讨的，欢迎留言。</p>
-<p><strong>Reference:</strong> </p>
-<hr>
-<p>[1] The Case for VM-Based Cloudlets in Mobile Computing<br>[2] Fog Computing: A Taxonomy, Survey and future direction<br>[3] Edge-centric Computing: Vision and Challenges<br>[4] Edge-Computing: Challenges to support edge-as-a-service<br>[5] A virtual Cloud computing provider for mobile devices<br>[6] Femto Clouds: Leveraging mobile devices to provide Cloud service at the edge<br>[7] Follow me Cloud: interworking federated Clouds and distributed mobile networks</p>
-<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
-<center>–END–</center>
-
-<hr>
-<blockquote>
-<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
-</blockquote>
-<p><img src="/images/weichat.png" alt=""></p>
-
         
 
         
@@ -1266,9 +376,151 @@
                 
                     <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
-                    <a href="/tags/雾计算/"><i class="fas fa-hashtag fa-fw"></i>雾计算</a>
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
-                    <a href="/tags/边缘计算/"><i class="fas fa-hashtag fa-fw"></i>边缘计算</a>
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/08/31/tech/Kubernetes_笔记_02_demo_初体验/">
+              
+                  Kubernetes 笔记 02 demo 初体验
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-31
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/k8s/4.jpg" alt=""></center>
+
+<p>Hi，大家好，我是 Linux云计算网络！欢迎大家和我一起学习 K8S。</p>
+<p>从前面的文章我们知道，Kubernetes 脱胎于 Google 的 Borg，Borg 在 Kubernetes 诞生之初已经在 Google 内部身经百战 10 余年，且不说它的历史源远流长，就凭它是出自 Google 那帮天才工程师之手，就知道它的学习难度不低。</p>
+        
+            <div class="readmore">
+                <a href="/2018/08/31/tech/Kubernetes_笔记_02_demo_初体验/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2018/08/30/tech/Kubernetes_笔记_01_初识_Kubernetes_新时代的领航者/">
+              
+                  Kubernetes 笔记 01 初识 Kubernetes 新时代的领航者
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-08-30
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Kubernetes/">Kubernetes</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<center><img src="/images/k8s/2.jpg" alt=""></center>
+
+<p>Hi，大家好，我是 Linux云计算网络！欢迎大家和我一起学习 K8S。</p>
+<p>大明王朝时期，明成祖朱棣为了发展海外贸易和建立自己的声望，派郑和七下西洋，创下了这段中国古代规模最大、船只最多（240多艘）、海员最多（2.7 万人）、时间最久的，比欧洲国家航海时间早半个多世纪的远洋航行壮举。</p>
+        
+            <div class="readmore">
+                <a href="/2018/08/30/tech/Kubernetes_笔记_01_初识_Kubernetes_新时代的领航者/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/Kubernetes/"><i class="fas fa-hashtag fa-fw"></i>Kubernetes</a>
                 
             </div>
         
@@ -1292,7 +544,7 @@
                 </a>
             
             <p class="current">
-                6 / 12
+                6 / 23
             </p>
             
                 <a class="next" rel="next" href="/page/7/">
@@ -1329,7 +581,7 @@
 </header>
 
   <div class="content material">
-    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+    <p>你好，这里是<a href="https://ctimbai.github.io">猿大白</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
 
   </div>
 </section>

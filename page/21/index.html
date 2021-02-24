@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <title>猿大白</title>
+  
+  
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈">
+  
+
+  <link rel="alternate" href="/atom.xml" title="猿大白">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- meta -->
+  
+  
+  <meta name="theme-color" content="#f24e32">
+  
+  <meta name="msapplication-TileColor" content="#f24e32">
+  
+  <meta name="msapplication-config" content="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/browserconfig.xml">
+  
+  
+  <!-- link -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.6.3/css/all.min.css">
+
+  
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-fonts@master/Ubuntu/Ubuntu-Regular.ttf">
+  
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicon.ico" type="image/x-icon">
+  
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/favicon-32x32.png" type="image/x-icon" sizes="32x32">
+  
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/apple-touch-icon.png" type="image/png" sizes="180x180">
+  
+  <link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/safari-pinned-tab.svg" color="#f24e32">
+  
+  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/xaoxuu/assets@18.12.27/favicon/favicons/site.webmanifest">
+  
+  
+
+  
+  <link rel="stylesheet" href="/style.css">
+  
+
+  
+
+
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+
+  
+  
+</head>
+
+<body>
+    <div id="loading-bar-wrapper">
+  <div id="loading-bar" class="material"></div>
+</div>
+
+    <script>setLoadingBarProgress(20)</script>
+    <header class="l_header material">
+	<div class="wrapper">
+		<div class="nav-main container container--flex">
+      <a class="logo flat-box" href="/">
+        
+          猿大白
+        
+      </a>
+			<div class="menu">
+				<ul class="h-list">
+          
+  					
+  						<li>
+								<a id="home" class="nav flat-box" href="/">
+									<i class="fas fa-home fa-fw"></i>&nbsp;主页
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="archives" class="nav flat-box" href="/archives/">
+									<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+								</a>
+							</li>
+      			
+  						<li>
+								<a id="friends" class="nav flat-box" href="/friends/">
+									<i class="fas fa-users fa-fw"></i>&nbsp;导航
+								</a>
+							</li>
+      			
+      		
+				</ul>
+			</div>
+
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="搜索">
+						<span class="icon"><i class="fas fa-search fa-fw"></i></span>
+					</form>
+				</div>
+			
+			<ul class="switcher h-list">
+				
+					<li class="s-search"><a class="fas fa-search fa-fw" href="javascript:void(0)"></a></li>
+				
+				<li class="s-menu"><a class="fas fa-bars fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+
+		<div class="nav-sub container container--flex">
+			<a class="logo flat-box"></a>
+			<ul class="switcher h-list">
+				<li class="s-comment"><a class="flat-btn fas fa-comments fa-fw" href="javascript:void(0)"></a></li>
+				<li class="s-toc"><a class="flat-btn fas fa-list fa-fw" href="javascript:void(0)"></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+	<aside class="menu-phone">
+    <header>
+		<nav class="menu">
+      <ul>
+          
+              
+                  <li>
+										<a id="home" class="nav flat-box" href="/">
+											<i class="fas fa-home fa-fw"></i>&nbsp;主页
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="archives" class="nav flat-box" href="/archives/">
+											<i class="fas fa-archive fa-fw"></i>&nbsp;归档
+										</a>
+                  </li>
+              
+                  <li>
+										<a id="friends" class="nav flat-box" href="/friends/">
+											<i class="fas fa-users fa-fw"></i>&nbsp;导航
+										</a>
+                  </li>
+              
+       
+      </ul>
+		</nav>
+    </header>
+	</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+    <div class="l_body">
+    <div class='container clearfix'>
+        <div class='l_main'>
+            
+
+<section class="post-list">
+    
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2014/10/01/tech/github/">
+              
+                  Git的学习资源
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-10-01
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p>最近看到一个工具，用于托管代码的仓库，Github，其相当于为本机客户端提供了一个远程管理代码的云端服务器，本机的代码可以克隆到云端，也可以从云端同步到客户端，对于程序员来说是一个非常强大的工具，这样程序员就可以不用担心代码的累积给自己造成的困扰，可以安心专注于算法，程序的设计上，而不用为其他的一些琐事儿烦恼，如后期的代码整理，查询和修改。Github是Git下面的一个子项目，Git是一款自由和开源的分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目，类似的系统，我们可能比较熟悉的是像微软的CVS、SVN等这些免费的版本控制系统，但是这些系统是集中式的，不但速度慢，而且必须联网才能使用。由于Git是基于Linux社区建立起来的一个系统，所以其拥有开源和分布式等的优点，现在已经成为业界最为流行的分布式版本控制系统。写这篇文章只是作为简单的了解，并列举网上几个入门级的资料，方便自己以后进行更为深入的学习。见下面：  </p>
+<p><a href="http://www.liaoxuefeng.com/" target="_blank" rel="noopener">廖雪峰的官方网站</a><br><a href="http://www.freair.com/bbs/read.php?tid=892" target="_blank" rel="noopener">从不会到会使用Github需要几步？</a><br><a href="http://www.yangzhiping.com/tech/github.html" target="_blank" rel="noopener">如何高效利用Github</a><br><a href="http://www.eoeandroid.com/thread-274556-1-1.html" target="_blank" rel="noopener">史上最全github使用方法：github入门到精通</a></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/git/"><i class="fas fa-hashtag fa-fw"></i>git</a>
+                
+                    <a href="/tags/github/"><i class="fas fa-hashtag fa-fw"></i>github</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2014/09/30/life/About Time/">
+              
+                  About Time ——让时间定格于当下
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-09-30
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p>无意中看到了《About Time》(中文翻译为《时空恋旅人》)这部影片，感触颇深，特以记之作为留恋。</p>
+<p><img src="/images/next/abouttime.jpg" alt="">     </p>
+        
+            <div class="readmore">
+                <a href="/2014/09/30/life/About Time/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2014/09/25/tech/matplotlib初探/">
+              
+                  matplotlib初探
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-09-25
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Python/">Python</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近摸索了Python的画图库<a href="http://matplotlib.org/index.html" target="_blank" rel="noopener">Matplotlib</a>，其画的图要多炫丽有多炫丽，要多优雅有多优雅，真的有被震撼到，最近项目要求需要画图，考虑到matlab虽然博大精深，但却不易上手，貌似网上最近也在盛传“是否matplotlib能取代matlab”的诸多言论，对于一个旁观者和门外汉，我不做评论，我只有一个理念：什么好学用什么。另外，对于语言的学习和掌握，我现在有一个特别明晰的目标，就是以后以Python为主轴，C\C++作为辅助，算法为核心来展开。  </p>
+<p>半年前就接触Python，但期间由于没有一个特定的目标，东捡一点西捡一点，到头来总是在重复同样的事情。现在觉得需要什么学什么，带有目标地去学习才能提高效率，也才能记忆犹新，废话不多说，本文就简单的说说matplotlib。由于刚入门，也没有什么心得，仅仅是看了<a href="http://www.loria.fr/~rougier/teaching/matplotlib/" target="_blank" rel="noopener">matplotlib tutorial</a>的一点笔记记录。由于手册是英文版，所以，本文算是对原文的翻译，但我会完全脱离原文的思路，用自己的思路来写，外加自己的一些引申的东西。在进入主题之前，先看下这个知乎大牛关于<a href="http://www.zhihu.com/question/21664179" target="_blank" rel="noopener">如何在论文中画出漂亮的插图</a>的探讨，先目睹一下matplotlib所体现出炫丽与优雅。</p>
+        
+            <div class="readmore">
+                <a href="/2014/09/25/tech/matplotlib初探/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Python/"><i class="fas fa-hashtag fa-fw"></i>Python</a>
+                
+                    <a href="/tags/matplotlib/"><i class="fas fa-hashtag fa-fw"></i>matplotlib</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2014/09/24/tech/Numpy科学计算器/">
+              
+                  Numpy——强大的科学计算器
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-09-24
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Python/">Python</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <h3 id="简单概念"><a href="#简单概念" class="headerlink" title="简单概念"></a>简单概念</h3><p><strong>Numpy 是Python中用于科学计算的一个基本的包(Package)</strong>，下面来看看Numpy的官方定义：<br>NumPy is the fundamental package for scientific computing with Python. It contains among other things:  </p>
+<ul>
+<li>a powerful N-dimensional array object  </li>
+<li>sophisticated (broadcasting) functions</li>
+<li>tools for integrating C/C++ and Fortran code</li>
+<li>useful linear algebra, Fourier transform, and random number capabilities</li>
+</ul>
+<p><strong>简单的理解Numpy就是</strong>：其为数值定义了特定的结构和规则，方便对不同的数值，甚至复杂的数值进行运算（这里说的数值是广义上的），如多维数组结构等。</p>
+        
+            <div class="readmore">
+                <a href="/2014/09/24/tech/Numpy科学计算器/" class="flat-box">
+                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
+                    阅读全文
+                </a>
+            </div>
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/Python/"><i class="fas fa-hashtag fa-fw"></i>Python</a>
+                
+                    <a href="/tags/Numpy/"><i class="fas fa-hashtag fa-fw"></i>Numpy</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+      
+        <div class="post-wrapper">
+          <article class="post reveal ">
+    
+<section class="meta">
+  
+  <div class="meta" id="header-meta">
+    
+      <h2 class="title">
+          <a href="/2014/09/23/tech/几个文件显示乱码的解决方法（大同小异）/">
+              
+                  JabRef、Pycharm显示乱码的解决方法（大同小异）
+              
+          </a>
+      </h2>
+    
+
+    
+      <time class="metatag time">
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2014-09-23
+      </time>
+    
+
+    
+      
+    
+    <div class="metatag cats">
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
+    </div>
+
+
+    
+
+    
+
+    
+
+  </div>
+</section>
+
+    <section class="article typo">
+        <p><strong>JabRef：</strong>一款和CTex配套使用的文献管理软件，就像Endnote和Word配套一样，在写Abstract或review时，其默认只能输入英文，输入中文则乱码，解决办法：<br>first set Options||Preferences||General&gt;&gt;Default Encoding as UTF8<br>then set Options||Preferences||Appearance&gt;&gt;Set table font as simsun (or any other Chinese fonts) </p>
+<p>效果非常好。如果还有问题，可将Entry Preview里改为<font face="simsun">  </font></p>
+<p><strong>Pycharm：</strong>一款方便调试，并集成了多个库的Python IDE，个人感觉非常好用，如C\C++的VS和Codeblock，java的eclipse，安装默认不支持中文编码，在注释的时候出现乱码，解决办法：<br>File-settings-file and code templates-python script中改成：<br># -<em>- coding: utf-8 -</em>-<br>然后File-settings-file encoding改成UTF-8编码  </p>
+<p>设置字体大小，行号<br>File-&gt;Settings-&gt;Editor-&gt;Colors &amp; Font -&gt; Font</p>
+<p>File-&gt;Settings-&gt;Editor-&gt;Apperance -&gt; 选上Show line numbers</p>
+<p>总结：一般这种编码乱码问题，都是由于编码不支持造成的，找到相关地方进行修改就可以了，一般都会在Setting里面。关于中英文编码问题，详见这篇文章，写得非常nice。<br><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="noopener">字符编码</a></p>
+
+        
+
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/乱码/"><i class="fas fa-hashtag fa-fw"></i>乱码</a>
+                
+            </div>
+        
+    </section>
+</article>
+
+        </div>
+      
+    
+</section>
+
+
+    <br>
+    <div class="prev-next">
+        <div class="prev-next">
+            
+                <a class="prev" rel="prev" href="/page/20/">
+                    <section class="post prev">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>&nbsp;上一页&nbsp;
+                    </section>
+                </a>
+            
+            <p class="current">
+                21 / 23
+            </p>
+            
+                <a class="next" rel="next" href="/page/22/">
+                    <section class="post next">
+                        &nbsp;下一页&nbsp;<i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </section>
+                </a>
+            
+
+        </div>
+    </div>
+
+
+
+<!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
+
+
+
+
+
+        </div>
+        <aside class='l_side'>
+            
+  
+  
+    
+      
+      
+        <section class="plain">
+  
+<header class="material">
+  <div><i class="fas fa-bullhorn fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;公告</div>
+  
+</header>
+
+  <div class="content material">
+    <p>你好，这里是<a href="https://ctimbai.github.io">猿大白</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        <section class="author">
+  <div class="content material">
+    
+      <div class="avatar">
+        <img class="avatar" src="/images/cloud.png">
+      </div>
+    
+    
+      <div class="text">
+        
+        
+          <p>公众号：Linux云计算网络</p>
+
+        
+        
+      </div>
+    
+    
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="category">
+    
+<header class="material">
+  <div><i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;所有分类</div>
+  
+</header>
+
+    <div class="content material">
+      <ul class="entry">
+        
+          <li><a class="flat-box" title="/categories/01-云计算/" href="/categories/01-云计算/"><div class="name">01 云计算</div><div class="badge">(7)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/02-雾计算/" href="/categories/02-雾计算/"><div class="name">02 雾计算</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/03-虚拟化/" href="/categories/03-虚拟化/"><div class="name">03 虚拟化</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/04-算法/" href="/categories/04-算法/"><div class="name">04 算法</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/05-工具/" href="/categories/05-工具/"><div class="name">05 工具</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/06-网络/" href="/categories/06-网络/"><div class="name">06 网络</div><div class="badge">(15)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/DPDK/" href="/categories/DPDK/"><div class="name">DPDK</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Docker/" href="/categories/Docker/"><div class="name">Docker</div><div class="badge">(9)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Kubernetes/" href="/categories/Kubernetes/"><div class="name">Kubernetes</div><div class="badge">(14)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Linux/" href="/categories/Linux/"><div class="name">Linux</div><div class="badge">(10)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/NFV/" href="/categories/NFV/"><div class="name">NFV</div><div class="badge">(1)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/OVS/" href="/categories/OVS/"><div class="name">OVS</div><div class="badge">(2)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/Python/" href="/categories/Python/"><div class="name">Python</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/影评/" href="/categories/影评/"><div class="name">影评</div><div class="badge">(8)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/杂谈/" href="/categories/杂谈/"><div class="name">杂谈</div><div class="badge">(11)</div></a></li>
+        
+          <li><a class="flat-box" title="/categories/读书/" href="/categories/读书/"><div class="name">读书</div><div class="badge">(4)</div></a></li>
+        
+      </ul>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        
+  <section class="tagcloud">
+    
+<header class="material">
+  <div><i class="fas fa-fire fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;热门标签</div>
+  
+</header>
+
+    <div class="content material">
+      <a href="/tags/Bridge/" style="font-size: 17.08px; color: #848484">Bridge</a> <a href="/tags/CNM/" style="font-size: 14px; color: #999">CNM</a> <a href="/tags/CPU/" style="font-size: 16.31px; color: #898989">CPU</a> <a href="/tags/Cgroup/" style="font-size: 14.77px; color: #949494">Cgroup</a> <a href="/tags/DPDK/" style="font-size: 15.54px; color: #8f8f8f">DPDK</a> <a href="/tags/Django/" style="font-size: 14px; color: #999">Django</a> <a href="/tags/Docker/" style="font-size: 20.15px; color: #6f6f6f">Docker</a> <a href="/tags/I-O/" style="font-size: 14px; color: #999">I/O</a> <a href="/tags/ICMP/" style="font-size: 14px; color: #999">ICMP</a> <a href="/tags/KVM/" style="font-size: 17.08px; color: #848484">KVM</a> <a href="/tags/Kata/" style="font-size: 14px; color: #999">Kata</a> <a href="/tags/Kubernetes/" style="font-size: 21.69px; color: #656565">Kubernetes</a> <a href="/tags/LaTeX/" style="font-size: 14.77px; color: #949494">LaTeX</a> <a href="/tags/Linux/" style="font-size: 23.23px; color: #5a5a5a">Linux</a> <a href="/tags/Markdown/" style="font-size: 14px; color: #999">Markdown</a> <a href="/tags/NAT/" style="font-size: 14px; color: #999">NAT</a> <a href="/tags/NFV/" style="font-size: 14px; color: #999">NFV</a> <a href="/tags/NUMA/" style="font-size: 15.54px; color: #8f8f8f">NUMA</a> <a href="/tags/Namespace/" style="font-size: 16.31px; color: #898989">Namespace</a> <a href="/tags/Numpy/" style="font-size: 14px; color: #999">Numpy</a> <a href="/tags/OVS/" style="font-size: 16.31px; color: #898989">OVS</a> <a href="/tags/OpenFlow/" style="font-size: 14.77px; color: #949494">OpenFlow</a> <a href="/tags/OpenStack/" style="font-size: 14px; color: #999">OpenStack</a> <a href="/tags/Pouch/" style="font-size: 14px; color: #999">Pouch</a> <a href="/tags/Python/" style="font-size: 18.62px; color: #7a7a7a">Python</a> <a href="/tags/Qemu/" style="font-size: 16.31px; color: #898989">Qemu</a> <a href="/tags/SDN/" style="font-size: 14px; color: #999">SDN</a> <a href="/tags/SPDK/" style="font-size: 14px; color: #999">SPDK</a> <a href="/tags/Sublime-Text/" style="font-size: 14px; color: #999">Sublime Text</a> <a href="/tags/UIO/" style="font-size: 14px; color: #999">UIO</a> <a href="/tags/VLAN/" style="font-size: 14.77px; color: #949494">VLAN</a> <a href="/tags/VPP/" style="font-size: 14px; color: #999">VPP</a> <a href="/tags/cacico/" style="font-size: 14px; color: #999">cacico</a> <a href="/tags/flannel/" style="font-size: 14px; color: #999">flannel</a> <a href="/tags/fstack/" style="font-size: 14px; color: #999">fstack</a> <a href="/tags/git/" style="font-size: 15.54px; color: #8f8f8f">git</a> <a href="/tags/github/" style="font-size: 14.77px; color: #949494">github</a> <a href="/tags/hexo/" style="font-size: 14px; color: #999">hexo</a> <a href="/tags/ipip/" style="font-size: 14px; color: #999">ipip</a> <a href="/tags/libnetwork/" style="font-size: 14px; color: #999">libnetwork</a> <a href="/tags/mTCP/" style="font-size: 14.77px; color: #949494">mTCP</a> <a href="/tags/macvlan/" style="font-size: 15.54px; color: #8f8f8f">macvlan</a> <a href="/tags/matplotlib/" style="font-size: 14px; color: #999">matplotlib</a> <a href="/tags/overlay/" style="font-size: 14px; color: #999">overlay</a> <a href="/tags/tap/" style="font-size: 17.08px; color: #848484">tap</a> <a href="/tags/tcpdump/" style="font-size: 14px; color: #999">tcpdump</a> <a href="/tags/tun/" style="font-size: 17.08px; color: #848484">tun</a> <a href="/tags/tunnel/" style="font-size: 14px; color: #999">tunnel</a> <a href="/tags/veth-pair/" style="font-size: 15.54px; color: #8f8f8f">veth-pair</a> <a href="/tags/vhost/" style="font-size: 14.77px; color: #949494">vhost</a> <a href="/tags/vhost-user/" style="font-size: 14px; color: #999">vhost_user</a> <a href="/tags/virtio/" style="font-size: 14.77px; color: #949494">virtio</a> <a href="/tags/vrouter/" style="font-size: 14px; color: #999">vrouter</a> <a href="/tags/weave/" style="font-size: 14px; color: #999">weave</a> <a href="/tags/乱码/" style="font-size: 14px; color: #999">乱码</a> <a href="/tags/云计算/" style="font-size: 24px; color: #555">云计算</a> <a href="/tags/人民的名义/" style="font-size: 14px; color: #999">人民的名义</a> <a href="/tags/共享经济/" style="font-size: 14px; color: #999">共享经济</a> <a href="/tags/内存/" style="font-size: 14.77px; color: #949494">内存</a> <a href="/tags/创新/" style="font-size: 14px; color: #999">创新</a> <a href="/tags/大页内存/" style="font-size: 14px; color: #999">大页内存</a> <a href="/tags/容器/" style="font-size: 19.38px; color: #747474">容器</a> <a href="/tags/容器网络/" style="font-size: 17.08px; color: #848484">容器网络</a> <a href="/tags/小米/" style="font-size: 14px; color: #999">小米</a> <a href="/tags/微服务/" style="font-size: 14px; color: #999">微服务</a> <a href="/tags/性能分析/" style="font-size: 17.85px; color: #7f7f7f">性能分析</a> <a href="/tags/情怀/" style="font-size: 14px; color: #999">情怀</a> <a href="/tags/手机/" style="font-size: 14px; color: #999">手机</a> <a href="/tags/技能图谱/" style="font-size: 14.77px; color: #949494">技能图谱</a> <a href="/tags/推荐系统/" style="font-size: 14px; color: #999">推荐系统</a> <a href="/tags/数据结构/" style="font-size: 14px; color: #999">数据结构</a> <a href="/tags/杂谈/" style="font-size: 14px; color: #999">杂谈</a> <a href="/tags/架构/" style="font-size: 14px; color: #999">架构</a> <a href="/tags/混合云/" style="font-size: 14px; color: #999">混合云</a> <a href="/tags/电影推荐/" style="font-size: 14px; color: #999">电影推荐</a> <a href="/tags/简历/" style="font-size: 14px; color: #999">简历</a> <a href="/tags/算法/" style="font-size: 14px; color: #999">算法</a> <a href="/tags/网络/" style="font-size: 22.46px; color: #5f5f5f">网络</a> <a href="/tags/罗胖/" style="font-size: 14px; color: #999">罗胖</a> <a href="/tags/老罗/" style="font-size: 15.54px; color: #8f8f8f">老罗</a> <a href="/tags/虚拟化/" style="font-size: 20.92px; color: #6a6a6a">虚拟化</a> <a href="/tags/读书/" style="font-size: 14.77px; color: #949494">读书</a> <a href="/tags/边缘计算/" style="font-size: 14.77px; color: #949494">边缘计算</a> <a href="/tags/锤子科技/" style="font-size: 15.54px; color: #8f8f8f">锤子科技</a> <a href="/tags/阿里巴巴/" style="font-size: 14px; color: #999">阿里巴巴</a> <a href="/tags/集群/" style="font-size: 14px; color: #999">集群</a> <a href="/tags/零拷贝/" style="font-size: 14px; color: #999">零拷贝</a> <a href="/tags/雾计算/" style="font-size: 15.54px; color: #8f8f8f">雾计算</a>
+    </div>
+  </section>
+
+
+      
+    
+  
+    
+      
+      
+        <section class="list">
+  
+<header class="material">
+  <div><i class="fas fa-link fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;友链</div>
+  
+</header>
+
+  <div class="content material">
+    <ul class="entry">
+      
+        <li><a class="flat-box" title="about/" href="/about/">
+          <div class="name">
+            
+              <i class="fas fa-comment-dots fa-fw" aria-hidden="true"></i>
+            
+            &nbsp;&nbsp;关于我 / 留言板
+          </div>
+          
+        </a></li>
+      
+    </ul>
+  </div>
+</section>
+
+      
+    
+  
+    
+      
+      
+        
+
+      
+    
+  
+
+
+        </aside>
+        <script>setLoadingBarProgress(60);</script>
+    </div>
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+    <footer id="footer" class="clearfix">
+  
+  <br>
+  <div><p>博客内容遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+  <div>本站使用 <a href="https://xaoxuu.com/wiki/material-x/" target="_blank" class="codename">Material X</a> 作为主题，总访问量为 <span id="busuanzi_value_site_pv"><i class="fas fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span> 次。
+  </div>
+</footer>
+
+    <script>setLoadingBarProgress(80);</script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+
+  <script>
+    var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+    var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+    var ALGOLIA_API_KEY = "";
+    var ALGOLIA_APP_ID = "";
+    var ALGOLIA_INDEX_NAME = "";
+    var AZURE_SERVICE_NAME = "";
+    var AZURE_INDEX_NAME = "";
+    var AZURE_QUERY_KEY = "";
+    var BAIDU_API_ID = "";
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/"||"/";
+    if(!ROOT.endsWith('/'))ROOT += '/';
+  </script>
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.5/dist/scrollreveal.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        const $reveal = $('.reveal');
+    		if ($reveal.length === 0) return;
+    		const sr = ScrollReveal({ distance: 0 });
+    		sr.reveal('.reveal');
+      });
+    </script>
+  
+  
+    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        Waves.attach('.flat-btn', ['waves-button']);
+        Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+        Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+        Waves.attach('.flat-box', ['waves-block']);
+        Waves.attach('.float-box', ['waves-block', 'waves-float']);
+        Waves.attach('.waves-image');
+        Waves.init();
+      });
+    </script>
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/xaoxuu/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js"></script>
+  
+  
+  
+
+
+  
+  
+  
+    
+  
+  
+    <script src="/js/app.js"></script>
+<script src="/js/search.js"></script>
+  
+
+
+
+
+
+
+    <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

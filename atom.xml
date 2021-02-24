@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>长亭的网志空间</title>
+  <title>猿大白</title>
   
-  <subtitle>Linux|云计算|网络|编程|读书|思维|认知</subtitle>
+  <subtitle>Linux|云计算|网络|编程|Go|C/C++</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://chambai.github.io/"/>
+  <link href="https://ctimbai.github.io/"/>
   <updated>2019-04-17T16:27:15.308Z</updated>
-  <id>https://chambai.github.io/</id>
+  <id>https://ctimbai.github.io/</id>
   
   <author>
     <name>bike</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Docker 网络模型之 macvlan 详解</title>
-    <link href="https://chambai.github.io/2019/04/14/tech/docker-macvlan/"/>
-    <id>https://chambai.github.io/2019/04/14/tech/docker-macvlan/</id>
+    <link href="https://ctimbai.github.io/2019/04/14/tech/docker-macvlan/"/>
+    <id>https://ctimbai.github.io/2019/04/14/tech/docker-macvlan/</id>
     <published>2019-04-14T05:16:14.000Z</published>
     <updated>2019-04-17T16:27:15.308Z</updated>
     
@@ -34,23 +34,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Docker" scheme="https://chambai.github.io/tags/Docker/"/>
+      <category term="Docker" scheme="https://ctimbai.github.io/tags/Docker/"/>
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="macvlan" scheme="https://chambai.github.io/tags/macvlan/"/>
+      <category term="macvlan" scheme="https://ctimbai.github.io/tags/macvlan/"/>
     
   </entry>
   
   <entry>
     <title>Linux网络命令必知必会之 tcpdump</title>
-    <link href="https://chambai.github.io/2019/04/11/tech/linux%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4%E4%B9%8Btcpdump/"/>
-    <id>https://chambai.github.io/2019/04/11/tech/linux网络命令之tcpdump/</id>
+    <link href="https://ctimbai.github.io/2019/04/11/tech/linux%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4%E4%B9%8Btcpdump/"/>
+    <id>https://ctimbai.github.io/2019/04/11/tech/linux网络命令之tcpdump/</id>
     <published>2019-04-11T05:16:14.000Z</published>
     <updated>2019-04-17T16:25:12.055Z</updated>
     
@@ -66,21 +66,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="tcpdump" scheme="https://chambai.github.io/tags/tcpdump/"/>
+      <category term="tcpdump" scheme="https://ctimbai.github.io/tags/tcpdump/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之网卡虚拟化技术 macvlan 详解</title>
-    <link href="https://chambai.github.io/2019/04/01/tech/linux-macvlan/"/>
-    <id>https://chambai.github.io/2019/04/01/tech/linux-macvlan/</id>
+    <link href="https://ctimbai.github.io/2019/04/01/tech/linux-macvlan/"/>
+    <id>https://ctimbai.github.io/2019/04/01/tech/linux-macvlan/</id>
     <published>2019-04-01T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:17.590Z</updated>
     
@@ -96,21 +96,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="macvlan" scheme="https://chambai.github.io/tags/macvlan/"/>
+      <category term="macvlan" scheme="https://ctimbai.github.io/tags/macvlan/"/>
     
   </entry>
   
   <entry>
     <title>一文带你全面了解虚拟机的四种网络模型</title>
-    <link href="https://chambai.github.io/2019/03/25/tech/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"/>
-    <id>https://chambai.github.io/2019/03/25/tech/虚拟机的四种网络模型/</id>
+    <link href="https://ctimbai.github.io/2019/03/25/tech/%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"/>
+    <id>https://ctimbai.github.io/2019/03/25/tech/虚拟机的四种网络模型/</id>
     <published>2019-03-25T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:11.146Z</updated>
     
@@ -126,23 +126,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="Bridge" scheme="https://chambai.github.io/tags/Bridge/"/>
+      <category term="Bridge" scheme="https://ctimbai.github.io/tags/Bridge/"/>
     
-      <category term="NAT" scheme="https://chambai.github.io/tags/NAT/"/>
+      <category term="NAT" scheme="https://ctimbai.github.io/tags/NAT/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之 IP 隧道详解</title>
-    <link href="https://chambai.github.io/2019/03/18/tech/ip%E9%9A%A7%E9%81%93/"/>
-    <id>https://chambai.github.io/2019/03/18/tech/ip隧道/</id>
+    <link href="https://ctimbai.github.io/2019/03/18/tech/ip%E9%9A%A7%E9%81%93/"/>
+    <id>https://ctimbai.github.io/2019/03/18/tech/ip隧道/</id>
     <published>2019-03-18T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:04.651Z</updated>
     
@@ -157,23 +157,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="tunnel" scheme="https://chambai.github.io/tags/tunnel/"/>
+      <category term="tunnel" scheme="https://ctimbai.github.io/tags/tunnel/"/>
     
-      <category term="ipip" scheme="https://chambai.github.io/tags/ipip/"/>
+      <category term="ipip" scheme="https://ctimbai.github.io/tags/ipip/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之 Linux 虚拟路由</title>
-    <link href="https://chambai.github.io/2019/03/14/tech/Linux%E8%B7%AF%E7%94%B1%E5%8A%9F%E8%83%BD/"/>
-    <id>https://chambai.github.io/2019/03/14/tech/Linux路由功能/</id>
+    <link href="https://ctimbai.github.io/2019/03/14/tech/Linux%E8%B7%AF%E7%94%B1%E5%8A%9F%E8%83%BD/"/>
+    <id>https://ctimbai.github.io/2019/03/14/tech/Linux路由功能/</id>
     <published>2019-03-14T05:16:14.000Z</published>
     <updated>2019-04-17T16:27:49.634Z</updated>
     
@@ -191,21 +191,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="vrouter" scheme="https://chambai.github.io/tags/vrouter/"/>
+      <category term="vrouter" scheme="https://ctimbai.github.io/tags/vrouter/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之虚拟网络设备 Bridge 详解</title>
-    <link href="https://chambai.github.io/2019/03/10/tech/bridge%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://chambai.github.io/2019/03/10/tech/bridge详解/</id>
+    <link href="https://ctimbai.github.io/2019/03/10/tech/bridge%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://ctimbai.github.io/2019/03/10/tech/bridge详解/</id>
     <published>2019-03-10T05:16:14.000Z</published>
     <updated>2019-04-17T16:29:02.752Z</updated>
     
@@ -222,21 +222,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="Bridge" scheme="https://chambai.github.io/tags/Bridge/"/>
+      <category term="Bridge" scheme="https://ctimbai.github.io/tags/Bridge/"/>
     
   </entry>
   
   <entry>
     <title>未来幸存者</title>
-    <link href="https://chambai.github.io/2019/03/09/life/%E6%9C%AA%E6%9D%A5%E5%B9%B8%E5%AD%98%E8%80%85/"/>
-    <id>https://chambai.github.io/2019/03/09/life/未来幸存者/</id>
+    <link href="https://ctimbai.github.io/2019/03/09/life/%E6%9C%AA%E6%9D%A5%E5%B9%B8%E5%AD%98%E8%80%85/"/>
+    <id>https://ctimbai.github.io/2019/03/09/life/未来幸存者/</id>
     <published>2019-03-09T05:16:14.000Z</published>
     <updated>2019-04-17T14:48:52.552Z</updated>
     
@@ -254,15 +254,15 @@
     
     </summary>
     
-      <category term="读书" scheme="https://chambai.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
+      <category term="读书" scheme="https://ctimbai.github.io/categories/%E8%AF%BB%E4%B9%A6/"/>
     
     
   </entry>
   
   <entry>
     <title>一文总结虚拟网络设备 eth, tap/tun, veth-pair</title>
-    <link href="https://chambai.github.io/2019/03/08/tech/eth-taptun-vethpair%E6%80%BB%E7%BB%93/"/>
-    <id>https://chambai.github.io/2019/03/08/tech/eth-taptun-vethpair总结/</id>
+    <link href="https://ctimbai.github.io/2019/03/08/tech/eth-taptun-vethpair%E6%80%BB%E7%BB%93/"/>
+    <id>https://ctimbai.github.io/2019/03/08/tech/eth-taptun-vethpair总结/</id>
     <published>2019-03-08T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:53.057Z</updated>
     
@@ -281,23 +281,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="tap" scheme="https://chambai.github.io/tags/tap/"/>
+      <category term="tap" scheme="https://ctimbai.github.io/tags/tap/"/>
     
-      <category term="tun" scheme="https://chambai.github.io/tags/tun/"/>
+      <category term="tun" scheme="https://ctimbai.github.io/tags/tun/"/>
     
-      <category term="veth-pair" scheme="https://chambai.github.io/tags/veth-pair/"/>
+      <category term="veth-pair" scheme="https://ctimbai.github.io/tags/veth-pair/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之虚拟网络设备 veth-pair 详解</title>
-    <link href="https://chambai.github.io/2019/03/03/tech/veth-pair%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://chambai.github.io/2019/03/03/tech/veth-pair详解/</id>
+    <link href="https://ctimbai.github.io/2019/03/03/tech/veth-pair%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://ctimbai.github.io/2019/03/03/tech/veth-pair详解/</id>
     <published>2019-03-03T05:16:14.000Z</published>
     <updated>2019-04-19T05:23:25.682Z</updated>
     
@@ -314,21 +314,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="veth-pair" scheme="https://chambai.github.io/tags/veth-pair/"/>
+      <category term="veth-pair" scheme="https://ctimbai.github.io/tags/veth-pair/"/>
     
   </entry>
   
   <entry>
     <title>如何用 tap/tun 设备编写一个 ICMP 程序</title>
-    <link href="https://chambai.github.io/2019/03/01/tech/%E5%9F%BA%E4%BA%8Etaptun%E5%86%99%E4%B8%80%E4%B8%AAICMP%E7%A8%8B%E5%BA%8F/"/>
-    <id>https://chambai.github.io/2019/03/01/tech/基于taptun写一个ICMP程序/</id>
+    <link href="https://ctimbai.github.io/2019/03/01/tech/%E5%9F%BA%E4%BA%8Etaptun%E5%86%99%E4%B8%80%E4%B8%AAICMP%E7%A8%8B%E5%BA%8F/"/>
+    <id>https://ctimbai.github.io/2019/03/01/tech/基于taptun写一个ICMP程序/</id>
     <published>2019-03-01T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:29.467Z</updated>
     
@@ -343,23 +343,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="tap" scheme="https://chambai.github.io/tags/tap/"/>
+      <category term="tap" scheme="https://ctimbai.github.io/tags/tap/"/>
     
-      <category term="tun" scheme="https://chambai.github.io/tags/tun/"/>
+      <category term="tun" scheme="https://ctimbai.github.io/tags/tun/"/>
     
-      <category term="ICMP" scheme="https://chambai.github.io/tags/ICMP/"/>
+      <category term="ICMP" scheme="https://ctimbai.github.io/tags/ICMP/"/>
     
   </entry>
   
   <entry>
     <title>Linux网络命令必知必会之创建 tap/tun 设备</title>
-    <link href="https://chambai.github.io/2019/02/28/tech/%E5%88%9B%E5%BB%BAtaptun%E8%AE%BE%E5%A4%87/"/>
-    <id>https://chambai.github.io/2019/02/28/tech/创建taptun设备/</id>
+    <link href="https://ctimbai.github.io/2019/02/28/tech/%E5%88%9B%E5%BB%BAtaptun%E8%AE%BE%E5%A4%87/"/>
+    <id>https://ctimbai.github.io/2019/02/28/tech/创建taptun设备/</id>
     <published>2019-02-28T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:37.658Z</updated>
     
@@ -374,23 +374,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="tap" scheme="https://chambai.github.io/tags/tap/"/>
+      <category term="tap" scheme="https://ctimbai.github.io/tags/tap/"/>
     
-      <category term="tun" scheme="https://chambai.github.io/tags/tun/"/>
+      <category term="tun" scheme="https://ctimbai.github.io/tags/tun/"/>
     
   </entry>
   
   <entry>
     <title>Linux云网络基础之虚拟网络设备 tap/tun 详解</title>
-    <link href="https://chambai.github.io/2019/02/26/tech/taptun%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://chambai.github.io/2019/02/26/tech/taptun详解/</id>
+    <link href="https://ctimbai.github.io/2019/02/26/tech/taptun%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://ctimbai.github.io/2019/02/26/tech/taptun详解/</id>
     <published>2019-02-26T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:43.347Z</updated>
     
@@ -406,23 +406,23 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="tap" scheme="https://chambai.github.io/tags/tap/"/>
+      <category term="tap" scheme="https://ctimbai.github.io/tags/tap/"/>
     
-      <category term="tun" scheme="https://chambai.github.io/tags/tun/"/>
+      <category term="tun" scheme="https://ctimbai.github.io/tags/tun/"/>
     
   </entry>
   
   <entry>
     <title>小趋势解构</title>
-    <link href="https://chambai.github.io/2019/01/15/life/%E5%B0%8F%E8%B6%8B%E5%8A%BF%E8%A7%A3%E6%9E%84/"/>
-    <id>https://chambai.github.io/2019/01/15/life/小趋势解构/</id>
+    <link href="https://ctimbai.github.io/2019/01/15/life/%E5%B0%8F%E8%B6%8B%E5%8A%BF%E8%A7%A3%E6%9E%84/"/>
+    <id>https://ctimbai.github.io/2019/01/15/life/小趋势解构/</id>
     <published>2019-01-15T05:16:14.000Z</published>
     <updated>2019-04-16T16:00:18.682Z</updated>
     
@@ -438,15 +438,15 @@
     
     </summary>
     
-      <category term="杂谈" scheme="https://chambai.github.io/categories/%E6%9D%82%E8%B0%88/"/>
+      <category term="杂谈" scheme="https://ctimbai.github.io/categories/%E6%9D%82%E8%B0%88/"/>
     
     
   </entry>
   
   <entry>
     <title>一文搞懂 network namespace</title>
-    <link href="https://chambai.github.io/2019/01/10/tech/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82network_namespace/"/>
-    <id>https://chambai.github.io/2019/01/10/tech/一文搞懂network_namespace/</id>
+    <link href="https://ctimbai.github.io/2019/01/10/tech/%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82network_namespace/"/>
+    <id>https://ctimbai.github.io/2019/01/10/tech/一文搞懂network_namespace/</id>
     <published>2019-01-10T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:58.098Z</updated>
     
@@ -463,21 +463,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="Namespace" scheme="https://chambai.github.io/tags/Namespace/"/>
+      <category term="Namespace" scheme="https://ctimbai.github.io/tags/Namespace/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   
   <entry>
     <title>一文搞懂 network namespace</title>
-    <link href="https://chambai.github.io/2019/01/10/tech/%E6%A8%A1%E6%9D%BF/"/>
-    <id>https://chambai.github.io/2019/01/10/tech/模板/</id>
+    <link href="https://ctimbai.github.io/2019/01/10/tech/%E6%A8%A1%E6%9D%BF/"/>
+    <id>https://ctimbai.github.io/2019/01/10/tech/模板/</id>
     <published>2019-01-10T05:16:14.000Z</published>
     <updated>2019-04-17T16:23:08.944Z</updated>
     
@@ -493,21 +493,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="Namespace" scheme="https://chambai.github.io/tags/Namespace/"/>
+      <category term="Namespace" scheme="https://ctimbai.github.io/tags/Namespace/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   
   <entry>
     <title>Linux 系统下实践 VLAN</title>
-    <link href="https://chambai.github.io/2019/01/07/tech/Linux%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%9E%E8%B7%B5VLAN/"/>
-    <id>https://chambai.github.io/2019/01/07/tech/Linux系统下实践VLAN/</id>
+    <link href="https://ctimbai.github.io/2019/01/07/tech/Linux%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%9E%E8%B7%B5VLAN/"/>
+    <id>https://ctimbai.github.io/2019/01/07/tech/Linux系统下实践VLAN/</id>
     <published>2019-01-07T05:16:14.000Z</published>
     <updated>2019-04-17T16:28:47.797Z</updated>
     
@@ -525,21 +525,21 @@
     
     </summary>
     
-      <category term="06 网络" scheme="https://chambai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
+      <category term="06 网络" scheme="https://ctimbai.github.io/categories/06-%E7%BD%91%E7%BB%9C/"/>
     
     
-      <category term="Linux" scheme="https://chambai.github.io/tags/Linux/"/>
+      <category term="Linux" scheme="https://ctimbai.github.io/tags/Linux/"/>
     
-      <category term="网络" scheme="https://chambai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="https://ctimbai.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="VLAN" scheme="https://chambai.github.io/tags/VLAN/"/>
+      <category term="VLAN" scheme="https://ctimbai.github.io/tags/VLAN/"/>
     
   </entry>
   
   <entry>
     <title>Kubernetes 笔记 012 Pod 的自动扩容与缩容</title>
-    <link href="https://chambai.github.io/2018/09/30/tech/Kubernetes_%E7%AC%94%E8%AE%B0_012_Pod_%E7%9A%84%E8%87%AA%E5%8A%A8%E6%89%A9%E5%AE%B9%E4%B8%8E%E7%BC%A9%E5%AE%B9/"/>
-    <id>https://chambai.github.io/2018/09/30/tech/Kubernetes_笔记_012_Pod_的自动扩容与缩容/</id>
+    <link href="https://ctimbai.github.io/2018/09/30/tech/Kubernetes_%E7%AC%94%E8%AE%B0_012_Pod_%E7%9A%84%E8%87%AA%E5%8A%A8%E6%89%A9%E5%AE%B9%E4%B8%8E%E7%BC%A9%E5%AE%B9/"/>
+    <id>https://ctimbai.github.io/2018/09/30/tech/Kubernetes_笔记_012_Pod_的自动扩容与缩容/</id>
     <published>2018-09-30T05:16:14.000Z</published>
     <updated>2019-04-11T16:01:06.222Z</updated>
     
@@ -555,19 +555,19 @@
     
     </summary>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/categories/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/categories/Kubernetes/"/>
     
     
-      <category term="云计算" scheme="https://chambai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+      <category term="云计算" scheme="https://ctimbai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/tags/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/tags/Kubernetes/"/>
     
   </entry>
   
   <entry>
     <title>Kubernetes 笔记 11 Pod 扩容与缩容 双十一前后的忙碌</title>
-    <link href="https://chambai.github.io/2018/09/29/tech/Kubernetes_%E7%AC%94%E8%AE%B0_11_Pod_%E6%89%A9%E5%AE%B9%E4%B8%8E%E7%BC%A9%E5%AE%B9_%E5%8F%8C%E5%8D%81%E4%B8%80%E5%89%8D%E5%90%8E%E7%9A%84%E5%BF%99%E7%A2%8C/"/>
-    <id>https://chambai.github.io/2018/09/29/tech/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/</id>
+    <link href="https://ctimbai.github.io/2018/09/29/tech/Kubernetes_%E7%AC%94%E8%AE%B0_11_Pod_%E6%89%A9%E5%AE%B9%E4%B8%8E%E7%BC%A9%E5%AE%B9_%E5%8F%8C%E5%8D%81%E4%B8%80%E5%89%8D%E5%90%8E%E7%9A%84%E5%BF%99%E7%A2%8C/"/>
+    <id>https://ctimbai.github.io/2018/09/29/tech/Kubernetes_笔记_11_Pod_扩容与缩容_双十一前后的忙碌/</id>
     <published>2018-09-29T05:16:14.000Z</published>
     <updated>2019-04-11T15:58:36.247Z</updated>
     
@@ -583,19 +583,19 @@
     
     </summary>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/categories/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/categories/Kubernetes/"/>
     
     
-      <category term="云计算" scheme="https://chambai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+      <category term="云计算" scheme="https://ctimbai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/tags/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/tags/Kubernetes/"/>
     
   </entry>
   
   <entry>
     <title>Kubernetes 笔记 10 Job 机器人加工厂</title>
-    <link href="https://chambai.github.io/2018/09/26/tech/Kubernetes_%E7%AC%94%E8%AE%B0_10_Job_%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A0%E5%B7%A5%E5%8E%82/"/>
-    <id>https://chambai.github.io/2018/09/26/tech/Kubernetes_笔记_10_Job_机器人加工厂/</id>
+    <link href="https://ctimbai.github.io/2018/09/26/tech/Kubernetes_%E7%AC%94%E8%AE%B0_10_Job_%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A0%E5%B7%A5%E5%8E%82/"/>
+    <id>https://ctimbai.github.io/2018/09/26/tech/Kubernetes_笔记_10_Job_机器人加工厂/</id>
     <published>2018-09-26T05:16:14.000Z</published>
     <updated>2019-04-11T15:59:54.399Z</updated>
     
@@ -611,12 +611,12 @@
     
     </summary>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/categories/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/categories/Kubernetes/"/>
     
     
-      <category term="云计算" scheme="https://chambai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+      <category term="云计算" scheme="https://ctimbai.github.io/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
     
-      <category term="Kubernetes" scheme="https://chambai.github.io/tags/Kubernetes/"/>
+      <category term="Kubernetes" scheme="https://ctimbai.github.io/tags/Kubernetes/"/>
     
   </entry>
   

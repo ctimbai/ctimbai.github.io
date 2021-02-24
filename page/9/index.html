@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
-  <title>长亭的网志空间</title>
+  <title>猿大白</title>
   
   
-  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈，分享读书、写作、思维、认知等话题">
+  <meta name="description" content="专注于Linux/云计算/网络/CC++/Python/Go等技术栈">
   
 
-  <link rel="alternate" href="/atom.xml" title="长亭的网志空间">
+  <link rel="alternate" href="/atom.xml" title="猿大白">
 
   <meta name="HandheldFriendly" content="True">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -76,7 +76,7 @@
 		<div class="nav-main container container--flex">
       <a class="logo flat-box" href="/">
         
-          长亭的网志空间
+          猿大白
         
       </a>
 			<div class="menu">
@@ -178,9 +178,9 @@
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2017/03/05/life/共享经济浪潮下的另类——ofo与摩拜/">
+          <a href="/2018/04/26/tech/一文掌握Linux性能分析之CPU篇/">
               
-                  共享经济浪潮下的另类——ofo与摩拜
+                  一文掌握 Linux 性能分析之 CPU 篇
               
           </a>
       </h2>
@@ -188,7 +188,7 @@
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-03-05
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-26
       </time>
     
 
@@ -196,7 +196,7 @@
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Linux/">Linux</a>
     </div>
 
 
@@ -210,164 +210,95 @@
 </section>
 
     <section class="article typo">
-        <p>当下ofo和摩拜正以迅雷不及掩耳之势火遍全中国，追本溯源，这是共享经济的又一波冲击。  </p>
-<p>百度百科上对共享经济的定义是：以获取一定的报酬为目的，基于陌生人且存在物品使用权暂时转移的一种新的经济模式。其中涉及到三个关键词：获取报酬、陌生人和使用权暂时转移。简单来说，就是将个人闲置的资源共享给别人使用，然后从中抽取一定的费用作为激励。这种共享的思想古已有之。古时物质很匮乏，所有的东西都是公有的，大家互相信任，都会把自己东西无偿地共享出来作为共用，记得爷爷曾经说过，他们都是吃大锅饭长大的。随着时间的推移，人们的生活水平逐步提高，物资开始有了盈余，人与人的关系也开始渐渐变得陌生和冷漠起来。而现在呢，物资依然有盈余，很多东西开始闲置下来，造成了大量资源的浪费，这时共享经济就作为一种解决方案被推行出来，与此同时，人变得越来越开放，需求也变得更加多元化，人与人之间的关系也随着共享经济的推行而变得信任起来。这是自然，也是必然的。</p>
-        
-            <div class="readmore">
-                <a href="/2017/03/05/life/共享经济浪潮下的另类——ofo与摩拜/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/共享经济/"><i class="fas fa-hashtag fa-fw"></i>共享经济</a>
-                
-            </div>
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/">
-              
-                  Hexo 不同电脑/终端同步方法
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2017-01-08
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>问题描述：  </p>
-<blockquote>
-<p>在Linux系统上搭建了博客，现想在windows上写博客，如何在两个系统进行文章的同步？</p>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
 </blockquote>
-<p>上面是在同一台电脑的不同终端上操作，同样这个问题也适用于不同电脑上，所以这个问题可以扩展成一个比较通用的问题：  </p>
+<p>平常工作会涉及到一些 Linux 性能分析的问题，因此决定总结一下常用的一些性能分析手段，仅供参考。</p>
+<p>说到性能分析，基本上就是 CPU、内存、磁盘 IO 以及网络这几个部分，本文先来看 CPU 这个部分。</p>
+<h3 id="1-CPU-基础信息"><a href="#1-CPU-基础信息" class="headerlink" title="1 CPU 基础信息"></a>1 CPU 基础信息</h3><hr>
+<p>进行性能分析之前，首先得知道 CPU 有哪些信息，可以通过以下方法查看 CPU 配置信息。</p>
+<h4 id="lscpu"><a href="#lscpu" class="headerlink" title="lscpu"></a><strong>lscpu</strong></h4><p>在 Linux 下，类似 lsxxx 这样的命令都是用来查看基本信息的，如 ls 查看当前目录文件信息，lscpu 就用来查看 CPU 信息，类似还有 lspci 查看 PCI 信息。</p>
+<center><img src="/images/linux/lscpu.jpg" alt=""></center>
+
+<p>可以看到我的机器配置很低，1 核 2.5GHz（在阿里云买的最低配的服务器）。</p>
+<h4 id="proc-cpuinfo"><a href="#proc-cpuinfo" class="headerlink" title="/proc/cpuinfo"></a><strong>/proc/cpuinfo</strong></h4><p>/proc 目录是内核透传出来给用户态使用的，里面记录着很多信息文件，比如还有内存文件 meminfo 等。可以使用 cat /proc/cpuinfo 查看 CPU 信息。</p>
+<center><img src="/images/linux/cpuinfo.jpg" alt=""></center>
+
+<p>这里显示的信息可以具体到每个逻辑核上，由于我只有一个核，所以只显示一组信息。</p>
+<h4 id="dmidecode"><a href="#dmidecode" class="headerlink" title="dmidecode"></a><strong>dmidecode</strong></h4><p>这个命令是用来获取 DMI（Desktop Management Interface）硬件信息的，包括 BIOS、系统、主板、处理器、内存、缓存等等。对于 CPU 信息，可以使用 dmidecode -t processor 来查看。</p>
+<center><img src="/images/linux/dmi.jpg" alt=""></center>
+
+<h3 id="2-CPU-使用情况分析"><a href="#2-CPU-使用情况分析" class="headerlink" title="2 CPU 使用情况分析"></a>2 CPU 使用情况分析</h3><hr>
+<p>知道了 CPU 的基本信息，我们就可以使用另外的命令来对 CPU 的使用情况分析一通了。</p>
+<h4 id="top"><a href="#top" class="headerlink" title="top"></a><strong>top</strong></h4><p>相信大家对下面这玩意不陌生，Windows 的任务管理器，top 的作用和它是一样的。</p>
+<center><img src="/images/linux/top_w.jpg" alt=""></center>
+
+<p>top 显示的效果虽说不像它这么华丽，但已然让人惊呼他俩怎么长得这么像。</p>
+<center><img src="/images/linux/top.jpg" alt=""></center>
+
+<p>我们重点关注这么几个字段：</p>
+<ul>
+<li>load average：三个数字分别表示最近 1 分钟，5 分钟和 15 分钟的负责，数值越大负载越重。一般要求不超过核数，比如对于单核情况要 &lt; 1。如果机器长期处于高于核数的情况，说明机器 CPU 消耗严重了。</li>
+<li>%Cpu(s)：表示当前 CPU 的使用情况，如果要查看所有核（逻辑核）的使用情况，可以按下数字 “1” 查看。这里有几个参数，表示如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- us    用户空间占用 CPU 时间比例</span><br><span class="line">- sy    系统占用 CPU 时间比例</span><br><span class="line">- ni    用户空间改变过优先级的进程占用 CPU 时间比例</span><br><span class="line">- id    CPU 空闲时间比</span><br><span class="line">- wa    IO等待时间比（IO等待高时，可能是磁盘性能有问题了）</span><br><span class="line">- hi    硬件中断</span><br><span class="line">- si    软件中断</span><br><span class="line">- st    steal time</span><br></pre></td></tr></table></figure>
+<p>每个进程的使用情况：这里可以罗列每个进程的使用情况，包括内存和 CPU 的，如果要看某个具体的进程，可以使用 <code>top -p pid</code> 查看。</p>
+<p>和 top 一样的还有一个改进版的工具：htop，功能和 top 一样的，只不过比 top 表现更炫酷，使用更方便，可以看下它的效果。</p>
+<center><img src="/images/linux/htop.jpg" alt=""></center>
+
+<h4 id="ps"><a href="#ps" class="headerlink" title="ps"></a><strong>ps</strong></h4><p>可能很多人会忽略这个命令，觉得这不是查看进程状态信息的吗，其实非也，这个命令配合它的参数能显示很多功能。比如 ps aux。如果配合 watch，可以达到跟 top 一样的效果，如：<code>watch -n 1 &quot;ps aux&quot;</code>（-n 1 表示每隔 1s 更新一次）</p>
+<center><img src="/images/linux/ps.jpg" alt=""></center>
+
+<h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a><strong>vmstat</strong></h4><p>这个命令基本能看出当前机器的运行状态和问题，非常强大。可以使用 <code>vmstat n</code> 后面跟一个数字，表示每隔 ns 显示系统的状态，信息包括 CPU、内存和 IO 等。</p>
+<center><img src="/images/linux/vmstat.jpg" alt=""></center>
+
+<p>几个关键的字段：</p>
+<ul>
+<li>r 值：表示在 CPU 运行队列中等待的进程数，如果这个值很大，表示很多进程在排队等待执行，CPU 压力山大。</li>
+<li>in 和 cs 值：表示中断次数和上下文切换次数，这两个值越大，表示系统在进行大量的进程（或线程）切换。切换的开销是非常大的，这时候应该减少系统进程（或线程）数。</li>
+<li>us、sy、id、wa 值：这些值上面也提到过，分别表示用户空间进程，系统进程，空闲和 IO 等待的 CPU 占比，这里只有 id 很高是好的，表示系统比较闲，其他值飚高都不好。</li>
+</ul>
+<p>这个工具强大之处在于它不仅可以分析 CPU，还可以分析内存、IO 等信息，犹如瑞士军刀。</p>
+<h4 id="dstat"><a href="#dstat" class="headerlink" title="dstat"></a><strong>dstat</strong></h4><p>这个命令也很强大，能显示 CPU 使用情况，磁盘 IO 情况，网络发包情况和换页情况，而且输出是彩色的，可读性比较强，相对于 vmstat 更加详细和直观。使用时可以直接输入命令，也可以带相关参数。</p>
+<center><img src="/images/linux/dstat.jpg" alt=""></center>
+
+<h3 id="3-进程使用-CPU-情况分析"><a href="#3-进程使用-CPU-情况分析" class="headerlink" title="3 进程使用 CPU 情况分析"></a>3 进程使用 CPU 情况分析</h3><hr>
+<p>上面说的是系统级的分析，现在来看单个进程的 CPU 使用情况分析，以便于我们能对占用 CPU 过多的进程进行调试和分析，优化程序性能。</p>
+<p>其实前面 top 和 ps 这样的命令就可以看每个进程的 CPU 使用情况，但我们需要更专业的命令。</p>
+<h4 id="pidstat"><a href="#pidstat" class="headerlink" title="pidstat"></a><strong>pidstat</strong></h4><p>这个命令默认统计系统信息，也包括 CPU、内存和 IO 等，我们常用 pidstat -u -p pid [times] 来显示 CPU 统计信息。如下统计 pid = 802 的 CPU 信息。</p>
+<center><img src="/images/linux/pidstat.jpg" alt=""></center>
+
+<h4 id="strace"><a href="#strace" class="headerlink" title="strace"></a><strong>strace</strong></h4><p>这个命令用来分析进程的系统调用情况，可以看进程都调用了哪些库和哪些系统调用，进而可以进一步优化程序。比如我们分析 ls 的系统调用情况，就可以用 strace ls：</p>
+<center><img src="/images/linux/strace.jpg" alt=""></center>
+
+<p>可以看到，一个简单的 ls 命令，其实有不少系统调用的操作。</p>
+<p>此外，还可以 attach（附着）到一个正在运行的进程上进行分析，比如我 attach 到 802 这个进程显示：</p>
+<center><img src="/images/linux/stracep.jpg" alt=""></center>
+
+<p>根据这些输出信息，其实就能够很好地帮我们分析问题，从而定位到问题所在了。</p>
+<p>OK，以上就是平常比较常用的一些工具，当然除了这些，还有很多很多工具，下面放一张图，来自 Linux 大牛，Netflix 高级性能架构师 Brendan Gregg。看完了，你也许会感叹“这世界太疯狂了（just crazy）”。</p>
+<center><img src="/images/linux/tools.jpg" alt=""></center>
+
+<p>Reference：<br>[1]. <a href="http://rdc.hundsun.com/portal/article/731.html" target="_blank" rel="noopener">http://rdc.hundsun.com/portal/article/731.html</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
 <blockquote>
-<p>不同电脑，或终端上如何同步Hexo？</p>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
 </blockquote>
-<p>Google一下，网友已经给了很好的解决方案，大体上有以下两种方案：<strong>利用分支</strong>和<strong>新建仓库</strong>。<br>
-        
-            <div class="readmore">
-                <a href="/2017/01/08/tech/Hexo-不同电脑-终端同步方法/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/hexo/"><i class="fas fa-hashtag fa-fw"></i>hexo</a>
+                    <a href="/tags/CPU/"><i class="fas fa-hashtag fa-fw"></i>CPU</a>
                 
-            </div>
-        
-    </p></section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/">
-              
-                  Git学习笔记——来自廖雪峰的博客
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-12-29
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <h2 id="Git-简介"><a href="#Git-简介" class="headerlink" title="Git 简介"></a>Git 简介</h2><p>Git是目前世界上最先进的开源的<strong>分布式</strong>版本控制系统。<br>和<strong>集中式</strong>的版本控制系统，如CVS、SVN等相比，Git有几大优点：<br>1、不像集中式版本控制系统一样，需要联网才能工作；<br>2、安全性较高，避免了单点失效的问题，不会因为某台电脑坏了，文件就丢失了；<br>3、具有强大的分支管理功能。</p>
-<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><pre><code>Linux：sudo apt-get install git
-centos: sudo yum install git-core
-windows: git bash
-</code></pre><p>安装完成后，需要配置机器的Git仓库，即：  </p>
-<pre><code>git config --global user.name &quot;Your Name&quot;
-git config --global user.email &quot;email@example.com&quot;
-</code></pre>
-        
-            <div class="readmore">
-                <a href="/2016/12/29/tech/Git学习笔记——来自廖雪峰的博客/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-            <div class="full-width auto-padding tags">
+                    <a href="/tags/Linux/"><i class="fas fa-hashtag fa-fw"></i>Linux</a>
                 
-                    <a href="/tags/git/"><i class="fas fa-hashtag fa-fw"></i>git</a>
+                    <a href="/tags/性能分析/"><i class="fas fa-hashtag fa-fw"></i>性能分析</a>
                 
             </div>
         
@@ -386,9 +317,9 @@ git config --global user.email &quot;email@example.com&quot;
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2016/06/15/life/狗狗的记忆——《人狗奇缘》续/">
+          <a href="/2018/04/20/tech/各种容器网络方案对比/">
               
-                  狗狗的记忆——《人狗奇缘》续
+                  各种容器网络方案对比
               
           </a>
       </h2>
@@ -396,7 +327,7 @@ git config --global user.email &quot;email@example.com&quot;
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-06-15
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-20
       </time>
     
 
@@ -404,7 +335,7 @@ git config --global user.email &quot;email@example.com&quot;
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -418,141 +349,45 @@ git config --global user.email &quot;email@example.com&quot;
 </section>
 
     <section class="article typo">
-        <p>这部电影真是太赞了，看了之后，在感动之余，勾起了我很多的回忆，突然有很多想说的话，上一篇算是一篇观后感，这一篇打算写写我与狗狗的故事。  </p>
-<p>小时候，我非常喜欢小狗，我爸妈也很喜欢，大概在上小学的时候家里就开始养狗。我记得非常清楚，那只小狗是爸妈从一个邻居家报来养的，当时邻居家的一只母狗一次性产了5只小狗，震惊了整个村子（最近听说某国的一只杜宾狗一次性产下了13只！！），我当时看到5小只乖乖地躺在一个小箩筐里，立刻就被萌化了，就喊着要一只，邻居家也很大方，就给了。</p>
-<p><img src="/images/movie/dubin.jpg" alt=""><br>
-        
-            <div class="readmore">
-                <a href="/2016/06/15/life/狗狗的记忆——《人狗奇缘》续/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>前面单主机容器网络和多主机容器网络两篇文章，咱们已经从原理上总结了多种容器网络方案，也通过这篇文章探讨了容器网络的背后原理。本文再基于一个宏观的视角，对比几种网络方案，让大家有个完整的认识。</p>
+<p>单主机网络就不多说了，因为也比较简单，我们重点对比几种多主机网络方案。</p>
+<p>对比的维度有以下几种：网络模型，IP 地址池管理（IP Address Management，IPAM），服务发现，连通与隔离，性能。</p>
+<p>网络模型指的是构成跨主机通信的网络结构和实现技术，比如是纯二层转发，还是纯三层转发；是 overlay 网络还是 underlay 网络等等。</p>
+<p>IPAM 指的是如何管理容器网络的 IP 池。当容器集群比较大，管理的主机比较多的时候，如何分配各个主机上容器的 IP 是一个比较棘手的问题。Docker 网络有个 subnet 的概念，通常一个主机分配一个 subnet，但也有多个主机共用一个 subnet 的情况，具体的网络方案有不同的考量。具体看下面的表格总结。</p>
+<p>服务发现本质上是一个分布式的 key-value 存储系统，用于跨主机通信时保存并同步各主机的网络信息，便于快速建立起各主机之间的网络连接。由于各网络方案实现上各有千秋，并不是所有的跨主机网络方案都要依据服务发现。</p>
+<p>连通与隔离指的是容器跨主机之间是否能够互相通信，以及容器与外网（外网不一定指 Internet）之间如何通信。</p>
+<p>性能具体指的是通信的时延，我们仅从各个网络方案的原理上来分析得出结论，所以这里的结论并不一定正确，因为不同的部署环境会对性能有一些影响，建议大家还是根据自己的环境动手实验验证为妙。</p>
+<p>从原理上说，underlay 网络性能要优于 overlay 网络，因为 overlay 网络存在封包和拆包操作，存在额外的 CPU 和网络开销，所以，几种方案中，macvlan、flannel host-gw、calico 的性能会优于 overlay、flannel vxlan 和 weave。但是这个也不能作为最终生产环境采用的标准，因为 overlay 网络采用 vxlan 作为隧道的话，能支持更多的二层网段，安全性也更高，所以，需要综合考虑。</p>
+<p>通过以上分析，我们可以得出以下的结论：</p>
+<center><img src="/images/docker/docker_net_com.jpg" alt=""></center>
 
-        
-    </p></section>
-</article>
+<p>参考：<br><a href="http://www.cnblogs.com/CloudMan6/p/7587532.html" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/7587532.html</a></p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
 
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2016/06/12/life/被《人狗奇缘》虐死了/">
-              
-                  被《人狗奇缘》虐死了
-              
-          </a>
-      </h2>
-    
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
 
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-06-12
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/影评/">影评</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>说实话，我最怕看这种虐心的电影，因为看完后，我会很难过，有时甚至会难过好几天。特别是这种跟动物有关的电影，最后的结局动物免不了一死，要么是救自己的主人而死，要么是与某种邪恶的力量抗战而死，总之，前期一定会把动物刻画得多么聪明、可爱，重点突出与主人的那种难舍难分的感情，一旦这种感情达到最高潮时，观众心里都快被融化时，剧情开始虐心了，并且层层递进，怎么虐怎么来，直至死…… </p>
-<p>这是一部韩国电影，我发现韩国导演特别擅长拍这种煽情的电影，曾经的《野蛮女友》、《七号房的礼物》，不知融化了多少人的心。  </p>
-        
-            <div class="readmore">
-                <a href="/2016/06/12/life/被《人狗奇缘》虐死了/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
-
-        
-    </section>
-</article>
-
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2016/05/03/life/所谓情怀/">
-              
-                  所谓情怀
-              
-          </a>
-      </h2>
-    
-
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-05-03
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>对情怀这个词有着较深的认识是来源于老罗的情怀演讲，当听到老罗赋予这个词深刻解读的时候，我感觉自己内心某一块干涸之地突然有了生机，感觉老罗所讲的这种所谓情怀的东西正是我内心所要追求的东西。</p>
-<p><img src="/images/next/laoluo.jpg" alt=""></p>
-<p>当我把这种所谓情怀的东西向身边的朋友讲述的时候，他们都表示很不理解。一个很出现频率很高的反驳是：你现在才二十多岁，哪来的情怀？我也表示很不解：难道情怀是只能上了年纪的人才有的吗？在我看来，情怀是每个人，在每个阶段都会有的东西。  </p>
-        
-            <div class="readmore">
-                <a href="/2016/05/03/life/所谓情怀/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/情怀/"><i class="fas fa-hashtag fa-fw"></i>情怀</a>
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
                 
             </div>
         
@@ -571,9 +406,9 @@ git config --global user.email &quot;email@example.com&quot;
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2016/01/28/life/漂亮得不像实力派-坚果开箱/">
+          <a href="/2018/04/18/tech/那么多容器网络的解决方案，其背后的原理到底是什么？/">
               
-                  漂亮得不像实力派 坚果开箱
+                  那么多容器网络的解决方案，其背后的原理到底是什么？
               
           </a>
       </h2>
@@ -581,7 +416,7 @@ git config --global user.email &quot;email@example.com&quot;
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-01-28
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-18
       </time>
     
 
@@ -589,7 +424,7 @@ git config --global user.email &quot;email@example.com&quot;
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -603,25 +438,66 @@ git config --global user.email &quot;email@example.com&quot;
 </section>
 
     <section class="article typo">
-        <p>终于拿到了机子，我迫不及待想写一篇开箱之作来记录这神圣的一刻，对一个科技爱好者来说，这是必须的。但是在写之前，我还需要口水一下。</p>
-<p>在手机同质化的今天，要买哪一款手机我是犹豫不定的，但有一点是肯定的，就是只买千元机，因为没钱^=^。细数一下现今很火的几款千元机，红米note 2、note3、魅蓝metal、乐1s、锤子的坚果…..恩，我看得上差不多就这么多。</p>
-<p>当然还有其他的，华为的设计我不太喜欢，所以不关注；联想的，你懂的，说得直接一点，就是很老套，虽然收购了Moto，但…希望他能做好吧；还有就是一加，一加手机可以说是我最喜欢的外观设计的手机，但是一加不做千元机，好吧。</p>
-<p>附带说一下，类似的设计还有韩国的LG，很美，但是，我只关注国产机，恩，我就是这么爱国。</p>
-        
-            <div class="readmore">
-                <a href="/2016/01/28/life/漂亮得不像实力派-坚果开箱/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>知其然而不知其所以然，不知也。老古人说得多好，学知识不懂得知识背后的原理，等于白学。</p>
+<p>通过前面两篇文章，我们知道了容器的单主机网络和多主机网络，对于这么多网络方案，我们看到对 Docker 的整体网络结构好像没有改动，都是水平扩展的，那 Docker 网络究竟是怎么集成这么多网络方案而不改变自身原有的结构呢？本文就来一探究竟。</p>
+<h3 id="1-Docker-的总体框架"><a href="#1-Docker-的总体框架" class="headerlink" title="1 Docker 的总体框架"></a>1 Docker 的总体框架</h3><hr>
+<p>要回答这个问题，得从 Docker 的总体框架说起。</p>
+<center><img src="/images/docker/docker_netarch.jpg" alt=""></center>
+
+<p>容器和虚拟机一样，都是虚拟化的产品，都包括计算虚拟化，存储虚拟化和 IO 虚拟化。容器作为轻量级的进程，不像虚拟机那般复杂，这三块分别靠三个 Driver 来完成的，execdriver 负责计算虚拟化，networkdriver 负责网络虚拟化，graphdriver 负责存储虚拟化。由此可见，Docker 靠 Driver 这种设计思想来支撑起它的基础平台，再往深了挖，它的每个子模块都随处可见这种设计思想，就网络这个子模块来看，也是如此。</p>
+<h3 id="2-Docker-的网络模型"><a href="#2-Docker-的网络模型" class="headerlink" title="2 Docker 的网络模型"></a>2 Docker 的网络模型</h3><hr>
+<h4 id="docker-engine-libcontainer"><a href="#docker-engine-libcontainer" class="headerlink" title="docker engine + libcontainer"></a>docker engine + libcontainer</h4><hr>
+<p>期初的 Docker 网络子模块的代码是分散在 docker daemon 和 libcontainer 中的，libcontainer 是一个独立的容器管理包，execdriver 和 networkdriver 都是通过 libcontainer 来实现对容器的具体操作。</p>
+<p>随着业务场景越来越复杂，这种内嵌的方式很难针对不同的网络场景进行扩展。后来，Docker 收购了一个做多主机网络解决方案的公司 SocketPlane，然后让那帮人专门来解决这个问题。这就是接下来要介绍的 libnetwork。</p>
+<h4 id="libnetwork-amp-amp-CNM"><a href="#libnetwork-amp-amp-CNM" class="headerlink" title="libnetwork &amp;&amp; CNM"></a>libnetwork &amp;&amp; CNM</h4><hr>
+<p>libnetwork 起初的做法很简单，就是将 docker engine 和 libcontainer 中网络相关的代码抽出来，合并成一个单独的库，做成网络抽象层，并对外提供 API。Docker 的愿景就是希望 libnetwork 能够做像 libcontainer 那样，成为一个多平台的容器网络基础包。</p>
+<p>后来受一个 GitHub issue ( <a href="https://github.com/moby/moby/issues/9983" target="_blank" rel="noopener">https://github.com/moby/moby/issues/9983</a>) 的启发，libnetwork 引入容器网络模型（Container Network Model，CNM），该模型进一步对 Docker 的网络结构进行了细分，提出了三个概念：network、sandbox 和 endpoint。</p>
+<h5 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h5><p>network 是一个抽象的概念，你可以把它理解成一个网络的插件，或者是网络的 Driver，比如说单主机网络的 Driver 就有 none、host、bridge，joined container 这四种，多主机网络就有 overlay、macvlan、flannel 这些。network 可以独立出去做，只需调用 Docker 对外提供的 API 就可以作为插件集成到 Docker 网络中使用。</p>
+<h5 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a><strong>sandbox</strong></h5><p>sandbox 实现了容器内部的网络栈，它定义容器的虚拟网卡，路由表和 DNS 等配置，其实就是一个标准的 linux network namespace 实现。</p>
+<h5 id="endpoint"><a href="#endpoint" class="headerlink" title="endpoint"></a><strong>endpoint</strong></h5><p>network 实现了一个第三方的网络栈，sandbox 则实现了容器内部的网络栈，那这两者怎么联系起来呢？答案就是通过 endpoint，endpoint 实现了 veth pair，一个 endpoint 就表示一对 veth pair，一端挂在容器中，另一端挂在 network 中。</p>
+<center><img src="/images/docker/cnm.jpg" alt=""></center>
+
+<p>network、sandbox 和 endpoint 三者之间的关系：<br>一个 network 可以包含多个 endpoint，自然也就包含多个 sandbox。<br>一个 sandbox 可以包含多个 endpoint，可以属于多个 network。<br>一个 endpoint 只可以属于一个 network，并且只属于一个 sandbox。</p>
+<p>如上图显示三个容器，每个容器一个 sandbox，除了第二个容器有两个 endpoint 分别接入 network1 和 network2 之外，其余 sandbox 都只有一个 endpoint 分别接入不同的 network。</p>
+<p>到此，我们就可以解答文章开篇提到的问题，“不同的网络方案如何集成到 Docker 网络模型中而不改变原有结构？”</p>
+<p>答案就是基于 libnetwork CNM，将各个网络模型以插件或 Driver 的形式集成到 Docker 网络中来，与 docker daemon 协同工作，实现容器网络。Docker 原生的 Driver 包括单主机的 none、bridge、joined container 和 多主机的 overlay、macvlan，第三方 Driver 就包括多主机的 flannel、weave、calico 等。</p>
+<center><img src="/images/docker/libnetwork.png" alt=""></center>
+
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><hr>
+<ol>
+<li>libnetwork 基于 CNM 模型将 Docker 网络结构从原生方案中抽离出来，增强了网络扩展性，以至于现在各种网络方案层出不穷，都可以轻松集成到 Docker 中。</li>
+<li>network，sandbox，endpoint 三个概念。</li>
+</ol>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/老罗/"><i class="fas fa-hashtag fa-fw"></i>老罗</a>
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
-                    <a href="/tags/锤子科技/"><i class="fas fa-hashtag fa-fw"></i>锤子科技</a>
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/libnetwork/"><i class="fas fa-hashtag fa-fw"></i>libnetwork</a>
+                
+                    <a href="/tags/CNM/"><i class="fas fa-hashtag fa-fw"></i>CNM</a>
                 
             </div>
         
@@ -640,9 +516,9 @@ git config --global user.email &quot;email@example.com&quot;
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2016/01/26/life/论牙痛的日子/">
+          <a href="/2018/04/16/tech/容器网络之多主机网络/">
               
-                  论牙痛的日子
+                  容器网络之多主机网络
               
           </a>
       </h2>
@@ -650,7 +526,7 @@ git config --global user.email &quot;email@example.com&quot;
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2016-01-26
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-16
       </time>
     
 
@@ -658,7 +534,7 @@ git config --global user.email &quot;email@example.com&quot;
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/Docker/">Docker</a>
     </div>
 
 
@@ -672,17 +548,81 @@ git config --global user.email &quot;email@example.com&quot;
 </section>
 
     <section class="article typo">
-        <p>不久前，乐嘉因为录节目而伤了蛋蛋，没过几天就洋洋洒洒写了一篇文章来讲述自己的蛋碎的始末，其幽默诙谐、自嘲自黑的文字把他乐观的心态展露无遗。说真的，真是让人佩服得五体投地。你想想，蛋都碎了，那有多痛，不单单是身体上的痛，更是心理上的痛，但也为乐嘉老师高兴，因为他说他释然了。</p>
-<p>这两天，我也遭受着身体上的另一种痛，就是牙痛。虽说牙痛比起蛋痛，程度要低很多，但还是真的痛——神经级别的痛。受乐嘉老师感染，我也想把这个过程写出来纪念一下。</p>
-        
-            <div class="readmore">
-                <a href="/2016/01/26/life/论牙痛的日子/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>上篇文章介绍了容器网络的单主机网络，本文将进一步介绍多主机网络，也就是跨主机的网络。总结下来，多主机网络解决方案包括但不限于以下几种：overlay、macvlan、flannel、weave、cacico 等，下面将分别一一介绍这几种网络，</p>
+<p>PS：本文仅从原理上对几种网络进行简单的对比总结，不涉及太多的细节。</p>
+<h3 id="1-overlay"><a href="#1-overlay" class="headerlink" title="1 overlay"></a>1 overlay</h3><hr>
+<p>俗称隧道网络，它是基于 VxLAN 协议来将二层数据包封装到 UDP 中进行传输的，目的是扩展二层网段，因为 VLAN 使用 12bit 标记 VLAN ID，最多支持 4094 个 VLAN，这对于大型云网络会成为瓶颈，而 VxLAN ID 使用 24bit 来标记，支持多达 16777216 个二层网段，所以 VxLAN 是扩展了 VLAN，也叫做大二层网络。</p>
+<p>overlay 网络需要一个全局的“上帝”来记录它网络中的信息，比如主机地址，子网等，这个上帝在 Docker 中是由服务发现协议来完成的，服务发现本质上是一个 key-value 数据库，要使用它，首先需要向它告知（注册）一些必要的信息（如网络中需要通信的主机），然后它就会自动去收集、同步网络的信息，同时，还会维护一个 IP 地址池，分配给主机中的容器使用。Docker 中比较有名的服务发现有 Consul、Etcd 和 ZooKeeper。overlay 网络常用 Consul。</p>
+<center><img src="/images/docker/overlay.jpg" alt=""></center>
+
+<p>创建 overlay 网络会创建一个 Linux bridge br0，br0 会创建两个接口，一个 veth2 作为与容器的虚拟网卡相连的 veth pair，另一个 vxlan1 负责与其他 host 建立 VxLAN 隧道，跨主机的容器就通过这个隧道来进行通信。</p>
+<p>为了保证 overlay 网络中的容器与外网互通，Docker 会创建另一个 Linux bridge docker_gwbridge，同样，该 bridge 也存在一对 veth pair，要与外围通信的容器可以通过这对 veth pair 到达 docker_gwbridge，进而通过主机 NAT 访问外网。</p>
+<h3 id="2-macvlan"><a href="#2-macvlan" class="headerlink" title="2 macvlan"></a>2 macvlan</h3><hr>
+<p>macvlan 就如它的名字一样，是一种网卡虚拟化技术，它能够将一个物理网卡虚拟出多个接口，每个接口都可以配置 MAC 地址，同样每个接口也可以配自己的 IP，每个接口就像交换机的端口一样，可以为它划分 VLAN。</p>
+<p>macvlan 的做法其实就是将这些虚拟出来的接口与 Docker 容器直连来达到通信的目的。一个 macvlan 网络对应一个接口，不同的 macvlan 网络分配不同的子网，因此，相同的 macvlan 之间可以互相通信，不同的 macvlan 网络之间在二层上不能通信，需要借助三层的路由器才能完成通信，如下，显示的就是两个不同的 macvlan 网络之间的通信流程。</p>
+<center><img src="/images/docker/macvlan.jpg" alt=""></center>
+
+<p>我们用一个 Linux 主机，通过配置其路由表和 iptables，将其配成一个路由器（当然是虚拟的），就可以完成不同 macvlan 网络之间的数据交换，当然用物理路由器也是没毛病的。</p>
+<h3 id="3-flannel"><a href="#3-flannel" class="headerlink" title="3 flannel"></a>3 flannel</h3><hr>
+<p>flannel 网络也需要借助一个全局的上帝来同步网络信息，一般使用的是 etcd。</p>
+<p>flannel 网络不会创建新的 bridge，而是用默认的 docker0，但创建 flannel 网络会在主机上创建一个虚拟网卡，挂在 docker0 上，用于跨主机通信。</p>
+<center><img src="/images/docker/flannel.jpg" alt=""></center>
+
+<p>组件方式让 flannel 多了几分灵活性，它可以使用二层的 VxLAN 隧道来封装数据包完成跨主机通信，也可以使用纯三层的方案来通信，比如 host-gw，只需修改一个配置文件就可以完成转化。</p>
+<h3 id="4-weave"><a href="#4-weave" class="headerlink" title="4 weave"></a>4 weave</h3><hr>
+<p>weave 网络没有借助服务发现协议，也没有 macvlan 那样的虚拟化技术，只需要在不同主机上启动 weave 组件就可以完成通信。</p>
+<p>创建 weave 网络会创建两个网桥，一个是 Linux bridge weave，一个是 datapath，也就是 OVS，weave 负责将容器加入 weave 网络中，OVS 负责将跨主机通信的数据包封装成 VxLAN 包进行隧道传输。</p>
+<center><img src="/images/docker/weave.jpg" alt=""></center>
+
+<p>同样，weave 网络也不支持与外网通信，Docker 提供 docker0 来满足这个需求。</p>
+<p>weave 网络通过组件化的方式使得网络分层比较清晰，两个网桥的分工也比较明确，一个用于跨主机通信，相当于一个路由器，一个负责将本地网络加入 weave 网络。</p>
+<h3 id="5-calico"><a href="#5-calico" class="headerlink" title="5 calico"></a>5 calico</h3><hr>
+<p>calico 是一个纯三层的网络，它没有创建任何的网桥，它之所以能完成跨主机的通信，是因为它记住 etcd 将网络中各网段的路由信息写进了主机中，然后创建的一对的 veth pair，一块留在容器的 network namespace 中，一块成了主机中的虚拟网卡，加入到主机路由表中，从而打通不同主机中的容器通信。</p>
+<center><img src="/images/docker/calico.jpg" alt=""></center>
+
+<p>calico 相较其他几个网络方案最大优点是它提供 policy 机制，用户可以根据自己的需求自定义 policy，一个 policy 可能对应一条 ACL，用于控制进出容器的数据包，比如我们建立了多个 calico 网络，想控制其中几个网络可以互通，其余不能互通，就可以修改 policy 的配置文件来满足要求，这种方式大大增加了网络连通和隔离的灵活性。</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><hr>
+<p>1、除了以上的几种方案，跨主机容器网络方案还有很多，比如：Romana，Contiv 等，本文就不作过多展开了，大家感兴趣可以查阅相关资料了解。</p>
+<p>2、跨主机的容器网络通常要为不同主机的容器维护一个 IP 池，所以大多方案需要借助第三方的服务发现方案。</p>
+<p>3、跨主机容器网络按传输方式可以分为纯二层网络，隧道网络（大二层网络），以及纯三层网络。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
+
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
+
         
 
+        
+            <div class="full-width auto-padding tags">
+                
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
+                
+                    <a href="/tags/容器/"><i class="fas fa-hashtag fa-fw"></i>容器</a>
+                
+                    <a href="/tags/Docker/"><i class="fas fa-hashtag fa-fw"></i>Docker</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
+                
+                    <a href="/tags/macvlan/"><i class="fas fa-hashtag fa-fw"></i>macvlan</a>
+                
+                    <a href="/tags/overlay/"><i class="fas fa-hashtag fa-fw"></i>overlay</a>
+                
+                    <a href="/tags/flannel/"><i class="fas fa-hashtag fa-fw"></i>flannel</a>
+                
+                    <a href="/tags/weave/"><i class="fas fa-hashtag fa-fw"></i>weave</a>
+                
+                    <a href="/tags/cacico/"><i class="fas fa-hashtag fa-fw"></i>cacico</a>
+                
+            </div>
         
     </section>
 </article>
@@ -699,9 +639,9 @@ git config --global user.email &quot;email@example.com&quot;
   <div class="meta" id="header-meta">
     
       <h2 class="title">
-          <a href="/2015/10/30/life/盘点改变世界10大创新应用-微信居首/">
+          <a href="/2018/04/11/tech/virtio_user_简介/">
               
-                  盘点改变世界10大创新应用 微信居首
+                  virtio-user 简介
               
           </a>
       </h2>
@@ -709,7 +649,7 @@ git config --global user.email &quot;email@example.com&quot;
 
     
       <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2015-10-30
+        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2018-04-11
       </time>
     
 
@@ -717,7 +657,7 @@ git config --global user.email &quot;email@example.com&quot;
       
     
     <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/杂谈/">杂谈</a>
+        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/DPDK/">DPDK</a>
     </div>
 
 
@@ -731,86 +671,49 @@ git config --global user.email &quot;email@example.com&quot;
 </section>
 
     <section class="article typo">
-        <p><em>这篇文章摘自于腾讯科技的一个图文报道专题，出处是BI中文站，这种报道看一眼就过去了，将来某一天想看可能就找不到了，我觉得这个报道很有意义，所以特地在自己的博客中记录下来。</em></p>
-<p>这个报道所列举的这十种应用都在一定程度上颠覆一些传统的行业，未来真是不可限量。  </p>
-<p>下面是报道的原文：<br>美国主流网络媒体BI( Business Insider )<a href="http://tech.qq.com/bi.htm" target="_blank" rel="noopener">BI 中文站</a>日前盘点了世界上最好的100大应用，并从中挑选出改变世界的10大最具创新精神应用，它们正改变我们的沟通、旅行、学习以及做事方式。这些应用正通过软件跨越各种限制，彻底改变运输、递送、外语学习、健身等行业，并让我们与亲朋好友的联系更为紧密。</p>
-<p><img src="/images/next/BI.png" alt=""><br>
-        
-            <div class="readmore">
-                <a href="/2015/10/30/life/盘点改变世界10大创新应用-微信居首/" class="flat-box">
-                    <i class="fas fa-book-open fa-fw" aria-hidden="true"></i>
-                    阅读全文
-                </a>
-            </div>
-        
+        <blockquote>
+<p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p>
+</blockquote>
+<p>在看本文之前，建议先看 virtio 简介，vhost 简介，vhost-user 简介。</p>
+<p>virtio-user 是 DPDK 针对特定场景提出的一种解决方案，它主要有两种场景的用途，一种是用于 DPDK 应用容器对 virtio 的支持，这是 DPDK v16.07 开始支持的；另一种是用于和内核通信，这是 DPDK v17.02 推出的。</p>
+<h3 id="1-virtio-user-用于容器网络"><a href="#1-virtio-user-用于容器网络" class="headerlink" title="1 virtio_user 用于容器网络"></a>1 virtio_user 用于容器网络</h3><hr>
+<p>我们知道，对于虚拟机，有 virtio 这套半虚拟化的标准协议来指导虚拟机和宿主机之间的通信，但对于容器的环境，直接沿用 virtio 是不行的，原因是虚拟机是通过 Qemu 来模拟的，Qemu 会将它虚拟出的整个 KVM 虚拟机的信息共享给宿主机，但对于 DPDK 加速的容器化环境来说显然是不合理的。因为 DPDK 容器与宿主机的通信只用得到虚拟内存中的大页内存部分，其他都是用不到的，全部共享也没有任何意义，DPDK 主要基于大页内存来收发数据包的。</p>
+<p>所以，virtio_user 其实就是在 virtio PMD 的基础上进行了少量修改形成的，简单来说，就是添加大页共享的部分逻辑，并精简了整块共享内存部分的逻辑。</p>
+<p>有兴趣可以对照 /driver/net/virtio 中的代码和 DPDK virtio_user 代码，其实大部分是相同的。</p>
+<p>从 DPDK 的角度看，virtio_user 是作为一个虚拟设备（vdev）来加载的，它充当的是一个 virtio 前端驱动，与之对应的后端通信驱动，是用户态的 vhost_user，在使用的时候，我们只需要定义好相应的适配接口即可，如下：</p>
+<center><img src="/images/docker/virtio_user.jpg" alt=""></center>
 
-        
-            <div class="full-width auto-padding tags">
-                
-                    <a href="/tags/创新/"><i class="fas fa-hashtag fa-fw"></i>创新</a>
-                
-            </div>
-        
-    </p></section>
-</article>
+<p>vhost 和 vhost_user 本质上是采用共享内存的 IPC 方式，通过在 host 端创建 vhost_user 共享内存文件，然后 virtio_user 启动的时候指定该文件即可，如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1）首先创建 vhost_user 共享内存文件</span><br><span class="line">--vdev &apos;eth_vhost_user0,iface=/tmp/vhost_user0&apos;</span><br><span class="line">2）启动 virtio_user 指定文件路径</span><br><span class="line">--vdev=virtio_user0,path=/tmp/vhost_user0</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-virtio-user-作为-exception-path-用于与内核通信"><a href="#2-virtio-user-作为-exception-path-用于与内核通信" class="headerlink" title="2 virtio_user 作为 exception path 用于与内核通信"></a>2 virtio_user 作为 exception path 用于与内核通信</h3><hr>
+<p>virtio_user 的一个用途就是作为 exception path 用于与内核通信。我们知道，DPDK 是旁路内核的转包方案，这也是它高性能的原因，但有些时候从 DPDK 收到的包（如控制报文）需要丢到内核网络协议栈去做进一步的处理，这个路径在 DPDK 中就被称为 exception path。</p>
+<p>在这之前，已经存在几种 exception path 的方案，如传统的 Tun/Tap，KNI（Kernel NIC Interface），AF_Packet 以及基于 SR-IOV 的 Flow Bifurcation。这些方案就不做过多介绍了，感兴趣的可看 DPDK 官网，上面都有介绍。</p>
+<center><img src="/images/docker/virtio_user1.jpg" alt=""></center>
 
-        </div>
-      
-    
-      
-        <div class="post-wrapper">
-          <article class="post reveal ">
-    
-<section class="meta">
-  
-  <div class="meta" id="header-meta">
-    
-      <h2 class="title">
-          <a href="/2015/06/07/tech/LaTeX制作中英简历模板/">
-              
-                  LaTeX制作中英简历模板
-              
-          </a>
-      </h2>
-    
+<p>和容器网络的方案使用 vhost_user 作为后端驱动一样，要使得 virtio_user 和内核通信，只需加载内核模块 vhost.ko，让它充当的是 virtio_user 的后端通信驱动即可。</p>
+<p>所以，我们可以看到，其实这两种方案本质上是一样，只是换了个后端驱动而已，这也是 virtio 的优势所在，定义一套通用的接口标准，需要什么类型的通信方式只需加载相应驱动即可，改动非常少，扩展性非常高。</p>
+<p>PS：文章未经我允许，不得转载，否则后果自负。</p>
+<center>–END–</center>
 
-    
-      <time class="metatag time">
-        <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;2015-06-07
-      </time>
-    
-
-    
-      
-    
-    <div class="metatag cats">
-        <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>&nbsp;<a class="categories" href="/categories/05-工具/">05 工具</a>
-    </div>
-
-
-    
-
-    
-
-    
-
-  </div>
-</section>
-
-    <section class="article typo">
-        <p>LaTex用于写文章的快捷与方便之处已是众人周知，然而LaTeX能做的事情还有很多，制作精美的PPT(特别是学术性的PPT)，制作精美的简历，以及做出精美的图片(媲美Python的matplotlib和MATLAB)，等等。LaTeX是一种脚本语言，类似于HTML，非常容易上手。利用LaTeX和JBref的组合来写文章，能够方便科研工作者快速实现自己的需求，而不必要为一些繁琐的排版问题而伤透脑筋。为了方便研究人员，很多会议、期刊、杂志都会提供自己相应的模板，投稿者只需下载模板，往里面增加自己的内容即可。</p>
-<p>本文提供一些利用LaTeX来制作个人简历的模板，以便日后需要。几个比较好的模板：</p>
-<p><a href="http://yixf.name/2012/02/19/%E4%BD%BF%E7%94%A8latex%E5%88%B6%E4%BD%9C%E4%B8%AD%E6%96%87%E7%AE%80%E5%8E%86%E7%9A%84%E6%A8%A1%E6%9D%BF/" target="_blank" rel="noopener">中文模板：</a></p>
-<p><a href="http://rpi.edu/dept/arc/training/latex/resumes/" target="_blank" rel="noopener">英文模板：</a></p>
+<hr>
+<blockquote>
+<p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p>
+</blockquote>
+<p><img src="/images/weichat.png" alt=""></p>
 
         
 
         
             <div class="full-width auto-padding tags">
                 
-                    <a href="/tags/LaTeX/"><i class="fas fa-hashtag fa-fw"></i>LaTeX</a>
+                    <a href="/tags/云计算/"><i class="fas fa-hashtag fa-fw"></i>云计算</a>
                 
-                    <a href="/tags/简历/"><i class="fas fa-hashtag fa-fw"></i>简历</a>
+                    <a href="/tags/虚拟化/"><i class="fas fa-hashtag fa-fw"></i>虚拟化</a>
+                
+                    <a href="/tags/DPDK/"><i class="fas fa-hashtag fa-fw"></i>DPDK</a>
+                
+                    <a href="/tags/网络/"><i class="fas fa-hashtag fa-fw"></i>网络</a>
+                
+                    <a href="/tags/容器网络/"><i class="fas fa-hashtag fa-fw"></i>容器网络</a>
                 
             </div>
         
@@ -834,7 +737,7 @@ git config --global user.email &quot;email@example.com&quot;
                 </a>
             
             <p class="current">
-                9 / 12
+                9 / 23
             </p>
             
                 <a class="next" rel="next" href="/page/10/">
@@ -871,7 +774,7 @@ git config --global user.email &quot;email@example.com&quot;
 </header>
 
   <div class="content material">
-    <p>你好，这里是<a href="https://ctimbai.github.io">长亭的网志空间</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
+    <p>你好，这里是<a href="https://ctimbai.github.io">猿大白</a>，我在这里分享技术和生活，专注于Linux/云计算/网络/CC++/Python/Go等技术栈，喜欢左手Coding，右手Writing，欢迎关注我的公众号「Linux云计算网络」，期待与你相遇~</p>
 
   </div>
 </section>
