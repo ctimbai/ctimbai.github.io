@@ -22,9 +22,9 @@
             
             <tag> Linux </tag>
             
-            <tag> 网络 </tag>
-            
             <tag> Docker </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> macvlan </tag>
             
@@ -373,20 +373,10 @@
         <content type="html"><![CDATA[<blockquote><p>本文首发于我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，专注于干货分享，号内有 <strong>10T</strong> 书籍和视频资源，后台回复<strong>「1024」</strong>即可免费领取，欢迎大家关注，二维码文末可以扫。</p></blockquote><center>–END–</center><hr><p>后台回复「<font color="red">加群</font>」，带你进入高手如云交流群。</p><hr><blockquote><p>我的公众号 <strong>「Linux云计算网络」(id: cloud_dev)</strong> ，号内有 <strong>10T</strong> 书籍和视频资源，后台回复 <strong>「1024」</strong> 即可免费领取，分享的内容包括但不限于 Linux、网络、云计算虚拟化、容器Docker、OpenStack、Kubernetes、工具、SDN、OVS、DPDK、Go、Python、C/C++编程技术等内容，欢迎大家关注。</p><p><img src="/images/weichat.png" alt=""></p></blockquote>]]></content>
       
       
-      <categories>
-          
-          <category> 06 网络 </category>
-          
-      </categories>
-      
       
         <tags>
             
             <tag> Linux </tag>
-            
-            <tag> 网络 </tag>
-            
-            <tag> Namespace </tag>
             
         </tags>
       
@@ -1131,13 +1121,13 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> 容器网络 </tag>
             
@@ -1164,13 +1154,13 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> 容器网络 </tag>
             
@@ -1201,13 +1191,13 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> 容器网络 </tag>
             
@@ -1244,11 +1234,11 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 虚拟化 </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> DPDK </tag>
             
@@ -1322,13 +1312,13 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> 容器网络 </tag>
             
@@ -1392,13 +1382,13 @@
             
             <tag> Linux </tag>
             
-            <tag> Namespace </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> Namespace </tag>
             
         </tags>
       
@@ -1425,13 +1415,13 @@
             
             <tag> Linux </tag>
             
-            <tag> Namespace </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 容器 </tag>
             
             <tag> Docker </tag>
+            
+            <tag> Namespace </tag>
             
             <tag> Cgroup </tag>
             
@@ -1555,11 +1545,11 @@
             
             <tag> Qemu </tag>
             
+            <tag> vhost_user </tag>
+            
             <tag> vhost </tag>
             
             <tag> virtio </tag>
-            
-            <tag> vhost_user </tag>
             
         </tags>
       
@@ -1700,11 +1690,11 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 虚拟化 </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> OVS </tag>
             
@@ -1733,11 +1723,11 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 虚拟化 </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> OVS </tag>
             
@@ -1770,11 +1760,11 @@
       
         <tags>
             
-            <tag> 网络 </tag>
-            
             <tag> 云计算 </tag>
             
             <tag> 虚拟化 </tag>
+            
+            <tag> 网络 </tag>
             
             <tag> OVS </tag>
             
