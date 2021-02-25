@@ -13,7 +13,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> Docker </category>
           
       </categories>
       
@@ -44,7 +44,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络工具 </category>
           
       </categories>
       
@@ -73,7 +73,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -102,7 +102,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -133,7 +133,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -164,7 +164,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -193,7 +193,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -222,7 +222,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -253,7 +253,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -282,7 +282,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -313,7 +313,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络工具 </category>
           
       </categories>
       
@@ -344,7 +344,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -404,7 +404,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -433,7 +433,7 @@
       
       <categories>
           
-          <category> 06 网络 </category>
+          <category> 网络 </category>
           
       </categories>
       
@@ -597,7 +597,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -869,7 +869,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -921,7 +921,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> 性能分析 </category>
           
       </categories>
       
@@ -950,7 +950,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> 性能分析 </category>
           
       </categories>
       
@@ -979,7 +979,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> 性能分析 </category>
           
       </categories>
       
@@ -1008,7 +1008,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> 性能分析 </category>
           
       </categories>
       
@@ -1095,7 +1095,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> 性能分析 </category>
           
       </categories>
       
@@ -1116,8 +1116,8 @@
     
     <entry>
       <title>各种容器网络方案对比</title>
-      <link href="/2018/04/20/tech/cloud/container/%E5%90%84%E7%A7%8D%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/"/>
-      <url>/2018/04/20/tech/cloud/container/%E5%90%84%E7%A7%8D%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/</url>
+      <link href="/2018/04/20/tech/cloud/container/docker/%E5%90%84%E7%A7%8D%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/"/>
+      <url>/2018/04/20/tech/cloud/container/docker/%E5%90%84%E7%A7%8D%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/</url>
       
         <content type="html"><![CDATA[<blockquote><p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p></blockquote><p>前面单主机容器网络和多主机容器网络两篇文章，咱们已经从原理上总结了多种容器网络方案，也通过这篇文章探讨了容器网络的背后原理。本文再基于一个宏观的视角，对比几种网络方案，让大家有个完整的认识。</p><p>单主机网络就不多说了，因为也比较简单，我们重点对比几种多主机网络方案。</p><p>对比的维度有以下几种：网络模型，IP 地址池管理（IP Address Management，IPAM），服务发现，连通与隔离，性能。</p><p>网络模型指的是构成跨主机通信的网络结构和实现技术，比如是纯二层转发，还是纯三层转发；是 overlay 网络还是 underlay 网络等等。</p><p>IPAM 指的是如何管理容器网络的 IP 池。当容器集群比较大，管理的主机比较多的时候，如何分配各个主机上容器的 IP 是一个比较棘手的问题。Docker 网络有个 subnet 的概念，通常一个主机分配一个 subnet，但也有多个主机共用一个 subnet 的情况，具体的网络方案有不同的考量。具体看下面的表格总结。</p><p>服务发现本质上是一个分布式的 key-value 存储系统，用于跨主机通信时保存并同步各主机的网络信息，便于快速建立起各主机之间的网络连接。由于各网络方案实现上各有千秋，并不是所有的跨主机网络方案都要依据服务发现。</p><p>连通与隔离指的是容器跨主机之间是否能够互相通信，以及容器与外网（外网不一定指 Internet）之间如何通信。</p><p>性能具体指的是通信的时延，我们仅从各个网络方案的原理上来分析得出结论，所以这里的结论并不一定正确，因为不同的部署环境会对性能有一些影响，建议大家还是根据自己的环境动手实验验证为妙。</p><p>从原理上说，underlay 网络性能要优于 overlay 网络，因为 overlay 网络存在封包和拆包操作，存在额外的 CPU 和网络开销，所以，几种方案中，macvlan、flannel host-gw、calico 的性能会优于 overlay、flannel vxlan 和 weave。但是这个也不能作为最终生产环境采用的标准，因为 overlay 网络采用 vxlan 作为隧道的话，能支持更多的二层网段，安全性也更高，所以，需要综合考虑。</p><p>通过以上分析，我们可以得出以下的结论：</p><center><img src="/images/docker/docker_net_com.jpg" alt=""></center><p>参考：<br><a href="http://www.cnblogs.com/CloudMan6/p/7587532.html" target="_blank" rel="noopener">http://www.cnblogs.com/CloudMan6/p/7587532.html</a></p><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p></blockquote><p><img src="/images/weichat.png" alt=""></p>]]></content>
       
@@ -1149,8 +1149,8 @@
     
     <entry>
       <title>那么多容器网络的解决方案，其背后的原理到底是什么？</title>
-      <link href="/2018/04/18/tech/cloud/container/%E9%82%A3%E4%B9%88%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%8C%E5%85%B6%E8%83%8C%E5%90%8E%E7%9A%84%E5%8E%9F%E7%90%86%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/"/>
-      <url>/2018/04/18/tech/cloud/container/%E9%82%A3%E4%B9%88%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%8C%E5%85%B6%E8%83%8C%E5%90%8E%E7%9A%84%E5%8E%9F%E7%90%86%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</url>
+      <link href="/2018/04/18/tech/cloud/container/docker/%E9%82%A3%E4%B9%88%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%8C%E5%85%B6%E8%83%8C%E5%90%8E%E7%9A%84%E5%8E%9F%E7%90%86%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/"/>
+      <url>/2018/04/18/tech/cloud/container/docker/%E9%82%A3%E4%B9%88%E5%A4%9A%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%8C%E5%85%B6%E8%83%8C%E5%90%8E%E7%9A%84%E5%8E%9F%E7%90%86%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</url>
       
         <content type="html"><![CDATA[<blockquote><p>文章首发于我的公众号「Linux云计算网络」，欢迎关注，第一时间掌握技术干货！</p></blockquote><p>知其然而不知其所以然，不知也。老古人说得多好，学知识不懂得知识背后的原理，等于白学。</p><p>通过前面两篇文章，我们知道了容器的单主机网络和多主机网络，对于这么多网络方案，我们看到对 Docker 的整体网络结构好像没有改动，都是水平扩展的，那 Docker 网络究竟是怎么集成这么多网络方案而不改变自身原有的结构呢？本文就来一探究竟。</p><h3 id="1-Docker-的总体框架"><a href="#1-Docker-的总体框架" class="headerlink" title="1 Docker 的总体框架"></a>1 Docker 的总体框架</h3><hr><p>要回答这个问题，得从 Docker 的总体框架说起。</p><center><img src="/images/docker/docker_netarch.jpg" alt=""></center><p>容器和虚拟机一样，都是虚拟化的产品，都包括计算虚拟化，存储虚拟化和 IO 虚拟化。容器作为轻量级的进程，不像虚拟机那般复杂，这三块分别靠三个 Driver 来完成的，execdriver 负责计算虚拟化，networkdriver 负责网络虚拟化，graphdriver 负责存储虚拟化。由此可见，Docker 靠 Driver 这种设计思想来支撑起它的基础平台，再往深了挖，它的每个子模块都随处可见这种设计思想，就网络这个子模块来看，也是如此。</p><h3 id="2-Docker-的网络模型"><a href="#2-Docker-的网络模型" class="headerlink" title="2 Docker 的网络模型"></a>2 Docker 的网络模型</h3><hr><h4 id="docker-engine-libcontainer"><a href="#docker-engine-libcontainer" class="headerlink" title="docker engine + libcontainer"></a>docker engine + libcontainer</h4><hr><p>期初的 Docker 网络子模块的代码是分散在 docker daemon 和 libcontainer 中的，libcontainer 是一个独立的容器管理包，execdriver 和 networkdriver 都是通过 libcontainer 来实现对容器的具体操作。</p><p>随着业务场景越来越复杂，这种内嵌的方式很难针对不同的网络场景进行扩展。后来，Docker 收购了一个做多主机网络解决方案的公司 SocketPlane，然后让那帮人专门来解决这个问题。这就是接下来要介绍的 libnetwork。</p><h4 id="libnetwork-amp-amp-CNM"><a href="#libnetwork-amp-amp-CNM" class="headerlink" title="libnetwork &amp;&amp; CNM"></a>libnetwork &amp;&amp; CNM</h4><hr><p>libnetwork 起初的做法很简单，就是将 docker engine 和 libcontainer 中网络相关的代码抽出来，合并成一个单独的库，做成网络抽象层，并对外提供 API。Docker 的愿景就是希望 libnetwork 能够做像 libcontainer 那样，成为一个多平台的容器网络基础包。</p><p>后来受一个 GitHub issue ( <a href="https://github.com/moby/moby/issues/9983" target="_blank" rel="noopener">https://github.com/moby/moby/issues/9983</a>) 的启发，libnetwork 引入容器网络模型（Container Network Model，CNM），该模型进一步对 Docker 的网络结构进行了细分，提出了三个概念：network、sandbox 和 endpoint。</p><h5 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h5><p>network 是一个抽象的概念，你可以把它理解成一个网络的插件，或者是网络的 Driver，比如说单主机网络的 Driver 就有 none、host、bridge，joined container 这四种，多主机网络就有 overlay、macvlan、flannel 这些。network 可以独立出去做，只需调用 Docker 对外提供的 API 就可以作为插件集成到 Docker 网络中使用。</p><h5 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a><strong>sandbox</strong></h5><p>sandbox 实现了容器内部的网络栈，它定义容器的虚拟网卡，路由表和 DNS 等配置，其实就是一个标准的 linux network namespace 实现。</p><h5 id="endpoint"><a href="#endpoint" class="headerlink" title="endpoint"></a><strong>endpoint</strong></h5><p>network 实现了一个第三方的网络栈，sandbox 则实现了容器内部的网络栈，那这两者怎么联系起来呢？答案就是通过 endpoint，endpoint 实现了 veth pair，一个 endpoint 就表示一对 veth pair，一端挂在容器中，另一端挂在 network 中。</p><center><img src="/images/docker/cnm.jpg" alt=""></center><p>network、sandbox 和 endpoint 三者之间的关系：<br>一个 network 可以包含多个 endpoint，自然也就包含多个 sandbox。<br>一个 sandbox 可以包含多个 endpoint，可以属于多个 network。<br>一个 endpoint 只可以属于一个 network，并且只属于一个 sandbox。</p><p>如上图显示三个容器，每个容器一个 sandbox，除了第二个容器有两个 endpoint 分别接入 network1 和 network2 之外，其余 sandbox 都只有一个 endpoint 分别接入不同的 network。</p><p>到此，我们就可以解答文章开篇提到的问题，“不同的网络方案如何集成到 Docker 网络模型中而不改变原有结构？”</p><p>答案就是基于 libnetwork CNM，将各个网络模型以插件或 Driver 的形式集成到 Docker 网络中来，与 docker daemon 协同工作，实现容器网络。Docker 原生的 Driver 包括单主机的 none、bridge、joined container 和 多主机的 overlay、macvlan，第三方 Driver 就包括多主机的 flannel、weave、calico 等。</p><center><img src="/images/docker/libnetwork.png" alt=""></center><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><hr><ol><li>libnetwork 基于 CNM 模型将 Docker 网络结构从原生方案中抽离出来，增强了网络扩展性，以至于现在各种网络方案层出不穷，都可以轻松集成到 Docker 中。</li><li>network，sandbox，endpoint 三个概念。</li></ol><p>PS：文章未经我允许，不得转载，否则后果自负。</p><center>–END–</center><hr><blockquote><p>欢迎扫👇的二维码关注我的微信公众号，后台回复「m」，可以获取往期所有技术博文推送，更多资料回复下列关键字获取。</p></blockquote><p><img src="/images/weichat.png" alt=""></p>]]></content>
       
@@ -1237,7 +1237,7 @@
       
       <categories>
           
-          <category> DPDK </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1250,9 +1250,9 @@
             
             <tag> 虚拟化 </tag>
             
-            <tag> 容器网络 </tag>
-            
             <tag> DPDK </tag>
+            
+            <tag> 容器网络 </tag>
             
         </tags>
       
@@ -1451,7 +1451,7 @@
       
       <categories>
           
-          <category> Docker </category>
+          <category> 容器 </category>
           
       </categories>
       
@@ -1480,7 +1480,7 @@
       
       <categories>
           
-          <category> Docker </category>
+          <category> 容器 </category>
           
       </categories>
       
@@ -1509,7 +1509,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -1542,7 +1542,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1555,11 +1555,11 @@
             
             <tag> Qemu </tag>
             
-            <tag> vhost_user </tag>
-            
             <tag> vhost </tag>
             
             <tag> virtio </tag>
+            
+            <tag> vhost_user </tag>
             
         </tags>
       
@@ -1577,7 +1577,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1610,7 +1610,7 @@
       
       <categories>
           
-          <category> NFV </category>
+          <category> DPDK </category>
           
       </categories>
       
@@ -1639,7 +1639,7 @@
       
       <categories>
           
-          <category> Linux </category>
+          <category> TCP/IP </category>
           
       </categories>
       
@@ -1763,7 +1763,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1802,7 +1802,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -1835,7 +1835,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1866,7 +1866,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1897,7 +1897,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1928,7 +1928,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1957,7 +1957,7 @@
       
       <categories>
           
-          <category> 03 虚拟化 </category>
+          <category> 虚拟化 </category>
           
       </categories>
       
@@ -1984,7 +1984,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -2011,7 +2011,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -2036,7 +2036,7 @@
       
       <categories>
           
-          <category> 01 云计算 </category>
+          <category> 云计算 </category>
           
       </categories>
       
@@ -2063,7 +2063,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2088,7 +2088,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2113,7 +2113,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2140,7 +2140,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2240,7 +2240,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2248,25 +2248,6 @@
         <tags>
             
             <tag> Sublime Text </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>推荐系统学习知识点整理</title>
-      <link href="/2014/12/17/tech/other/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/"/>
-      <url>/2014/12/17/tech/other/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/</url>
-      
-        <content type="html"><![CDATA[<p>本文由知乎<a href="http://www.zhihu.com/question/21251105" target="_blank" rel="noopener">如何学习推荐系统？</a>一文整理而来，如有雷同，纯属正常。^.^<br>推荐系统一直是我最感兴趣的技术，但是苦于课题组不做这块的东西，所以只能借助于课余时间去学习。我觉得兴趣的东西还是不能丢，趁现在还是学生时代，抓紧时间多学些东西，让自己的兴趣尽可能地放大，说白了，就是做自己喜欢做的事，不让将来有后悔的念头。关于如何学习，对于初学者，肯定只能站在巨人的肩膀上才能有所突破，本文就简单地对巨人的工作做一点整理，希望对今后的学习有所帮助。  </p><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>推荐系统不算是一个独立的学科，它与机器学习，数据挖掘有天然密不可分的关系。所以，想要学习好这门技术，就要多有所涉略。</p><h3 id="技术博客"><a href="#技术博客" class="headerlink" title="技术博客"></a>技术博客</h3><p>1、<a href="http://www.ibm.com/developerworks/cn/web/1103_zhaoct_recommstudy1/index.html#icomments" target="_blank" rel="noopener">探索推荐引擎内部的秘密</a>:对现有的推荐系统技术进行了综述性描述，如下：<br><img src="/image/recomsys.png" alt=""><br><a id="more"></a><br>2、<a href="http://semocean.com/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%96%87%E7%8C%AE%E5%8F%8A%E8%B5%84%E6%96%99/" target="_blank" rel="noopener">推荐系统经典论文文献及业界应用</a>:百度技术专家的技术博客。里面有很多参考资料。<br>3、<a href="http://blog.csdn.net/java060515/article/details/1570243" target="_blank" rel="noopener">个性化推荐技术漫谈</a>：对个性化推荐技术的基本原理进行简要介绍，提出了作者对优秀的个性化推荐的多角度认识。  </p><h3 id="阅读最新Paper"><a href="#阅读最新Paper" class="headerlink" title="阅读最新Paper"></a>阅读最新Paper</h3><p>1、几个重要会议：<strong>recsys</strong>,SIGIR,<strong>KDD</strong>,WSDM,WWW,ICDM…<br>2、 <strong>Recommendation Engines Seminar Paper</strong>, Thomas Hess, 2009: 推荐引擎的总结性文章，Thomas 给出推荐引擎的模型，各种推荐机制的工作原理，并分析了推荐引擎面临的众多问题。<br>3、其余更细致的内容参考本文：<a href="http://semocean.com/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%96%87%E7%8C%AE%E5%8F%8A%E8%B5%84%E6%96%99/" target="_blank" rel="noopener">推荐系统经典论文文献及业界应用</a>，资料非常齐全。  </p><h3 id="相关书籍"><a href="#相关书籍" class="headerlink" title="相关书籍"></a>相关书籍</h3><p>1、项亮《推荐系统实践》<br>2、Shapira B. <strong>Recommender systems handbook[M]</strong>. Springer, 2011. 推荐系统可做枕头，也应该放在枕边的书籍，看了半本多。如果将该书及其中的参考文献都看完并理解，那恭喜你，你已经对这个领域有深入理解了。<br>3、Jannach D, Zanker M, Felfernig A, et al. <strong>Recommender systems: an introduction[M]</strong>. Cambridge University Press, 2010. 可以认为是2010年前推荐系统论文的综述集合。<br>4、Celma O. <strong>Music recommendation and discovery[M]</strong>. Springer, 2010. 主要内容集中在音乐推荐，领域非常专注于音乐推荐，包括选取的特征，评测时如何考虑音乐因素。  </p><h3 id="相关视频"><a href="#相关视频" class="headerlink" title="相关视频"></a>相关视频</h3><p>1、<a href="https://www.coursera.org/course/ml?from_restricted_preview=1&amp;course_id=970311&amp;r=https%3A%2F%2Fclass.coursera.org%2Fml-003%2Fclass" target="_blank" rel="noopener">Stanford-&gt;机器学习</a>   </p><h3 id="相关系统"><a href="#相关系统" class="headerlink" title="相关系统"></a>相关系统</h3><p>1、<a href="www.amazon.com">Amazon</a>：推荐技术的先驱，Amazon 在 B2C 领域的推荐技术值得大家参考。<br>2、<a href="www.douban.com">豆瓣</a>:作为国内社交网络的先驱，豆瓣在推荐技术上也处于领先的位置，同时对于不同内容的推荐策略有深入的研究。<br>3、<a href="http://pan.baidu.com/share/link?shareid=2173369320&amp;uk=1493671608" target="_blank" rel="noopener">淘宝推荐系统</a><br>4、<a href="http://pan.baidu.com/share/home?uk=1493671608#category/type=0" target="_blank" rel="noopener">当当网搜索和推荐 庄洪波</a><br>5、<a href="http://pan.baidu.com/share/link?shareid=2228144324&amp;uk=1493671608" target="_blank" rel="noopener">盛大只能对剑系统的开发与应用</a><br>6、<a href="http://blog.csdn.net/jj12345jj198999/article/details/8821419" target="_blank" rel="noopener">一个入门级的电影推荐系统</a> </p><h3 id="推荐系统工具"><a href="#推荐系统工具" class="headerlink" title="推荐系统工具"></a>推荐系统工具</h3><p>1、<a href="http://mahout.apache.org/" target="_blank" rel="noopener">Mahout</a>：基于hadoop的机器学习，数据挖掘，推荐系统开源工具。<br>2、<a href="http://scikit-learn.org/stable/" target="_blank" rel="noopener">scikit-learn</a>：基于python的机器学习，数据挖掘库，方便好用，适合数据量较小的调研任务，不过，一切不支持大数据的机器学习算法，（一定程度上）都是耍流氓。。。。<br>3、<a href="http://www.cs.waikato.ac.nz/ml/weka/" target="_blank" rel="noopener">weka</a>：经典得不能再经典的数据挖掘工具，java版本<br>4、<a href="http://www.r-project.org/" target="_blank" rel="noopener">R</a>：R语言<br>5、<a href="http://glaros.dtc.umn.edu/gkhome/views/cluto" target="_blank" rel="noopener">Cluto</a>：聚类工具，集成了较多聚类算法及相似度度量方法；单机，数据量受限<br>6、<a href="http://rapidminer.com/products/rapidminer-studio/" target="_blank" rel="noopener">RapidMiner</a>：没用过，但据说使用量非常大<br>7、<a href="http://svdfeature.apexlab.org/wiki/Main_Page" target="_blank" rel="noopener">svdfeature</a>: 上交Apex开发的svd工具集，代码质量不错，而且附带（MovieLen数据集）示例，直接下载各MovieLens数据集就能实验效果<br>8、<a href="http://www.libfm.org/" target="_blank" rel="noopener">LibFM:Rendle</a> S. Factorization machines with libFM[J]. ACM Transactions on  </p><h3 id="经典推荐算法大赛数据"><a href="#经典推荐算法大赛数据" class="headerlink" title="经典推荐算法大赛数据"></a>经典推荐算法大赛数据</h3><p>1、<a href="http://pan.baidu.com/s/1hqilwcW" target="_blank" rel="noopener">netflix大赛数据</a>：netflix大赛数据，想尝试各种算法效果，可以用该数据做实验；netflix已经不再发布数据，如有需要可从该链接下载。<br>2、<a href="http://grouplens.org/datasets/movielens/" target="_blank" rel="noopener">Movielen数据集</a>   </p><h3 id="相关参考资料"><a href="#相关参考资料" class="headerlink" title="相关参考资料"></a>相关参考资料</h3><p>1、<a href="https://groups.google.com/group/resys" target="_blank" rel="noopener">Google Recommender System Group</a>：推荐系统的 Google 讨论组，有很多关于推荐引擎的有趣讨论。<br>2、<a href="http://www.deitel.com/ResourceCenters/Web20/RecommenderSystems/RecommenderSystemAlgorithms/tabid/1317/Default.aspx" target="_blank" rel="noopener">Recommender System Algorithms</a>：关于推荐引擎算法的资源。<br>3、<a href="http://www.slideshare.net/rashmi/design-of-recommender-systems" target="_blank" rel="noopener">Design of Recommender System</a>：关于推荐引擎的设计方法的介绍。<br>4、<a href="http://www.slideshare.net/blueace/how-to-build-a-recommender-system-presentation" target="_blank" rel="noopener">How to build a recommender system</a>：这个演示给出了如何构建一个推荐引擎，并结合例子详细介绍了基于协同过滤的推荐策略。<br>5、<a href="http://wuchong.me/blog/2014/04/19/recsys-cf-study/" target="_blank" rel="noopener">协同过滤技术的实现</a></p><h3 id="后序"><a href="#后序" class="headerlink" title="后序"></a>后序</h3><p>其余关于数据挖掘和机器学习的资料请参见<a href="http://semocean.com/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E7%BB%8F%E5%85%B8%E8%AE%BA%E6%96%87%E6%96%87%E7%8C%AE%E5%8F%8A%E8%B5%84%E6%96%99/" target="_blank" rel="noopener">推荐系统经典论文文献及业界应用</a>一文。不管怎么说，最终想要在这方面取得点成果，最重要的是动手实践，实际参加开发一个推荐系统就好了，而这正是我想做的事，也是我的一点小小的理想吧。  </p><p>附：资料大合集（哇塞，有福了！）<br><a href="https://github.com/Flowerowl/Big-Data-Resources" target="_blank" rel="noopener">呵呵哈哈</a><br><a href="http://rec-sys.net/forum.php" target="_blank" rel="noopener">论坛</a>  </p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 推荐系统 </tag>
             
         </tags>
       
@@ -2284,7 +2265,7 @@
       
       <categories>
           
-          <category> 04 算法 </category>
+          <category> 算法与数据结构 </category>
           
       </categories>
       
@@ -2338,7 +2319,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2365,7 +2346,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
@@ -2446,7 +2427,7 @@
       
       <categories>
           
-          <category> 05 工具 </category>
+          <category> 工具 </category>
           
       </categories>
       
